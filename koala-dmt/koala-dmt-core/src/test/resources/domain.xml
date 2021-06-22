@@ -1,0 +1,205 @@
+<domains><!-- 是每个领域对象一个xml文件还是一张图表一个xml文件？主键约束，瞬态的，大字段？ -->
+	<entity abstract="true">
+		<package>?</package><!-- 是否需要定义package -->
+		<name>Party</name><!-- 默认使用单表策略，定义顶级的基类上 -->
+		<properties>
+			<property>
+				<propertyName>name</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+			<property>
+				<propertyName>sn</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+		</properties>
+		<actions>
+			<action><!-- 异常? -->
+				<actionName>get</actionName>
+				<returnType>Party</returnType>
+				<parameters>
+					<parameter sortNumber="1">
+						<parameterType>Long</parameterType>
+						<parameterName>id</parameterName>
+					</parameter>
+					<parameter sortNumber="2">
+						<parameterType>class</parameterType>
+						<parameterName>clazz</parameterName>
+					</parameter>
+				</parameters>
+			</action>
+		</actions>
+	</entity>
+	<interface>
+		<name>Contactable</name>
+		<actions>
+			<action>
+				<actionName>contact</actionName>
+			</action>
+		</actions>
+	</interface>
+	<entity>
+		<name>Employee</name>
+		<extend>Party</extend>
+		<properties>
+			<property>
+				<propertyName>entryDate</propertyName>
+				<propertyType>Date</propertyType><!-- 日期格式是否需要更详细的配置，比如TemporalType -->
+			</property>
+			<property nullable="false"><!-- nullable为false，设置此属性不能为空，默认值为true -->
+				<propertyName>person</propertyName>
+				<propertyType>Person</propertyType><!-- 是否使用全类名 -->
+				<relation>ManyToOne</relation>
+			</property>
+			<property>
+				<propertyName>emails</propertyName>
+				<propertyType genericity="String">Set</propertyType>
+				<relation>ElementCollection</relation><!-- 如果genericity属性的值为基础类型或者其包装类型或者是枚举，则默认使用@ElementCollection，表名为组合EMPLOYEE_EMAILS，关联column使用EMPLOYEE_ID -->
+			</property>
+			<property>
+				<propertyName>posts</propertyName>
+				<propertyType genericity="Post">List</propertyType>
+				<relation>ManyToMany</relation><!-- 默认中间表名为 EMPLOYEE_POSTS，关联字段分别为POST_ID,EMPLOYEE_ID -->
+			</property>
+		</properties>
+		<actions>
+			<action>
+				<actionName>assignPost</actionName>
+				<returnType></returnType>
+				<parameters>
+					<parameter sortNumber="1">
+						<parameterType>Post</parameterType>
+						<parameterName>post</parameterName>
+					</parameter>
+					<parameter sortNumber="2">
+						<parameterType>boolean</parameterType>
+						<parameterName>principal</parameterName>
+					</parameter>
+				</parameters>
+			</action>
+		</actions>
+	</entity>
+	<entity>
+		<name>Post</name>
+		<extend>Party</extend>
+		<properties>
+			<property transient="true"><!-- 标签属性transient的值为true，表示该属性为瞬态的，不持久化。不配置该属性的话，默认为false -->
+				<propertyName>fullName</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+		</properties>
+	</entity>
+	<entity>
+		<name>Person</name>
+		<properties>
+			<property nullable="false">
+				<propertyName>name</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+			<property unique="true"><!-- unique为true，设置该属性不能重复，默认为false -->
+				<propertyName>identityNumber</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+			<property>
+				<propertyName>gender</propertyName>
+				<propertyType>Gender</propertyType>
+				<relation>Enumerated</relation><!-- 枚举默认使用@Enumerated并设置EnumType.STRING -->
+			</property>
+			<property>
+				<propertyName>contactInfo</propertyName>
+				<propertyType>PersonContactInfo</propertyType><!-- 值对象 -->
+				<relation>Embedded</relation><!-- 值对象默认使用@Embedded -->
+			</property>
+			<property>
+				<propertyName>addresses</propertyName>
+				<propertyType genericity="Address">Set</propertyType>
+				<relation>ElementCollection</relation><!-- 默认表名是属性名称：ADDRESSES。另外还需要注意泛型中有枚举的情况，另外默认@JoinColumn(name = "PERSON_ID") -->
+			</property>
+			<property>
+				<propertyName>educationInfos</propertyName>
+				<propertyType genericity="PersonEducationInfo">List</propertyType>
+				<relation>OneToMany</relation><!-- onetomany要使用mappedby还是中间表？mappedby使用则默认使用类名person。然后检测many端类型是否有对应属性。 -->
+			</property>
+		</properties>
+	</entity>
+	<enum>
+		<name>Gender</name>
+		<enumItems>
+			<enumItem>MALE</enumItem>
+			<enumItem>FEMALE</enumItem>
+		</enumItems>
+	</enum>
+	<valueObject>
+		<name>Address</name>
+		<implementsList>
+			<implements>ValueObject</implements><!-- 值对象将默认实现ValueObject接口 -->
+			<implements>Contactable</implements>
+		</implementsList>
+		<constants>
+			<constant>
+				<constantType>String</constantType><!-- 常量只支持基础数据类型及其包装类型 -->
+				<constantName>ADDRESS_STRING</constantName>
+				<constantValue>Address</constantValue>
+			</constant>
+		</constants>
+		<properties>
+			<property>
+				<propertyName>country</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+			<property>
+				<propertyName>province</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+			<property>
+				<propertyName>city</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+		</properties>
+	</valueObject>
+	<valueObject>
+		<name>PersonContactInfo</name>
+		<implementsList>
+			<implements>ValueObject</implements>
+			<implements>Contactable</implements>
+		</implementsList>
+		<properties>
+			<property>
+				<propertyName>homePostalcode</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+			<property>
+				<propertyName>homeTelephone</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+			<property>
+				<propertyName>mobile</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+		</properties>
+	</valueObject>
+	<valueObject>
+		<name>PersonEducationInfo</name>
+		<implementsList>
+			<implements>ValueObject</implements>
+		</implementsList>
+		<properties>
+			<property nullable="false">
+				<propertyName>person</propertyName>
+				<propertyType>Person</propertyType>
+				<relation>ManyToOne</relation>
+			</property>
+			<property>
+				<propertyName>fromDate</propertyName>
+				<propertyType>Date</propertyType>
+			</property>
+			<property>
+				<propertyName>toDate</propertyName>
+				<propertyType>Date</propertyType>
+			</property>
+			<property>
+				<propertyName>school</propertyName>
+				<propertyType>String</propertyType>
+			</property>
+		</properties>
+	</valueObject>
+</domains>

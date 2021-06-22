@@ -22,7 +22,7 @@
 
 	<!-- Creates a EntityManagerFactory for use with the Hibernate JPA provider 
 		and a simple in-memory data source populated with test data -->
-	<bean id="entityManagerFactory_dmt" class="org.openkoala.koala.util.KoalaEntityManagerFactoryBean">
+	<bean id="entityManagerFactory_dmt" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="dmt" />
 		<property name="packagesToScan">
 			<list>
@@ -30,13 +30,12 @@
 			</list>
 		</property>
 
-		<property name="scanMappingResourceDir" value="mappings" />
 		<property name="dataSource" ref="dataSource_dmt" />
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
 				<property name="database" value="${dmt.db.Type}"></property>
 				<property name="showSql" value="${dmt.hibernate.show_sql}"></property>
-				<property name="generateDdl" value="${dmt.generateDdl}"></property>
+				<property name="generateDdl" value="${dmt.generate.ddl}"></property>
 				<property name="databasePlatform" value="${dmt.db.jdbc.dialect}"></property>
 			</bean>
 		</property>
@@ -47,8 +46,8 @@
         <property name="persistenceUnitName" value="dmt" />
     </bean>
 
-    <bean id="repository_dmt" class="org.openkoala.koala.commons.domain.jpa.KoalaEntityRepositoryJpa">
-        <property name="entityManagerName" value="dmtEntityManager"/>
+    <bean id="repository_dmt" class="org.dayatang.persistence.jpa.EntityRepositoryJpa">
+        <!-- <property name="entityManagerName" value="dmtEntityManager"/> -->
     </bean>
 
     <bean id="queryChannel_dmt" class="org.dayatang.querychannel.impl.QueryChannelServiceImpl">

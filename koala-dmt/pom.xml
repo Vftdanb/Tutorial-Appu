@@ -21,10 +21,6 @@
 		<charset>UTF-8</charset>
 		<dbunit.data.file>src/test/resources/sample-data.xml</dbunit.data.file>
 
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<struts2.version>2.3.15.1</struts2.version>
-		<spring.version>3.1.3.RELEASE</spring.version>
-		<spring.security.version>3.0.8.RELEASE</spring.security.version>
 		<aspectj.version>1.6.12</aspectj.version>
 		<drools.version>5.3.1.BRMS</drools.version>
 		<jbpm.version>5.3.1.BRMS</jbpm.version>
@@ -33,19 +29,19 @@
 		<mina.version>2.0.7</mina.version>
 		<tomcat.version>6.0.35</tomcat.version>
 		<aether.connector.version>1.13.1</aether.connector.version>
-		<koala.version>2.1.0-SNAPSHOT</koala.version>
+		<koala.version>3.0.0-SNAPSHOT</koala.version>
+		
 		<jdbc.groupId>com.h2database</jdbc.groupId>
 		<jdbc.artifactId>h2</jdbc.artifactId>
-		<jdbc.version>1.3.162</jdbc.version>
-		<jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
+		<jdbc.version>1.3.175</jdbc.version>
 
 		<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
 		<hibernate.show_sql>true</hibernate.show_sql>
 		<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
 		<db.jdbcDriver>org.h2.Driver</db.jdbcDriver>
-		<db.connectionURL>jdbc:h2:~/db/koala-dmt</db.connectionURL>
+		<db.connectionURL>jdbc:h2:mem:testdb</db.connectionURL>
 		<db.username>sa</db.username>
-		<db.password />
+		<db.password/>
 		<db.Type>H2</db.Type>
 		<db.generate.ddl>true</db.generate.ddl>
 	</properties>
@@ -121,6 +117,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+		
+			<dependency>
+				<groupId>org.openkoala.koalacommons</groupId>
+				<artifactId>koala-commons-support</artifactId>
+				<version>${koala.version}</version>
+			</dependency>
 
 			<!-- Specification -->
 			<dependency>
@@ -254,7 +256,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.dayatang.dddlib</groupId>
-				<artifactId>dddlib-jpa</artifactId>
+				<artifactId>dddlib-persistence-jpa</artifactId>
 				<version>${dddlib.version}</version>
 			</dependency>
 			<dependency>
@@ -274,7 +276,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.dayatang.dddlib</groupId>
-				<artifactId>dddlib-querychannel</artifactId>
+				<artifactId>dddlib-query-channel</artifactId>
 				<version>${dddlib.version}</version>
 			</dependency>
 
@@ -449,6 +451,16 @@
 				<groupId>proxool</groupId>
 				<artifactId>proxool-cglib</artifactId>
 				<version>0.9.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-core-asl</artifactId>
+				<version>1.9.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.jackson</groupId>
+				<artifactId>jackson-mapper-asl</artifactId>
+				<version>1.9.2</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
