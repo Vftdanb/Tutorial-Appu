@@ -18,7 +18,7 @@
 	<!-- Spring Listener -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath*:META-INF/spring/root.xml</param-value>
+		<param-value>classpath:META-INF/spring/root.xml</param-value>
 	</context-param>
 	<listener>
 		<listener-class>org.dayatang.ioc.spring.webapp.DayatangContextLoaderListener</listener-class>
