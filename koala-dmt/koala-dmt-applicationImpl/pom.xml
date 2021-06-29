@@ -10,8 +10,19 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.openkoala.dmt</groupId>
+			<artifactId>koala-dmt-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openkoala.dmt</groupId>
+			<artifactId>koala-dmt-application</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+		
+		<!-- <dependency>
 			<groupId>org.dayatang.dddlib</groupId>
 			<artifactId>dddlib-query-channel</artifactId>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 </project>

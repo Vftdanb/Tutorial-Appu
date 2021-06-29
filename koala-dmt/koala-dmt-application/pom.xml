@@ -6,4 +6,13 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>koala-dmt-application</artifactId>
+  
+  	<dependencies>
+		<dependency>
+			<groupId>org.openkoala.dmt</groupId>
+			<artifactId>koala-dmt-core</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
+	</dependencies>
+  
 </project>

@@ -3,6 +3,7 @@ package org.openkoala.dmt.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,6 +22,8 @@ public class DomainsChart extends AbstractEntity {
 	
 	private Set<DomainShape> domainShapes = new HashSet<DomainShape>();
 
+	private Set<Line> lines = new HashSet<Line>();
+	
 	public String getName() {
 		return name;
 	}
@@ -29,13 +32,22 @@ public class DomainsChart extends AbstractEntity {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy = "domainsChart")
+	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL)
 	public Set<DomainShape> getDomainShapes() {
 		return domainShapes;
 	}
 
 	public void setDomainShapes(Set<DomainShape> domainShapes) {
 		this.domainShapes = domainShapes;
+	}
+
+	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL)
+	public Set<Line> getLines() {
+		return lines;
+	}
+
+	public void setLines(Set<Line> lines) {
+		this.lines = lines;
 	}
 
 	@Override
