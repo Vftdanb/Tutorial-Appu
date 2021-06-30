@@ -1,5 +1,6 @@
 package org.openkoala.dmt.domain;
 
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Embedded;
@@ -27,6 +28,8 @@ public abstract class DomainShape extends AbstractEntity {
 
 	private static final long serialVersionUID = 5786291695802079586L;
 
+	private String shapeId;
+	
 	private LeftTopPoint leftTopPoint;
 	
 	private Integer width;
@@ -37,6 +40,15 @@ public abstract class DomainShape extends AbstractEntity {
 
 	private DomainsChart domainsChart;
 	
+	@Column(name = "SHAPE_ID", nullable = false)
+	public String getShapeId() {
+		return shapeId;
+	}
+
+	public void setShapeId(String shapeId) {
+		this.shapeId = shapeId;
+	}
+
 	@Embedded
 	public LeftTopPoint getLeftTopPoint() {
 		return leftTopPoint;
@@ -82,8 +94,7 @@ public abstract class DomainShape extends AbstractEntity {
 
 	@Override
 	public String[] businessKeys() {
-		// TODO Auto-generated method stub
-		return null;
+		return new String[]{shapeId};
 	}
 
 	@Override
@@ -93,12 +104,14 @@ public abstract class DomainShape extends AbstractEntity {
 		if (!(other instanceof DomainShape))
 			return false;
 		DomainShape castOther = (DomainShape) other;
-		return new EqualsBuilder().append(domainsChart, castOther.domainsChart).append(name, castOther.name).isEquals();
+		return new EqualsBuilder().append(domainsChart, castOther.domainsChart)
+				.append(shapeId, castOther.shapeId)
+				.append(name, castOther.name).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(domainsChart).append(name).toHashCode();
+		return new HashCodeBuilder(17, 37).append(domainsChart).append(shapeId).append(name).toHashCode();
 	}
 
 	@Override

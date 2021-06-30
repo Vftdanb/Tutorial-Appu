@@ -18,6 +18,8 @@ public class EntityShape extends DomainShape {
 	
 	private Set<Property> properties = new HashSet<Property>();
 
+	private Boolean isAbstractEntity = false;
+	
 	private Boolean isMappedSuperClass = false;
 	
 	@ElementCollection
@@ -28,6 +30,15 @@ public class EntityShape extends DomainShape {
 
 	public void setProperties(Set<Property> properties) {
 		this.properties = properties;
+	}
+
+	@Column(name = "IS_ABSTRACT_ENTITY")
+	public Boolean getIsAbstractEntity() {
+		return isAbstractEntity;
+	}
+
+	public void setIsAbstractEntity(Boolean isAbstractEntity) {
+		this.isAbstractEntity = isAbstractEntity;
 	}
 
 	@Column(name = "IS_MAPPED_SUPER_CLASS")

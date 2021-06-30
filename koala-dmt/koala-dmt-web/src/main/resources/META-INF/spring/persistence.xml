@@ -50,9 +50,9 @@
         <!-- <property name="entityManagerName" value="dmtEntityManager"/> -->
     </bean>
 
-    <bean id="queryChannel_dmt" class="org.dayatang.querychannel.impl.QueryChannelServiceImpl">
+    <!-- <bean id="queryChannel_dmt" class="org.dayatang.querychannel.impl.QueryChannelServiceImpl">
         <constructor-arg name="repository" ref="repository_dmt" />
-    </bean>
+    </bean> -->
 
 	<bean id="dataSource_dmt" class="org.logicalcobwebs.proxool.ProxoolDataSource">
 		<property name="driver" value="${dmt.db.jdbc.driver}" />
