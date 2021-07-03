@@ -4,7 +4,7 @@ import org.openkoala.dmt.domain.Line;
 import org.openkoala.dmt.domain.LineType;
 
 public class LineDto {
-
+	
 	private LineType lineType;
 	
 	private String fromShapeId;
