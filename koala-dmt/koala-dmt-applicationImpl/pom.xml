@@ -23,7 +23,7 @@
 		<!-- <dependency>
 			<groupId>org.dayatang.dddlib</groupId>
 			<artifactId>dddlib-query-channel</artifactId>
-		</dependency> -->
+		</dependency> --> 
 		
 		<dependency>
 			<groupId>org.springframework</groupId>
