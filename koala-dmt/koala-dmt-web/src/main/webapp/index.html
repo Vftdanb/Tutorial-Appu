@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>领域建模工具</title>
+		<link rel="stylesheet" href="lib/bootstrap-3.1.1/css/bootstrap.css" />
+		<link rel="stylesheet" href="lib/font-awesome-4.0.3/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/layout.css" />
+	</head>
+	<body>
+		<div class="widget-container" id="widgetContainer">
+			<div class="g-head" id="gHead"></div>
+			<div class="g-main" id="gMain">
+				<div class="col-xs-3 u-left">
+					<div class="panel panel-primary" id="projectExplorer">
+						<div class="panel-heading">项目列表</div>
+						<div class="panel-body"></div>
+					</div>
+					<div class="panel panel-primary" id="propertiesExplorer">
+						<div class="panel-heading">属性</div>
+						<div class="panel-body"></div>
+					</div>
+				</div>
+				<div class="col-xs-9 u-right">
+					<div class="panel panel-primary" id="gwtTabLayoutPanel">
+						<div class="panel-heading">
+							 <ul class="nav nav-tabs" id="navTabs">
+					            <li class="active"><a href="#home" data-toggle="tab">主页</a></li>
+					        </ul>
+						</div>
+						<div class="panel-body">
+							 <div class="tab-content" id="tabContent">
+					            <div id="home" class="tab-pane active"></div>
+					        </div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="g-footer" id="gFooter">
+				Copyright @koala, All rights reserved.
+			</div>
+		</div>
+		<script type="text/javascript" src="lib/jquery-1.11.0.min.js" ></script>
+		<script type="text/javascript" src="lib/bootstrap-3.1.1/js/bootstrap.js" ></script>
+		<script src="js/main.js"></script>
+	</body>
+</html>

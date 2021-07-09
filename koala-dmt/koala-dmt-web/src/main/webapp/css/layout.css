@@ -1,0 +1,70 @@
+body {
+	overflow: hidden;
+	height: 100%;
+	background: #e8e8e8 url("../images/pattern.png") repeat;
+}
+.widget-container {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.g-head {
+	background-color: #fff;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.g-main {
+	padding-top: 10px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.g-footer {
+	color: #fff;
+	background-color: #333333;
+	font-size: 1.2em;
+	text-align: center;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.u-left {
+	width: 28%;
+}
+.panel {
+	border-color: #3e85a5
+}
+.panel-primary .panel-heading {
+	-webkit-box-shadow: inset 0 0 2px #2D2D2D;
+	box-shadow: inset 0 0 2px #2D2D2D;
+	font: din;
+	background: #3e85a5;
+	background: -moz-linear-gradient(top, #3e85a5 0%, #0b4e77 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3e85a5), color-stop(100%, #0b4e77));
+	background: -webkit-linear-gradient(top, #3e85a5 0%, #0b4e77 100%);
+	background: -o-linear-gradient(top, #3e85a5 0%, #0b4e77 100%);
+	background: -ms-linear-gradient(top, #3e85a5 0%, #0b4e77 100%);
+	background: linear-gradient(to bottom, #3e85a5 0%, #0b4e77 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3e85a5', endColorstr='#0b4e77', GradientType=0);
+}
+.u-right {
+	width: 72%;
+}
+
+.u-right .panel-heading {
+	padding: 6px 0 0;
+}
+
+.u-right .panel-heading .nav {
+	position: relative;
+	top: 2px;
+	left: 12px;
+}
+.u-right .panel-heading a {
+	padding: 7px 15px;
+	cursor: pointer!important;
+}
