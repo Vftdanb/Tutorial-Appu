@@ -7,7 +7,10 @@ $(function() {
 		$('#gFooter').height(0.05 * height);
 		$('#projectExplorer .panel-body').height(0.36 * height);
 		$('#propertiesExplorer .panel-body').height(0.24 * height);
-		$('#gwtTabLayoutPanel .panel-body').height(0.75 * height);
+		$('#gwtTabLayoutPanel .panel-body').height(0.80 * height);
+		$('.diagram').height($(window).height() * 0.80 - 28);
+		$('.tool-container').height($(window).height() * 0.80 - 28);
+		$('.tool-bar').height($(window).height() * 0.80 - 48);
 	});
 	$(window).trigger('resize');
 
@@ -24,14 +27,14 @@ $(function() {
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
 				"type" : "item",
 				"actionUrl" : "forum"
-			},{
+			}, {
 				"id" : 7,
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
 				"type" : "item",
 				"actionUrl" : "forum"
 			}]
 		}],
-		'icon-class':'red',
+		'icon-class' : 'red',
 		"type" : "folder",
 		"actionUrl" : ""
 	}, {
@@ -47,7 +50,7 @@ $(function() {
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
 				"type" : "item",
 				"actionUrl" : "forum"
-			},{
+			}, {
 				"id" : 7,
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
 				"type" : "item",
@@ -63,14 +66,14 @@ $(function() {
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
 				"type" : "item",
 				"actionUrl" : "forum"
-			},{
+			}, {
 				"id" : 7,
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
 				"type" : "item",
 				"actionUrl" : "forum"
 			}]
 		}],
-		'icon-class':'orange',
+		'icon-class' : 'orange',
 		"type" : "folder",
 		"actionUrl" : ""
 	}]
@@ -83,10 +86,10 @@ $(function() {
 		'selected-icon' : null,
 		'unselected-icon' : null
 	});
-	$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function(){
+	$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function() {
 		var title = $(this).text();
 		var id = $(this).attr('id');
-		openTab('/pages/template.html', title, 'id'+id);
+		openTab('/pages/template.html', title, 'id' + id);
 	});
 });
 
@@ -113,16 +116,30 @@ function openTab(url, title, id) {
 	var contents = $('#tabContent');
 	var content = contents.find('#' + id);
 	if (content.length > 0) {
-		$.get(url).done(function(data) {
-			content.html(data);
-		});
 		tabs.find('a[href="#' + id + '"]').tab('show');
-		tabs.find('a[href="#' + id + '"]').find('span').html(title);
 		return;
 	}
 	content = $('<div id="' + id + '" class="tab-pane"></div>');
 	$.get(url).done(function(data) {
 		content.html(data);
+		content.find('.diagram').height($(window).height() * 0.80 - 28);
+		content.find('.tool-container').height($(window).height() * 0.80 - 28);
+		content.find('.tool-bar').height($(window).height() * 0.80 - 48);
+		content.find('.tool-bar').css('min-height', $(window).height() * 0.80 - 48 + 'px');
+		content.find('[data-toggle="tooltip"]').tooltip();
+		content.find('.tool').on('click', function() {
+			var $this = $(this);
+			content.find('.tool.selected').removeClass('selected');
+			$this.addClass('selected');
+			var img = $this.find('img').attr('src');
+			content.find('.diagram').css('cursor', 'url(' + img + '),auto');
+		});
+		content.find('#scale').on('change', function() {
+			var value = $(this).val();
+			var diagramWidget = content.find('.diagram-widget');
+			diagramWidget.css('transform', 'scale(' + value + ')');
+			diagramWidget.css('-webkit-transform', 'scale(' + value + ')');
+		});
 	});
 	contents.append(content);
 	var tab = $('<li>');
