@@ -35,7 +35,15 @@ public class LeftTopPoint implements ValueObject {
 	public void setY(Integer y) {
 		this.y = y;
 	}
+	
+	public LeftTopPoint() {
+	}
 
+	public LeftTopPoint(Integer x, Integer y) {
+		this.x = x;
+		this.y = y;
+	}
+	
 	@Override
 	public boolean equals(final Object other) {
 		if (this == other)
