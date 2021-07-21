@@ -104,14 +104,14 @@ public abstract class DomainShape extends AbstractEntity {
 		if (!(other instanceof DomainShape))
 			return false;
 		DomainShape castOther = (DomainShape) other;
-		return new EqualsBuilder().append(domainsChart, castOther.domainsChart)
+		return new EqualsBuilder()
 				.append(shapeId, castOther.shapeId)
 				.append(name, castOther.name).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(domainsChart).append(shapeId).append(name).toHashCode();
+		return new HashCodeBuilder(17, 37).append(shapeId).append(name).toHashCode();
 	}
 
 	@Override

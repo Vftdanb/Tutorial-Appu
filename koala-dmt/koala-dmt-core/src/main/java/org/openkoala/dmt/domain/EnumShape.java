@@ -16,7 +16,7 @@ public class EnumShape extends DomainShape {
 	private static final long serialVersionUID = 3649817604378412071L;
 	
 	private List<String> enumItems = new ArrayList<String>();
-
+	
 	@ElementCollection
 	@CollectionTable(name = "ENUM_ITEMS", joinColumns = @JoinColumn(name = "ENUM_ID"))
 	public List<String> getEnumItems() {
