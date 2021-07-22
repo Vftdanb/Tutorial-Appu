@@ -1,0 +1,110 @@
+body{
+	font-family: "微软雅黑";
+}
+#canvas_freamwork{
+	width:800px;
+	height:600px;
+	overflow:auto;
+}
+#uml_canvas{
+	width:1600px;
+	height:1000px;
+	position:relative;
+	background:#CCFFCC;
+	-webkit-transform-origin:0px 0px;
+}
+#uml_canvas .node .name ,#uml_canvas .node .header{
+	cursor:move;
+	text-align:center;
+}
+#uml_canvas .node {
+	min-width:60px;
+	position:absolute;
+	border-radius:2px;
+	padding:1px;
+	border:1px solid #5890c1;
+	font-size:14px;
+}
+#svg_canvas {
+	position:absolute;
+	width:100%;
+	height:100%;
+}
+.actions ,.properties ,.enumItems{
+	border-top:1px #5890c1 solid;
+	min-height:10px;
+}
+
+#tools,#uml_canvas{
+	float:left;
+}
+/*线条的样式*/
+marker path {
+	fill:#FFF;
+	stroke:#5890c1;
+}
+#lines path {
+	stroke-width:2px;
+	stroke:#5890c1;
+}
+#line-template path {
+	stroke:#5890c1;
+	stroke-width:2px;
+	cursor:pointer;
+}
+#template{display:none;}
+#node-template .node{
+	cursor:pointer;
+	width:180px;
+	position:relative;
+	margin:10px;
+	-webkit-transform:scale(0.5);
+	-moz-transform:scale(0.5);
+}
+.node {
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#bbb));
+}
+.property div{
+	height:18px;
+	line-height:18px;
+	display:inline-block;
+}
+.property:before{
+	content:"+ ";
+}
+.propertyName,.propertyType,.relation{min-width:30px;}
+.properties,.actions{
+	
+}
+.node .action div{
+	display	: inline-block;
+}
+.node .action:before{content:"+ ";vertical-align:middle;}
+/*画布工具栏*/
+#tools {
+	border:#5890C1 1px solid;
+}
+#tools div {
+	padding-left:20px;
+	height 	: 17px;
+	margin 	: 5px;
+	cursor 	: pointer;
+	vertical-align: middle;
+}
+#tools div span{
+	display:block;
+	height:17px;
+}
+#tools .cursor{background:url("icons/cursor.png") no-repeat 0 1px;}
+#tools .entity{background:url("icons/class.png") no-repeat 0 1px;}
+#tools .interface{background:url("icons/interface.gif") no-repeat 0 1px;}
+#tools .enum{background:url("icons/enum.png") no-repeat 0 1px;}
+#tools .attribute{background:url("icons/attribute.png") no-repeat 0 1px;}
+#tools .enum_literal{background:url("icons/enum_literal.png") no-repeat 0 1px;}
+#tools .action{background:url("icons/action.png") no-repeat 0 1px;}
+#tools .extends{background:url("icons/generalizatic.gif") no-repeat 0 1px;}
+#tools .implement{background:url("icons/realization.gif") no-repeat 0 1px;}
+#tools .aggregate{background:url("icons/aggregate.gif") no-repeat 0 1px;}
+#tools .compose{background:url("icons/compose.gif") no-repeat 0 1px;}
+#tools .associate{background:url("icons/associate.gif") no-repeat 0 1px;}
+#tools .current-tool{box-shadow: 0 0 10px #000000;}
