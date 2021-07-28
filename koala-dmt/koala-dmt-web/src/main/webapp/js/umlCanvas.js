@@ -1,16 +1,12 @@
 /*主类*/
 function umlCanvas(){
-	var debugDiv = $("#debug");
-	var debug = function(text){
-		debugDiv.html(text+"");
-	};
-	
 	/*画图工具*/
 	var commonTool 	= this.commonTool; 	//
 	var svgGraph 	= this.svgGraph;	//svg画线工具
 	var domGraph 	= this.domGraph;	//画html节点的工具
 	
 	/*全局变量*/
+	var zoom			= 1;						//uml图的缩放值
 	var svgLines 		= $("#lines");    			//线条容器
 	var umlCanvas 		= $("#uml_canvas");			//所有图形元素的容器
 	var canvas_offset 	= umlCanvas.offset();		//总容器的位置

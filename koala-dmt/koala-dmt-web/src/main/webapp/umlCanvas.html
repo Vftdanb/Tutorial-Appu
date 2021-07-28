@@ -6,37 +6,38 @@
 		<script type="text/javascript" src="js/jquery-2.1.0.min.js"></script>
 		<link type="text/css" rel="stylesheet" href="css/umlCanvas.css"/>
 		<style>
-			.folder span{
+			.folder div span{
+				display:none!important;
 			}
 		</style>
 	</head>
 	<body>
+		<!-- 缩放 -->
+		<select onchange="zoom(this)">
+			<option value="0.5">50%</option>
+			<option value="1">100%</option>
+			<option value="1.5">150%</option>
+			<option value="2">200%</option>
+			<option value="2.5">250%</option>
+			<option value="3">300%</option>
+		</select>
 		<div id="tools" class="folder">
-			<div style="background:url('icons/swich.png') no-repeat center center;" class="swich_tool_view"></div>
-			<div class="node cursor"><span>cursor</span></div>
+			<div style="background:url('css/icons/swich.png') no-repeat left center;" class="swich_tool_view" title="切换工具栏视图"></div>
+			<div class="node cursor"></div>
 			<hr/>
-			<div class="node entity"><span>entiry</span></div>
-			<div class="node interface"><span>interface</span></div>
-			<div class="node enum"><span>enum</span></div>
+			<div class="node entity"><span>实体</span></div>
+			<div class="node interface"><span>接口</span></div>
+			<div class="node enum"><span>枚举</span></div>
 			<hr/>
-			<div class="component attribute"><span>attribute</span></div>
-			<div class="component enum_literal"><span>enum literal</span></div>
-			<div class="component action"><span>action</span></div>
+			<div class="component attribute"><span>属性</span></div>
+			<div class="component enum_literal"><span>枚举项</span></div>
+			<div class="component action"><span>行为</span></div>
 			<hr/>
-			<div class="line extends"><span>extends</span></div>
-			<div class="line implement"><span>implement</span></div>
-			<div class="line aggregate"><span>aggregate</span></div>
-			<div class="line compose"><span>compose</span></div>
-			<div class="line associate"><span>associate</span></div>
-			<!-- 缩放 -->
-			<select onchange="zoom(this)">
-				<option value="0.5">50%</option>
-				<option value="1">100%</option>
-				<option value="1.5">150%</option>
-				<option value="2">200%</option>
-				<option value="2.5">250%</option>
-				<option value="3">300%</option>
-			</select>
+			<div class="line extends"><span>继承</span></div>
+			<div class="line implement"><span>实现</span></div>
+			<div class="line aggregate"><span>聚合</span></div>
+			<div class="line compose"><span>组合</span></div>
+			<div class="line associate"><span>关联</span></div>
 		</div>
 		<div id="canvas_freamwork">
 			<div id="uml_canvas">
@@ -141,6 +142,24 @@
 					
 				</div>
 			</div>
+			
+		</div>
+		<!-- 各种右键编辑菜单 -->
+		<div id="edit_contextmenus" style="display:none">
+			<!-- 添加节点成员的右键菜单 -->
+			<div id="add_members" class="contextmenu">
+				<div class="contextmenu_item">asdf</div>
+				<div class="contextmenu_item">asdf</div>
+				<div class="contextmenu_item">asdf</div>
+				<div class="contextmenu_item">asdf</div>
+				<div class="contextmenu_item">asdf</div>
+				<div class="contextmenu_item">asdf</div>
+			</div>
+			
+			<!--  -->
+			<div id="">
+				
+			</div>
 		</div>
 		<datalist id="property_type_tip">
 			<option value="String"></option>
@@ -160,10 +179,16 @@
 				var value = $(t).val();
 				$("#uml_canvas").css("transform","scale("+value+")");
 			}
-			$("#tools .swich_tool_view").tiggle(
-				function(){$(this).parent().addClass("icon_text_view");},
-				function(){$(this).parent().removeClass("icon_single_view");}
-			);
+			$("#tools .swich_tool_view").click(function(){
+				var thiz = $(this);
+				if($(this).data("closed")){
+					thiz.data("closed",false);
+					thiz.parent().addClass("folder");
+				} else {
+					thiz.data("closed",true);
+					thiz.parent().removeClass("folder");
+				}
+			});
 		</script>
 	</body>
 </html>
