@@ -2,7 +2,7 @@ body{
 	font-family: "微软雅黑";
 }
 #canvas_freamwork{
-	width:800px;
+	width:700px;
 	height:600px;
 	overflow:auto;
 }
@@ -124,7 +124,7 @@ marker path {
 .contextmenu_item{
 	padding-left:19px;
 	height:17px;
-	background:;
-	position:relative;
 	background:#CCFFFF url("icons/compose.gif") no-repeat 0 0;
+	min-width:0px;
+	overflow:hidden;
 }
