@@ -8,9 +8,9 @@ $(function() {
 		$('#projectExplorer .panel-body').height(0.36 * height);
 		$('#propertiesExplorer .panel-body').height(0.24 * height);
 		$('#gwtTabLayoutPanel .panel-body').height(0.80 * height);
-		$('.diagram').height($(window).height() * 0.80 - 28);
-		$('.tool-container').height($(window).height() * 0.80 - 28);
-		$('.tool-bar').height($(window).height() * 0.80 - 48);
+//		$('.diagram').height($(window).height() * 0.80 - 28);
+//		$('.tool-container').height($(window).height() * 0.80 - 28);
+//		$('.tool-bar').height($(window).height() * 0.80 - 48);
 	});
 	$(window).trigger('resize');
 
@@ -122,24 +122,24 @@ function openTab(url, title, id) {
 	content = $('<div id="' + id + '" class="tab-pane"></div>');
 	$.get(url).done(function(data) {
 		content.html(data);
-		content.find('.diagram').height($(window).height() * 0.80 - 28);
-		content.find('.tool-container').height($(window).height() * 0.80 - 28);
-		content.find('.tool-bar').height($(window).height() * 0.80 - 48);
-		content.find('.tool-bar').css('min-height', $(window).height() * 0.80 - 48 + 'px');
-		content.find('[data-toggle="tooltip"]').tooltip();
-		content.find('.tool').on('click', function() {
-			var $this = $(this);
-			content.find('.tool.selected').removeClass('selected');
-			$this.addClass('selected');
-			var img = $this.find('img').attr('src');
-			content.find('.diagram').css('cursor', 'url(' + img + '),auto');
-		});
-		content.find('#scale').on('change', function() {
-			var value = $(this).val();
-			var diagramWidget = content.find('.diagram-widget');
-			diagramWidget.css('transform', 'scale(' + value + ')');
-			diagramWidget.css('-webkit-transform', 'scale(' + value + ')');
-		});
+//		content.find('.diagram').height($(window).height() * 0.80 - 28);
+//		content.find('.tool-container').height($(window).height() * 0.80 - 28);
+//		content.find('.tool-bar').height($(window).height() * 0.80 - 48);
+//		content.find('.tool-bar').css('min-height', $(window).height() * 0.80 - 48 + 'px');
+//		content.find('[data-toggle="tooltip"]').tooltip();
+//		content.find('.tool').on('click', function() {
+//			var $this = $(this);
+//			content.find('.tool.selected').removeClass('selected');
+//			$this.addClass('selected');
+//			var img = $this.find('img').attr('src');
+//			content.find('.diagram').css('cursor', 'url(' + img + '),auto');
+//		});
+//		content.find('#scale').on('change', function() {
+//			var value = $(this).val();
+//			var diagramWidget = content.find('.diagram-widget');
+//			diagramWidget.css('transform', 'scale(' + value + ')');
+//			diagramWidget.css('-webkit-transform', 'scale(' + value + ')');
+//		});
 	});
 	contents.append(content);
 	var tab = $('<li>');
