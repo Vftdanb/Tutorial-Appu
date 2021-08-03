@@ -1,210 +1,279 @@
-<div>
-	<div id="tools" class="folder">
-		<div style="background:url('icons/swich.png') no-repeat center center;" class="swich_tool_view"></div>
-		<div class="node cursor">
-			<span>cursor</span>
-		</div>
-		<hr/>
-		<div class="node entity">
-			<span>entiry</span>
-		</div>
-		<div class="node interface">
-			<span>interface</span>
-		</div>
-		<div class="node enum">
-			<span>enum</span>
-		</div>
-		<hr/>
-		<div class="component attribute">
-			<span>attribute</span>
-		</div>
-		<div class="component enum_literal">
-			<span>enum literal</span>
-		</div>
-		<div class="component action">
-			<span>action</span>
-		</div>
-		<hr/>
-		<div class="line extends">
-			<span>extends</span>
-		</div>
-		<div class="line implement">
-			<span>implement</span>
-		</div>
-		<div class="line aggregate">
-			<span>aggregate</span>
-		</div>
-		<div class="line compose">
-			<span>compose</span>
-		</div>
-		<div class="line associate">
-			<span>associate</span>
-		</div>
-		<!-- 缩放 -->
-		<select onchange="zoom(this)">
-			<option value="0.5">50%</option>
-			<option value="1">100%</option>
-			<option value="1.5">150%</option>
-			<option value="2">200%</option>
-			<option value="2.5">250%</option>
-			<option value="3">300%</option>
-		</select>
-	</div>
-	<div id="canvas_freamwork">
-		<div id="uml_canvas">
-			<!-- 线条画布 -->
-			<svg id="svg_canvas">
-				<defs>
-					<!-- 空心三角形 -->
-					<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
-						<path d="M10,10 L16,13 L10,16 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
-					</marker>
-					<!-- 空心菱形 -->
-					<marker id="arrow2" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
-						<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
-					</marker>
-					<!-- 实心菱形 -->
-					<marker id="arrow3" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
-						<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
-					</marker>
-				</defs>
-				<g id="lines"></g>
-			</svg>
-			<!-- 节点画布 -->
-		</div>
-	</div>
-	<!-- uml元素模板 -->
-	<div id="template">
-		<!-- 线条模板 -->
-		<svg id="line-template" style="">
-			<!-- 继承关系连线模板 -->
-			<g class="line extends">
-				<path d="M10,20 L80,20" style="marker-end:url(#arrow1)"></path>
-				<text x="20" y="30">
-					说明文字
-				</text>
-			</g>
-			<!-- 实现关系连线模板 -->
-			<g class="line implement">
-				<path d="M10,70 L80,70" style="marker-end:url(#arrow1);stroke-dasharray:5"></path>
-			</g>
-			<!-- 聚合关系连线模板 -->
-			<g class="line aggregate">
-				<path d="M0,0 L0,0" style="marker-start:url(#arrow2)"></path>
-			</g>
-			<!-- 组合关系连线模板  -->
-			<g class="line compose">
-				<path d="M0,0 L0,0" style="marker-start:url(#arrow3)"></path>
-			</g>
-			<!-- 关联关系连线模板  -->
-			<g class="line associate">
-				<path d="M0,0 L0,0"></path>
-			</g>
-		</svg>
-
-		<!-- 节点模板 -->
-		<div id="node-template">
-			<!-- 实体模板 -->
-			<div class="node entity">
-				<div class="name">
-					User
-				</div>
-				<div class="properties"></div>
-				<div class="actions"></div>
-			</div>
-
-			<!-- 接口模板 -->
-			<div class="node interface">
-				<div class="header">
-					«interface»
-				</div>
-				<div class="name">
-					接口
-				</div>
-				<div class="actions"></div>
-			</div>
-
-			<!-- 枚举模板  -->
-			<div class="node enum">
-				<div class="header">
-					«enum»
-				</div>
-				<div class="name">
-					enum
-				</div>
-				<div class="enumItems"></div>
-			</div>
-
-			<!-- 属性模板  -->
-			<div class="property">
-				<div class="propertyName">
-					emails
-				</div>
-				<div>
-					:
-				</div>
-				<div class="propertyType">
-					Set
-				</div>
-			</div>
-
-			<!-- 枚举项模板 -->
-			<div class="enumItem"></div>
-
-			<!-- 行为模板 -->
-			<div class="action">
-				<div class="actionName">
-					assignPost
-				</div>
-				<div class="parameters">
-					<span>(</span>
-					<span>)</span>
-				</div>
-				<span>:</span>
-				<div class="returnType">
-					void
-				</div>
-			</div>
-
-			<!-- 行为的参数模板 -->
-			<div class="parameter" sortNumber="1">
-				<div class="parameterType">
-					Post
-				</div>
-				<div class="parameterName">
-					post
-				</div>
-			</div>
-		</div>
-
-		<div id="edit_windows">
-			<div id="edit_entity_window">
-
-			</div>
-		</div>
-	</div>
-	<datalist id="property_type_tip">
-		<option value="String"></option>
-		<option value="Set"></option>
-		<option value="List"></option>
-		<option value="Date"></option>
-		<option value="Long"></option>
-		<option value="Integer"></option>
-		<option value="oschinaAoscgitAinline"></option>
-	</datalist>
+<!--<div>
+<div class="top-bar">
+<i class="fa fa-search"></i>
+<select id="scale" class="scale">
+<option value="0.25">25%</option>
+<option value="0.5">50%</option>
+<option value="0.75">75%</option>
+<option value="1">100%</option>
+<option value="1.25">125%</option>
+<option value="1.5">150%</option>
+<option value="2">200%</option>
+</select>
 </div>
+<div>
+<div class="tool-container">
+<div class="shrink-icon">
+<i class="fa fa-angle-double-right"></i>
+</div>
+<div class="tool-bar">
+<div class="tool">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABVUlEQVR42mNgQAJhYWG+oaGhWgzkgsDAwIyioqJqsg0JCAjI/A8E+fn5Nb6+vtokG+Dl5ZX9HwqysrJqSTbEzc0t9z8SyMjIqAeK6RBtgLOzc/5/NJCamtro4uKiS5QBtra2hf+xgPj4+GagnB5BA6ysrIr/4wDR0dEt5ubm+A0xMTEp/Y8HREREtBkaGurjNEBfX78CWcP379+/Ojg41IPEYdjAwCAKpwEaGhpVII1v375939nZuRLEnjt37k41NTV9ogJRQUGhDqQZGHX9QHb8+fPn73wDAmNj43wVFRV2ggZISUk12tvbT5SRkdEVExMTBwbcDJArpkyZshcoZ0jQACEhoWSgRn0kfvCZM2fuff369ZusrGwhMb5gBGIWIOYEYn42NjaNoKCgOSBXGBkZTQaJATErPgOYgJgDZDkQywKxuoCAQLyent5UoGHBUDEuZA0A0FnnRv32IMcAAAAASUVORK5CYII=">
+<span></span>
+</div>
+<div class="GFVVQ1VPM"></div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new package (type 'p')">
+<img src="data:image/gif;base64,R0lGODlhEAAQAKIAAPD3/+32//P5/+bz/yBooNDm8P///////yH5BAEAAAcALAAAAAAQABAAAAMzeLrc/jAyQiuJxGh9of2fQhRkaZLdOKxsO6SFK8NBbd8BDOx8D8CCoHAoSIGOkqRyuUgAADs=">
+<span><i>P</i>ackage</span>
+</div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new class (type 'c')">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAApElEQVR42mNggIKCBUf+B7RsA+LtYNofTG//798KpKEYJAbDIPUMyMC/edv/hy+/EI39mreiGuDbsOX/i/fficZ+jVswDXjz6SfRGKsBH77+IhpjNeDrjz9EY0wD6jf///X7L9HYB6gexQCfuo3///79RzT2rtuEaYB37QYg3vjfqxaV7QUXA9EbwHIg9RgGkBKItDGAVDzIvADKXaQ4HyM3kgsAzeiNbRsgqAYAAAAASUVORK5CYII=">
+<span><i>C</i>lass</span>
+</div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new attribute (type 'a')">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA3ElEQVR42mNgGAVgkDXr0H9SMYoBqdMO/P/77z/ROHX6AVQD4ibt+//r7///cZP2QvDEvdjZQAxSFw+kUQwI69n1/xtQIqxn5/+H3//jxKEgdX+A6np3oRrg27rt/6ff//+DaJBCEBuM/6DSvm3b4DSKAc71m/6/+fX/v3PDJrABb4HsN1D8FoZ/QuRBYi5A9SgGWFWu//8cqMCqYt1/q0rs2Boq9wKkDkijGGBYsvr/kx///z8G4idAF4DYKBgq9hjKNypejWqAdv6K/1pADKK185AwNj5UbBhlAwB7tm/d60a+TAAAAABJRU5ErkJggg==">
+<span><i>A</i>ttribute</span>
+</div>
+<div class="GFVVQ1VPM"></div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new generalization (type 'z')">
+<img src="data:image/gif;base64,R0lGODlhEAAQALMAAEB4pLDH2SBilNDe6WCPs8DT4fD0+BBWjYClwgBLhaC80v///wAAAAAAAAAAAAAAACH5BAEAAAsALAAAAAAQABAAAAQ9cMlJp0Gq6nsS0hZyAKIBLoEAFAt5LsoxLIVgvoQMZK+S5IIXLJFR8EC+Y48olCSbQ+Xp2QwwoYMAdEuJAAA7">
+<span>Generali<i>z</i>ation</span>
+</div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new realization (type 'r')">
+<img src="data:image/gif;base64,R0lGODlhEAAQALMAAEB4pCBilNDe6cDT4eDp8HCauzBtnLDH2QBLhYClwvD0+BBWjaC80v///wAAAAAAACH5BAEAAA0ALAAAAAAQABAAAARAsMlJp0qs6rtQ0layAKICNkcADA15NswiNENgvoUMZC+D5IFXg4DIMHgvglASuwkPxaVEcZAyDFJUVCqoZr+NCAA7">
+<span><i>R</i>ealization</span>
+</div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new dependency (type 'y')">
+<img src="data:image/gif;base64,R0lGODlhEAAQALMAALDH2fD0+ODp8GCPs8DT4RBWjXCau9De6TBtnABLhUB4pKC80v///wAAAAAAAAAAACH5BAEAAAwALAAAAAAQABAAAAQwkMlJq7Uqm1vJSApHCckQikzACMTJLYWKMkCyzFIA4AuC07bfYTdb3HhB3vHHbEYAADs=">
+<span>Dependenc<i>y</i></span>
+</div>
+<div class="GFVVQ1VPM"></div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new association (type 's')">
+<img src="data:image/gif;base64,R0lGODlhEAAQAKIAALDH2fD0+ABLhaC80v///wAAAAAAAAAAACH5BAEAAAQALAAAAAAQABAAAAMiSLrc/gQE2IYAdNmR1e7E14kZSZkQ+qgO2wACBwYYaN9MAgA7">
+<span>A<i>s</i>sociation</span>
+</div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new composition (type 't')">
+<img src="data:image/gif;base64,R0lGODlhEAAQAKIAACBooJCxyqC80rDH2dDe6f///wAAAAAAACH5BAEAAAUALAAAAAAQABAAAAMlWLrMAi2qR2Sj1oGa5+4e12EgOX5ggEpA2w6d24IyFMs0Du5KAgA7">
+<span>Composi<i>t</i>ion</span>
+</div>
+<div class="tool" data-toggle="tooltip" data-placement="right" title="Create a new aggregation (type 'g')">
+<img src="data:image/gif;base64,R0lGODlhEAAQAKIAACBooJCxyqC80rDH2dDe6f///////wAAACH5BAEAAAYALAAAAAAQABAAAAMpaLrMAi2qR2Sj1oGa5+4e12EgOX5ggEpA2w4dUMxQPBd1JtOg24LARQIAOw==">
+<span>A<i>g</i>gregation</span>
+</div>
+</div>
+</div>
+<div class="diagram">
+<div class="diagram-widget">
+
+</div>
+</div>
+</div>
+</div>-->
+<div id="tools" class="folder">
+	<div style="background:url('icons/swich.png') no-repeat center center;" class="swich_tool_view"></div>
+	<div class="node cursor">
+		<span>cursor</span>
+	</div>
+	<hr/>
+	<div class="node entity">
+		<span>entiry</span>
+	</div>
+	<div class="node interface">
+		<span>interface</span>
+	</div>
+	<div class="node enum">
+		<span>enum</span>
+	</div>
+	<hr/>
+	<div class="component attribute">
+		<span>attribute</span>
+	</div>
+	<div class="component enum_literal">
+		<span>enum literal</span>
+	</div>
+	<div class="component action">
+		<span>action</span>
+	</div>
+	<hr/>
+	<div class="line extends">
+		<span>extends</span>
+	</div>
+	<div class="line implement">
+		<span>implement</span>
+	</div>
+	<div class="line aggregate">
+		<span>aggregate</span>
+	</div>
+	<div class="line compose">
+		<span>compose</span>
+	</div>
+	<div class="line associate">
+		<span>associate</span>
+	</div>
+	<!-- 缩放 -->
+	<select onchange="zoom(this)">
+		<option value="0.5">50%</option>
+		<option value="1">100%</option>
+		<option value="1.5">150%</option>
+		<option value="2">200%</option>
+		<option value="2.5">250%</option>
+		<option value="3">300%</option>
+	</select>
+</div>
+<div id="canvas_freamwork">
+	<div id="uml_canvas">
+		<!-- 线条画布 -->
+		<svg id="svg_canvas">
+			<defs>
+				<!-- 空心三角形 -->
+				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
+					<path d="M10,10 L16,13 L10,16 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
+				</marker>
+				<!-- 空心菱形 -->
+				<marker id="arrow2" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
+					<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
+				</marker>
+				<!-- 实心菱形 -->
+				<marker id="arrow3" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
+					<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
+				</marker>
+			</defs>
+			<g id="lines"></g>
+		</svg>
+		<!-- 节点画布 -->
+	</div>
+</div>
+<!-- uml元素模板 -->
+<div id="template">
+	<!-- 线条模板 -->
+	<svg id="line-template" style="">
+		<!-- 继承关系连线模板 -->
+		<g class="line extends">
+			<path d="M10,20 L80,20" style="marker-end:url(#arrow1)"></path>
+			<text x="20" y="30">
+				说明文字
+			</text>
+		</g>
+		<!-- 实现关系连线模板 -->
+		<g class="line implement">
+			<path d="M10,70 L80,70" style="marker-end:url(#arrow1);stroke-dasharray:5"></path>
+		</g>
+		<!-- 聚合关系连线模板 -->
+		<g class="line aggregate">
+			<path d="M0,0 L0,0" style="marker-start:url(#arrow2)"></path>
+		</g>
+		<!-- 组合关系连线模板  -->
+		<g class="line compose">
+			<path d="M0,0 L0,0" style="marker-start:url(#arrow3)"></path>
+		</g>
+		<!-- 关联关系连线模板  -->
+		<g class="line associate">
+			<path d="M0,0 L0,0"></path>
+		</g>
+	</svg>
+
+	<!-- 节点模板 -->
+	<div id="node-template">
+		<!-- 实体模板 -->
+		<div class="node entity">
+			<div class="name">
+				User
+			</div>
+			<div class="properties"></div>
+			<div class="actions"></div>
+		</div>
+
+		<!-- 接口模板 -->
+		<div class="node interface">
+			<div class="header">
+				«interface»
+			</div>
+			<div class="name">
+				接口
+			</div>
+			<div class="actions"></div>
+		</div>
+
+		<!-- 枚举模板  -->
+		<div class="node enum">
+			<div class="header">
+				«enum»
+			</div>
+			<div class="name">
+				enum
+			</div>
+			<div class="enumItems"></div>
+		</div>
+
+		<!-- 属性模板  -->
+		<div class="property">
+			<div class="propertyName">
+				emails
+			</div>
+			<div>
+				:
+			</div>
+			<div class="propertyType">
+				Set
+			</div>
+		</div>
+
+		<!-- 枚举项模板 -->
+		<div class="enumItem"></div>
+
+		<!-- 行为模板 -->
+		<div class="action">
+			<div class="actionName">
+				assignPost
+			</div>
+			<div class="parameters">
+				<span>(</span>
+				<span>)</span>
+			</div>
+			<span>:</span>
+			<div class="returnType">
+				void
+			</div>
+		</div>
+
+		<!-- 行为的参数模板 -->
+		<div class="parameter" sortNumber="1">
+			<div class="parameterType">
+				Post
+			</div>
+			<div class="parameterName">
+				post
+			</div>
+		</div>
+	</div>
+
+	<div id="edit_windows">
+		<div id="edit_entity_window">
+
+		</div>
+	</div>
+</div>
+<datalist id="property_type_tip">
+	<option value="String"></option>
+	<option value="Set"></option>
+	<option value="List"></option>
+	<option value="Date"></option>
+	<option value="Long"></option>
+	<option value="Integer"></option>
+	<option value="oschinaAoscgitAinline"></option>
+</datalist>
 <script type="text/javascript">
 	new umlCanvas();
+
 	function zoom(t) {
 		var value = $(t).val();
 		$("#uml_canvas").css("transform", "scale(" + value + ")");
 	}
-	$(function(){
-		$("#tools .swich_tool_view").toggle(function() {
-			$(this).parent().addClass("icon_text_view");
-		}, function() {
-			$(this).parent().removeClass("icon_single_view");
-		});
-	});
 
+
+	$("#tools .swich_tool_view").tiggle(function() {
+		$(this).parent().addClass("icon_text_view");
+	}, function() {
+		$(this).parent().removeClass("icon_single_view");
+	}); 
 </script>
