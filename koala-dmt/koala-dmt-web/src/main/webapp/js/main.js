@@ -8,9 +8,9 @@ $(function() {
 		$('#projectExplorer .panel-body').height(0.36 * height);
 		$('#propertiesExplorer .panel-body').height(0.24 * height);
 		$('#gwtTabLayoutPanel .panel-body').height(0.80 * height);
-//		$('.diagram').height($(window).height() * 0.80 - 28);
-//		$('.tool-container').height($(window).height() * 0.80 - 28);
-//		$('.tool-bar').height($(window).height() * 0.80 - 48);
+		//		$('.diagram').height($(window).height() * 0.80 - 28);
+		//		$('.tool-container').height($(window).height() * 0.80 - 28);
+		//		$('.tool-bar').height($(window).height() * 0.80 - 48);
 	});
 	$(window).trigger('resize');
 
@@ -122,24 +122,23 @@ function openTab(url, title, id) {
 	content = $('<div id="' + id + '" class="tab-pane"></div>');
 	$.get(url).done(function(data) {
 		content.html(data);
-//		content.find('.diagram').height($(window).height() * 0.80 - 28);
-//		content.find('.tool-container').height($(window).height() * 0.80 - 28);
-//		content.find('.tool-bar').height($(window).height() * 0.80 - 48);
-//		content.find('.tool-bar').css('min-height', $(window).height() * 0.80 - 48 + 'px');
-//		content.find('[data-toggle="tooltip"]').tooltip();
-//		content.find('.tool').on('click', function() {
-//			var $this = $(this);
-//			content.find('.tool.selected').removeClass('selected');
-//			$this.addClass('selected');
-//			var img = $this.find('img').attr('src');
-//			content.find('.diagram').css('cursor', 'url(' + img + '),auto');
-//		});
-//		content.find('#scale').on('change', function() {
-//			var value = $(this).val();
-//			var diagramWidget = content.find('.diagram-widget');
-//			diagramWidget.css('transform', 'scale(' + value + ')');
-//			diagramWidget.css('-webkit-transform', 'scale(' + value + ')');
-//		});
+		content.find('#canvas_freamwork').height($(window).height()*0.75).css('width', '91.3%');
+		content.find('#tools').height($(window).height()*0.75).css('width', '8.7%');
+		new umlCanvas();
+		function zoom(t) {
+			var value = $(t).val();
+			content.find("#uml_canvas").css("transform", "scale(" + value + ")");
+		}
+		content.find("#tools .swich_tool_view").click(function() {
+			var thiz = $(this);
+			if ($(this).data("closed")) {
+				thiz.data("closed", false);
+				thiz.parent().addClass("folder");
+			} else {
+				thiz.data("closed", true);
+				thiz.parent().removeClass("folder");
+			}
+		});
 	});
 	contents.append(content);
 	var tab = $('<li>');

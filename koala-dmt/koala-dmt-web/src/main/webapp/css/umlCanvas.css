@@ -92,16 +92,16 @@ marker path {
 	display:block;
 	height:17px;
 }
-#tools .cursor{background:url("../icons/cursor.png") no-repeat 0 1px;}
-#tools .entity{background:url("../icons/class.png") no-repeat 0 1px;}
-#tools .interface{background:url("../icons/interface.gif") no-repeat 0 1px;}
-#tools .enum{background:url("../icons/enum.png") no-repeat 0 1px;}
-#tools .attribute{background:url("../icons/attribute.png") no-repeat 0 1px;}
-#tools .enum_literal{background:url("../icons/enum_literal.png") no-repeat 0 1px;}
-#tools .action{background:url("../icons/action.png") no-repeat 0 1px;}
-#tools .extends{background:url("../icons/generalizatic.gif") no-repeat 0 1px;}
-#tools .implement{background:url("../icons/realization.gif") no-repeat 0 1px;}
-#tools .aggregate{background:url("../icons/aggregate.gif") no-repeat 0 1px;}
-#tools .compose{background:url("../icons/compose.gif") no-repeat 0 1px;}
-#tools .associate{background:url("../icons/associate.gif") no-repeat 0 1px;}
+#tools .cursor{background:url("../images/icons/cursor.png") no-repeat 0 1px;}
+#tools .entity{background:url("../images/icons/class.png") no-repeat 0 1px;}
+#tools .interface{background:url("../images/icons/interface.gif") no-repeat 0 1px;}
+#tools .enum{background:url("../images/icons/enum.png") no-repeat 0 1px;}
+#tools .attribute{background:url("../images/icons/attribute.png") no-repeat 0 1px;}
+#tools .enum_literal{background:url("../images/icons/enum_literal.png") no-repeat 0 1px;}
+#tools .action{background:url("../images/icons/action.png") no-repeat 0 1px;}
+#tools .extends{background:url("../images/icons/generalizatic.gif") no-repeat 0 1px;}
+#tools .implement{background:url("../images/icons/realization.gif") no-repeat 0 1px;}
+#tools .aggregate{background:url("../images/icons/aggregate.gif") no-repeat 0 1px;}
+#tools .compose{background:url("../images/icons/compose.gif") no-repeat 0 1px;}
+#tools .associate{background:url("../images/icons/associate.gif") no-repeat 0 1px;}
 #tools .current-tool{box-shadow: 0 0 10px #000000;}
