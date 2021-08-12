@@ -175,13 +175,11 @@
 			</div>
 		</div>
 		
-		<div id="test">测试插件</div>
 		<script type="text/javascript" src="js/tool.js"></script>
-		<script type="text/javascript" src="js/umlCanvas.js"></script>
+		<script type="text/javascript" src="js/jqueryUmlCanvas.js"></script>
 		<script type="text/javascript" src="plugins/inlineedit/jquery.miniedit.js"></script>
-		<script type="text/javascript" src="js/umlCanvasProtorype.js"></script>
 		<script type="text/javascript">
-			new umlCanvas();
+			$("#canvas1").umlCanvas();
 			
 			function zoom(t){
 				var value = $(t).val();
@@ -197,8 +195,6 @@
 					thiz.parent().removeClass("folder");
 				}
 			});
-			/*重构示例*/
-			$("#test").umlCanvas2();
 		</script>
 	</body>
 </html>

@@ -1,5 +1,7 @@
 /*主类*/
 function umlCanvas(){
+	var thiz = $("#canvas1");
+	
 	/*画图工具*/
 	var commonTool 	= this.commonTool; 	//
 	var svgGraph 	= this.svgGraph;	//svg画线工具
@@ -7,17 +9,17 @@ function umlCanvas(){
 	
 	/*全局变量*/
 	var zoom			= 1;						//uml图的缩放值
-	var svgLines 		= $("#lines");    			//线条容器
-	var umlCanvas 		= $("#uml_canvas");			//所有图形元素的容器
-	var canvas_offset 	= umlCanvas.offset();		//总容器的位置
+	var svgLines 		= thiz.find(".uml_lines");  //线条容器
+	var umlCanvas 		= thiz.find(".uml_canvas");	//所有图形元素的容器
+	var toolBar			= $(".tools");				//切换工具的工具栏
+	var canvas_offset	= umlCanvas.offset();		//总容器的位置
 	var focusItem 		= null;						//当前被选中的元素
-	var toolBar			= $("#tools");			//切换工具的工具栏
 	var curTool			= {type:"cursor",name:null};//当前的工具（currentTool）
 	var focusItem		= null;						//当前被选中的节点或线条
 	
 	//全局缓存
-	var lines 		= []; 	//页面上的所有线条对象以及所有线条的控制数据(json格式)
-	var nodes 		= []; 	//页面上的所有节点对象以及所有节点的控制数据(json格式)
+	var lines 		= {}; 	//页面上的所有线条对象以及所有线条的控制数据(json对象)
+	var nodes 		= {}; 	//页面上的所有节点对象以及所有节点的控制数据(json对象)
 	
 	
 	/*拖动鼠标画连线*/
@@ -95,15 +97,26 @@ function umlCanvas(){
 	
 	/*点击节点，添加属性或行为*/
 	umlCanvas.delegate(".node","click",function(e){
-		if(curTool.name == "property"){	//添加属性
-			$(this).find(".properties").append($("#node-template .property").clone());
-		} else if(curTool.name == "action"){ //添加行为
-			$(this).find(".actions").append($("#node-template .action").clone());
+		if(curTool.name == "property"){			//添加属性
+			addProperty($(this));
+		} else if(curTool.name == "action"){ 	//添加行为
+			addAction($(this));
 		}
 		var relatedLines = commonTool.findRelatedLines($(this).attr("id"),lines);
 		svgGraph.resetLines($(this),nodes,lines,relatedLines.outLines,relatedLines.inLines);
 		
 		swichTool("cursor");
+	});
+	
+	/*右键菜单添加行为或属性*/
+	$("#add_members").delegate(".contextmenu_item","click",function(e){
+		var thiz = $(this) ,target = thiz.parent().data("target");
+		
+		if(thiz.is(".add_property")){
+			addProperty(target);
+		} else if(thiz.is(".add_action")){
+			addAction(target);
+		}
 	});
 	
 	/*拖拽节点*/
@@ -142,7 +155,7 @@ function umlCanvas(){
 	});
 	
 	/*点击工具切换*/
-	$("#tools").delegate(".node,.line,.component","click",function(e){
+	toolBar.delegate(".node,.line,.component","click",function(e){
 		swichTool($(this).attr("class").split(" ")[1]);
 	});
 	
@@ -228,7 +241,7 @@ function umlCanvas(){
 		var position = commonTool.mousePosition(e);
 		
 		if(thiz.is(".entity")){ 			//右键实体，添加属性和行为
-			showContextmenu(e,"add_members");
+			showContextmenu(thiz,e,"add_members");
 		} else if(thiz.is(".interface")){ 	//右键接口，添加行为和常量
 			alert(2);
 		} else if(thiz.is(".enum")){ 		//右键枚举，添加枚举项
@@ -237,8 +250,10 @@ function umlCanvas(){
 	});
 	
 	$("#edit_contextmenus").delegate(".contextmenu","click",function(){
-		$(this).hide();
+		$(this).slideUp(50);
 	});
+	
+	
 	
 	/*切换工具的方法*/
 	function swichTool(name){
@@ -253,28 +268,42 @@ function umlCanvas(){
 	}
 	
 	/*显示右键菜单*/
-	function showContextmenu(e,menuName){
+	function showContextmenu(target,e,menuName){
 		var position = commonTool.mousePosition(e);
 		
 		$("#"+menuName).css({
-			display	: "block",
 			top		: position.top,
 			left	: position.left
-		});
+		}).data("target",target).slideDown(50);
 	}
 	
+	/**************************************添加节点的各种成员******************************************/
 	/*添加属性*/
 	function addProperty(target){
-		
+		target.find(".properties").append($("#node-template .property").clone());
+		/*同步更新缓存数据*/
 	}
 	
 	/*添加行为*/
 	function addAction(target){
-		
+		target.find(".actions").append($("#node-template .action").clone());
+		/*同步更新缓存数据*/
 	}
 	
 	/*添加枚举项*/
 	function addEnumItem(target){
-		
+		/*同步更新缓存数据*/
+	}
+	/*删除属性*/
+	function deleteProperty(){
+		/*同步更新缓存数据*/
+	}
+	/*删除行为*/
+	function deleteAction(){
+		/*同步更新缓存数据*/
+	}
+	/*删除枚举项*/
+	function deleteEnumItem(){
+		/*同步更新缓存数据*/
 	}
 };
