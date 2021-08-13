@@ -25,7 +25,7 @@
 			</select>
 			<div class="tools folder" >
 				<div style="background:url('images/icons/swich.png') no-repeat left center;" class="swich_tool_view" title="切换工具栏视图"></div>
-				<div class="node cursor"></div>
+				<div class="cursor cursor"></div>
 				<hr/>
 				<div class="node entity"><span>实体</span></div>
 				<div class="node interface"><span>接口</span></div>
@@ -134,16 +134,14 @@
 				</div>
 				
 				<!-- 枚举项模板 -->
-				<div class="enumItem"></div>
+				<div class="enumItem">enumitem</div>
 				
 				<!-- 行为模板 -->
 				<div class="action">
 					<div class="actionName">assignPost</div>
-					<div class="parameters">
-						<span>(</span>
-						<span>)</span>
-					</div>
-					<span>:</span>
+					<span>(</span>
+					<div class="parameters" style="min-width:10px;">ssss</div>
+					<span>) :</span>
 					<div class="returnType">void</div>
 				</div>
 				
@@ -175,8 +173,8 @@
 			</div>
 		</div>
 		
-		<script type="text/javascript" src="js/tool.js"></script>
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js"></script>
+		<script type="text/javascript" src="js/tool.js"></script>
 		<script type="text/javascript" src="plugins/inlineedit/jquery.miniedit.js"></script>
 		<script type="text/javascript">
 			$("#canvas1").umlCanvas();
@@ -194,7 +192,7 @@
 					thiz.data("closed",true);
 					thiz.parent().removeClass("folder");
 				}
-			});
+			});	
 		</script>
 	</body>
 </html>

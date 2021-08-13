@@ -100,16 +100,6 @@ svgGraph = {
 
 /*画html节点的画笔*/
 domGraph = {
-	/*添加节点*/
-	addNode : function(dom,position,canvas,id){
-		canvas.append(dom);
-		dom.css({
-			left:position.left,
-			top:position.top
-		}).attr("id",id);
-		return dom;
-	},
-	
 	/*选中节点*/
 	focusItem : function(){
 		
@@ -182,3 +172,71 @@ commonTool = {
 		
 	}
 };
+
+
+
+
+
+/****************************顶级数据结构****************************/
+/*实体类*/
+function Entity(name){
+	this.package;
+	this.name			= name;
+	this.extends		= null;	//父类(连线时级联产生)
+	this.implementsList = [];	//实现（连线时接连产生，有可能要自动实现方法）
+	this.constants		= [];	//常量数组（常量对象数组）
+	this.properties 	= []; 	//属性数组（属性对象数组）
+	this.actions		= []; 	//行为数组（行为对象数组）
+	
+}
+/*值对象*/
+function ValueObject(name){
+	this.name 			=  name;
+}
+/*接口类*/
+function Interface(name){
+	this.name 		= name;
+	this.actions 	= [];	//
+}
+/*枚举*/
+function Enum(name){
+	this.name 		= name;
+	this.enumItems 	= [];
+}
+
+
+
+/****************************二级数据结构****************************/
+/*属性类*/
+function Property(name,type){
+	this.propertyName 	= name;
+	this.propertyType 	= type;
+	this.propertyScope	= null;
+	this.relation		= null;
+}
+
+/*常量类*/
+function Constant(name ,type){
+	this.constantName 	= name;
+	this.constantType 	= type;
+	this.constantValue 	= null;
+}
+/*行为类*/
+function Action(name ,returnType){
+	this.actionName = name;
+	this.returnType = returnType;
+	this.parameters = [];
+}
+
+/*枚举项类*/
+function EnumItem(name){
+	this.enumName = name;
+}
+
+/****************************三级级数据结构****************************/
+/*行为参数类*/
+function Parameter(name ,type){
+	this.parameterName 	= name;
+	this.parameterType 	= type;
+	this.sortNumber 	= null;
+}
