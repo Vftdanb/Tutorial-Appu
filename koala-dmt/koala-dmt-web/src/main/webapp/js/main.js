@@ -7,7 +7,10 @@ $(function() {
 		$('#gFooter').height(0.05 * height);
 		$('#projectExplorer .panel-body').height(0.36 * height);
 		$('#propertiesExplorer .panel-body').height(0.24 * height);
-		$('#gwtTabLayoutPanel .panel-body').height(0.75 * height);
+		$('#gwtTabLayoutPanel .panel-body').height(0.80 * height);
+		//		$('.diagram').height($(window).height() * 0.80 - 28);
+		//		$('.tool-container').height($(window).height() * 0.80 - 28);
+		//		$('.tool-bar').height($(window).height() * 0.80 - 48);
 	});
 	$(window).trigger('resize');
 
@@ -24,14 +27,14 @@ $(function() {
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
 				"type" : "item",
 				"actionUrl" : "forum"
-			},{
+			}, {
 				"id" : 7,
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
 				"type" : "item",
 				"actionUrl" : "forum"
 			}]
 		}],
-		'icon-class':'red',
+		'icon-class' : 'red',
 		"type" : "folder",
 		"actionUrl" : ""
 	}, {
@@ -47,7 +50,7 @@ $(function() {
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
 				"type" : "item",
 				"actionUrl" : "forum"
-			},{
+			}, {
 				"id" : 7,
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
 				"type" : "item",
@@ -63,14 +66,14 @@ $(function() {
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
 				"type" : "item",
 				"actionUrl" : "forum"
-			},{
+			}, {
 				"id" : 7,
 				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
 				"type" : "item",
 				"actionUrl" : "forum"
 			}]
 		}],
-		'icon-class':'orange',
+		'icon-class' : 'orange',
 		"type" : "folder",
 		"actionUrl" : ""
 	}]
@@ -83,10 +86,10 @@ $(function() {
 		'selected-icon' : null,
 		'unselected-icon' : null
 	});
-	$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function(){
+	$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function() {
 		var title = $(this).text();
 		var id = $(this).attr('id');
-		openTab('/pages/template.html', title, 'id'+id);
+		openTab('/pages/template.html', title, 'id' + id);
 	});
 });
 
@@ -113,16 +116,29 @@ function openTab(url, title, id) {
 	var contents = $('#tabContent');
 	var content = contents.find('#' + id);
 	if (content.length > 0) {
-		$.get(url).done(function(data) {
-			content.html(data);
-		});
 		tabs.find('a[href="#' + id + '"]').tab('show');
-		tabs.find('a[href="#' + id + '"]').find('span').html(title);
 		return;
 	}
 	content = $('<div id="' + id + '" class="tab-pane"></div>');
 	$.get(url).done(function(data) {
 		content.html(data);
+		content.find('#canvas_freamwork').height($(window).height()*0.75).css('width', '91.3%');
+		content.find('#tools').height($(window).height()*0.75).css('width', '8.7%');
+		new umlCanvas();
+		function zoom(t) {
+			var value = $(t).val();
+			content.find("#uml_canvas").css("transform", "scale(" + value + ")");
+		}
+		content.find("#tools .swich_tool_view").click(function() {
+			var thiz = $(this);
+			if ($(this).data("closed")) {
+				thiz.data("closed", false);
+				thiz.parent().addClass("folder");
+			} else {
+				thiz.data("closed", true);
+				thiz.parent().removeClass("folder");
+			}
+		});
 	});
 	contents.append(content);
 	var tab = $('<li>');
