@@ -15,4 +15,9 @@ public class DomainsChartApplicationImpl implements DomainsChartApplication {
 		domainsChart.save();
 	}
 
+	@Override
+	public DomainsChart getDomainsChart(String projectName, String name) {
+		return DomainsChart.getByProjectNameAndName(projectName, name);
+	}
+
 }

@@ -235,4 +235,42 @@ public class DomainShapeDto {
 		result.setId(domainsChartId);
 		return result;
 	}
+
+	public static DomainShapeDto generateDtoBy(DomainShape domainShape) {
+		DomainShapeDto result = new DomainShapeDto();
+		result.setId(domainShape.getId());
+		result.setVersion(domainShape.getVersion());
+		result.setName(domainShape.getName());
+		result.setShapeId(domainShape.getShapeId());
+		result.setLeftTopPoint(domainShape.getLeftTopPoint());
+		result.setHeight(domainShape.getHeight());
+		result.setWidth(domainShape.getWidth());
+		result.setDomainsChartId(domainShape.getDomainsChart().getId());
+		
+		if (domainShape instanceof EntityShape) {
+			EntityShape entityShape = (EntityShape) domainShape;
+			result.setShapeType(ShapeType.EntityShape);
+			result.setIsAbstractEntity(entityShape.getIsAbstractEntity());
+			result.setIsMappedSuperClass(entityShape.getIsMappedSuperClass());
+			result.setProperties(entityShape.getProperties());
+		}
+		
+		if (domainShape instanceof ValueObjectShape) {
+			ValueObjectShape valueObjectShape = (ValueObjectShape) domainShape;
+			result.setShapeType(ShapeType.ValueObjectShape);
+			result.setProperties(valueObjectShape.getProperties());
+		}
+		
+		if (domainShape instanceof InterfaceShape) {
+			result.setShapeType(ShapeType.InterfaceShape);
+		}
+		
+		if (domainShape instanceof EnumShape) {
+			EnumShape enumShape = (EnumShape) domainShape;
+			result.setShapeType(ShapeType.EnumShape);
+			result.setEnumItems(enumShape.getEnumItems());
+		}
+		
+		return result;
+	}
 }

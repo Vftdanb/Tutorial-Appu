@@ -46,6 +46,7 @@
 		<db.generate.ddl>true</db.generate.ddl>
 	</properties>
 	<modules>
+		<module>koala-dmt-codegen</module>
 		<module>koala-dmt-core</module>
 		<module>koala-dmt-application</module>
 		<module>koala-dmt-applicationImpl</module>

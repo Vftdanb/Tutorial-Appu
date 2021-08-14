@@ -1,6 +1,7 @@
 package org.openkoala.dmt.domain;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,12 +19,22 @@ public class DomainsChart extends AbstractEntity {
 
 	private static final long serialVersionUID = 3043999013741427550L;
 
+	private String projectName;
+	
 	private String name;
 	
 	private Set<DomainShape> domainShapes = new HashSet<DomainShape>();
 
 	private Set<Line> lines = new HashSet<Line>();
 	
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -56,6 +67,28 @@ public class DomainsChart extends AbstractEntity {
 		return null;
 	}
 
+	/**
+	 * 查找某个项目下的所有领域模型图
+	 * @param projectName
+	 * @return
+	 */
+	public static List<DomainsChart> findByProjectName(String projectName) {
+		return getRepository().createCriteriaQuery(DomainsChart.class)
+				.eq("projectName", projectName).list();
+	}
+
+	/**
+	 * 查找某个项目下对应名称的领域模型图
+	 * @param projectName
+	 * @param name
+	 * @return
+	 */
+	public static DomainsChart getByProjectNameAndName(String projectName, String name) {
+		return getRepository().createCriteriaQuery(DomainsChart.class)
+				.eq("projectName", projectName)
+				.eq("name", name).singleResult();
+	}
+	
 	@Override
 	public boolean equals(final Object other) {
 		if (this == other)

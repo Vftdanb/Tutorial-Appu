@@ -5,12 +5,15 @@ import java.util.Set;
 
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
+import org.openkoala.dmt.domain.Line;
 
 public class DomainsChartDto {
 
 	private Long id;
 	
 	private int version;
+	
+	private String projectName;
 	
 	private String name;
 	
@@ -32,6 +35,14 @@ public class DomainsChartDto {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
 	}
 
 	public String getName() {
@@ -61,8 +72,9 @@ public class DomainsChartDto {
 	public DomainsChart transformToDomainsChart() {
 		DomainsChart result = new DomainsChart();
 		result.setId(id);
-		result.setName(name);
 		result.setVersion(version);
+		result.setName(name);
+		result.setProjectName(projectName);
 		
 		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
 			result.getDomainShapes().add(domainShapeDto.transformToDomainShape());
@@ -78,6 +90,24 @@ public class DomainsChartDto {
 			}
 		}
 		return null;
+	}
+
+	public static DomainsChartDto generateDtoBy(DomainsChart domainsChart) {
+		DomainsChartDto result = new DomainsChartDto();
+		result.setId(domainsChart.getId());
+		result.setVersion(domainsChart.getVersion());
+		result.setProjectName(domainsChart.getProjectName());
+		result.setName(domainsChart.getName());
+		
+		for (DomainShape domainShape : domainsChart.getDomainShapes()) {
+			result.getDomainShapeDtos().add(DomainShapeDto.generateDtoBy(domainShape));
+		}
+		
+		for (Line line : domainsChart.getLines()) {
+			result.getLineDtos().add(LineDto.generateDtoBy(line));
+		}
+		
+		return result;
 	}
 	
 }
