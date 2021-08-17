@@ -3,11 +3,18 @@ package org.openkoala.dmt.web.dto;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.Line;
 
-public class DomainsChartDto {
+public class DomainsChartDto implements Dto {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3411792002890207219L;
 
 	private Long id;
 	
@@ -108,6 +115,21 @@ public class DomainsChartDto {
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public boolean equals(final Object other) {
+		if (this == other)
+			return true;
+		if (!(other instanceof DomainsChartDto))
+			return false;
+		DomainsChartDto castOther = (DomainsChartDto) other;
+		return new EqualsBuilder().append(projectName, castOther.projectName).append(name, castOther.name).isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37).append(name).append(projectName).toHashCode();
 	}
 	
 }

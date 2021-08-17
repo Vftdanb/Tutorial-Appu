@@ -38,6 +38,8 @@ public abstract class DomainShape extends AbstractEntity {
 	
 	private String name;
 
+	private String description;
+	
 	private DomainsChart domainsChart;
 	
 	@Column(name = "SHAPE_ID", nullable = false)
@@ -82,6 +84,14 @@ public abstract class DomainShape extends AbstractEntity {
 		this.name = name;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "DC_ID")
 	public DomainsChart getDomainsChart() {
@@ -106,12 +116,13 @@ public abstract class DomainShape extends AbstractEntity {
 		DomainShape castOther = (DomainShape) other;
 		return new EqualsBuilder()
 				.append(shapeId, castOther.shapeId)
-				.append(name, castOther.name).isEquals();
+				.append(name, castOther.name)
+				.append(domainsChart, castOther.domainsChart).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(shapeId).append(name).toHashCode();
+		return new HashCodeBuilder(17, 37).append(shapeId).append(name).append(domainsChart).toHashCode();
 	}
 
 	@Override

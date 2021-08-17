@@ -23,6 +23,8 @@ public class Line extends AbstractEntity {
 	
 	private LineType lineType;
 	
+	private String description;
+	
 	private DomainsChart domainsChart;
 	
 	@ManyToOne
@@ -54,6 +56,14 @@ public class Line extends AbstractEntity {
 		this.lineType = lineType;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "DC_ID")
 	public DomainsChart getDomainsChart() {
@@ -68,7 +78,7 @@ public class Line extends AbstractEntity {
 	public boolean equals(final Object other) {
 		if (this == other)
 			return true;
-		if (!(other instanceof DomainShape))
+		if (!(other instanceof Line))
 			return false;
 		Line castOther = (Line) other;
 		return new EqualsBuilder().append(domainsChart, castOther.domainsChart)

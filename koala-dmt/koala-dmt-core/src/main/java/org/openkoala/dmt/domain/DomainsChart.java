@@ -96,12 +96,12 @@ public class DomainsChart extends AbstractEntity {
 		if (!(other instanceof DomainsChart))
 			return false;
 		DomainsChart castOther = (DomainsChart) other;
-		return new EqualsBuilder().append(name, castOther.name).append(domainShapes, castOther.domainShapes).isEquals();
+		return new EqualsBuilder().append(projectName, castOther.projectName).append(name, castOther.name).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(name).append(domainShapes).toHashCode();
+		return new HashCodeBuilder(17, 37).append(name).append(projectName).toHashCode();
 	}
 
 	@Override

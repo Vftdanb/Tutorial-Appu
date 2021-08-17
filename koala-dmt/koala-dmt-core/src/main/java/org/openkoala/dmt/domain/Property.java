@@ -54,6 +54,11 @@ public class Property implements ValueObject {
 	 */
 	private DomainPropertyRelation relation;
 
+	/**
+	 * 描述
+	 */
+	private String description;
+	
 	public String getName() {
 		return name;
 	}
@@ -111,6 +116,14 @@ public class Property implements ValueObject {
 
 	public void setRelation(DomainPropertyRelation relation) {
 		this.relation = relation;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override
