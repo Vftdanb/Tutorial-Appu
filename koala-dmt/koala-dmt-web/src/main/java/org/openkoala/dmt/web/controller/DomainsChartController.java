@@ -17,7 +17,7 @@ public class DomainsChartController {
 	private DomainsChartApplication domainsChartApplication;
 
 	@ResponseBody
-	@RequestMapping("/create")
+	@RequestMapping("/get")
 	public DomainsChartDto getDomainsChart(String projectName, String name) {
 		DomainsChart domainsChart = domainsChartApplication.getDomainsChart(projectName, name);
 		return DomainsChartDto.generateDtoBy(domainsChart);
