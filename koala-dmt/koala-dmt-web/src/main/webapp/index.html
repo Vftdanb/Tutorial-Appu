@@ -93,10 +93,124 @@
 				Copyright @koala, All rights reserved.
 			</div>
 		</div>
+				<div id="template">
+			<!-- 线条模板 -->
+			<svg id="line-template" style="">
+				<!-- 继承关系连线模板 -->
+				<g class="line extends">
+					<path d="M10,20 L80,20" style="marker-end:url(#arrow1)"></path>
+					<text x="20" y="30">说明文字</text>
+				</g>
+				<!-- 实现关系连线模板 -->
+				<g class="line implement">
+					<path d="M10,70 L80,70" style="marker-end:url(#arrow1);stroke-dasharray:5"></path>
+				</g>
+				<!-- 聚合关系连线模板 -->
+				<g class="line aggregate">
+					<path d="M0,0 L0,0" style="marker-start:url(#arrow2)"></path>
+				</g>
+				<!-- 组合关系连线模板  -->
+				<g class="line compose">
+					<path d="M0,0 L0,0" style="marker-start:url(#arrow3)"></path>
+				</g>
+				<!-- 关联关系连线模板  -->
+				<g class="line associate"><path d="M0,0 L0,0"></path></g>
+			</svg>
+			
+			<!-- 节点模板 -->
+			<div id="node-template">
+				<!-- 实体模板 -->
+				<div class="node entity">
+					<div class="name">User</div>
+					<div class="properties"></div>
+					<div class="actions"></div>
+				</div>
+				
+				<!-- 接口模板 -->
+				<div class="node interface">
+					<div class="header">«interface»</div>
+					<div class="name">接口</div>
+					<div class="actions"></div>	
+				</div>
+				
+				<!-- 枚举模板  -->
+				<div class="node enum">
+					<div class="header">«enum»</div>
+					<div class="name">enum</div>
+					<div class="enumItems"></div>
+				</div>
+				
+				<!-- 属性模板  -->
+				<div class="property">
+					<div class="propertyName">emails</div><div>:</div>
+					<div class="propertyType">Set</div>
+				</div>
+				
+				<!-- 枚举项模板 -->
+				<div class="enumItem"></div>
+				
+				<!-- 行为模板 -->
+				<div class="action">
+					<div class="actionName">assignPost</div>
+					<div class="parameters">
+						<span>(</span>
+						<span>)</span>
+					</div>
+					<span>:</span>
+					<div class="returnType">void</div>
+				</div>
+				
+				<!-- 行为的参数模板 -->				
+				<div class="parameter" sortNumber="1">
+					<div class="parameterType">Post</div>
+					<div class="parameterName">post</div>
+				</div>
+			</div>
+			
+			<div id="edit_windows">
+				<div id="edit_entity_window">
+					
+				</div>
+			</div>
+		</div>
+		<!-- 以下内在多个画板时的情况下可以共用 ，包括图形的模板、右键菜单等元素-->
+		<!-- uml元素模板 -->
+		<svg>
+			<defs>
+				<!-- 空心三角形 -->
+				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
+					<path d="M10,10 L16,13 L10,16 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
+				</marker>
+			    <!-- 空心菱形 -->
+			  	<marker id="arrow2" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
+			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
+			    </marker>
+			    <!-- 实心菱形 -->
+			    <marker id="arrow3" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
+			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
+			    </marker>
+			</defs>
+		</svg>
+		<!-- 各种右键编辑菜单 -->
+		<div id="edit_contextmenus">
+			<!-- 添加节点成员的右键菜单 -->
+			<div id="add_members" class="contextmenu">
+				<div class="contextmenu_item add_property"><div>添加属性</div></div>
+				<div class="contextmenu_item add_action"><div>添加行为</div></div>
+				<div class="contextmenu_item add_enumItem"><div>添加枚举项</div></div>
+			</div>
+			
+			<!--  -->
+			<div id="">
+			</div>
+		</div>
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
 		<script type="text/javascript" src="lib/bootstrap-3.1.1/js/bootstrap.js" ></script>
 		<script type="text/javascript" src="lib/tiny.tree.min.js" ></script>
 		<script type="text/javascript" src="js/umlCanvas.js" ></script>
+		<script type="text/javascript" src="js/umlCanvasProtorype.js" ></script>
+		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
+		<script type="text/javascript" src="js/tool.js" ></script>
 		<script type="text/javascript" src="plugins/inlineedit/jquery.miniedit.js" ></script>
 		<script src="js/main.js"></script>
 	</body>
