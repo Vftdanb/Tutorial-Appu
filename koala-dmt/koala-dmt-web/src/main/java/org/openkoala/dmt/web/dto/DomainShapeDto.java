@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.EntityShape;
@@ -14,7 +16,9 @@ import org.openkoala.dmt.domain.LeftTopPoint;
 import org.openkoala.dmt.domain.Property;
 import org.openkoala.dmt.domain.ValueObjectShape;
 
-public class DomainShapeDto {
+public class DomainShapeDto implements Dto {
+
+	private static final long serialVersionUID = -1551254242524216902L;
 
 	private enum ShapeType {
 		EntityShape,
@@ -46,6 +50,8 @@ public class DomainShapeDto {
 	private Boolean isMappedSuperClass = false;
 	
 	private List<String> enumItems = new ArrayList<String>();
+	
+	private String description;
 	
 	private Long domainsChartId;
 	
@@ -145,6 +151,14 @@ public class DomainShapeDto {
 		this.enumItems = enumItems;
 	}
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public Long getDomainsChartId() {
 		return domainsChartId;
 	}
@@ -181,6 +195,7 @@ public class DomainShapeDto {
 		result.setIsAbstractEntity(isAbstractEntity);
 		result.setIsMappedSuperClass(isMappedSuperClass);
 		result.setProperties(properties);
+		result.setDescription(description);
 		result.setDomainsChart(generateDomainsChart());
 		
 		return result;
@@ -196,6 +211,7 @@ public class DomainShapeDto {
 		result.setHeight(height);
 		result.setWidth(width);
 		result.setProperties(properties);
+		result.setDescription(description);
 		result.setDomainsChart(generateDomainsChart());
 		
 		return result;
@@ -210,6 +226,7 @@ public class DomainShapeDto {
 		result.setLeftTopPoint(leftTopPoint);
 		result.setHeight(height);
 		result.setWidth(width);
+		result.setDescription(description);
 		result.setDomainsChart(generateDomainsChart());
 		
 		return result;
@@ -225,6 +242,7 @@ public class DomainShapeDto {
 		result.setHeight(height);
 		result.setWidth(width);
 		result.setEnumItems(enumItems);
+		result.setDescription(description);
 		result.setDomainsChart(generateDomainsChart());
 		
 		return result;
@@ -235,4 +253,62 @@ public class DomainShapeDto {
 		result.setId(domainsChartId);
 		return result;
 	}
+
+	public static DomainShapeDto generateDtoBy(DomainShape domainShape) {
+		DomainShapeDto result = new DomainShapeDto();
+		result.setId(domainShape.getId());
+		result.setVersion(domainShape.getVersion());
+		result.setName(domainShape.getName());
+		result.setShapeId(domainShape.getShapeId());
+		result.setLeftTopPoint(domainShape.getLeftTopPoint());
+		result.setHeight(domainShape.getHeight());
+		result.setWidth(domainShape.getWidth());
+		result.setDescription(domainShape.getDescription());
+		result.setDomainsChartId(domainShape.getDomainsChart().getId());
+		
+		if (domainShape instanceof EntityShape) {
+			EntityShape entityShape = (EntityShape) domainShape;
+			result.setShapeType(ShapeType.EntityShape);
+			result.setIsAbstractEntity(entityShape.getIsAbstractEntity());
+			result.setIsMappedSuperClass(entityShape.getIsMappedSuperClass());
+			result.setProperties(entityShape.getProperties());
+		}
+		
+		if (domainShape instanceof ValueObjectShape) {
+			ValueObjectShape valueObjectShape = (ValueObjectShape) domainShape;
+			result.setShapeType(ShapeType.ValueObjectShape);
+			result.setProperties(valueObjectShape.getProperties());
+		}
+		
+		if (domainShape instanceof InterfaceShape) {
+			result.setShapeType(ShapeType.InterfaceShape);
+		}
+		
+		if (domainShape instanceof EnumShape) {
+			EnumShape enumShape = (EnumShape) domainShape;
+			result.setShapeType(ShapeType.EnumShape);
+			result.setEnumItems(enumShape.getEnumItems());
+		}
+		
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object other) {
+		if (this == other)
+			return true;
+		if (!(other instanceof DomainShapeDto))
+			return false;
+		DomainShapeDto castOther = (DomainShapeDto) other;
+		return new EqualsBuilder()
+				.append(shapeId, castOther.shapeId)
+				.append(name, castOther.name)
+				.append(domainsChartId, castOther.domainsChartId).isEquals();
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 37).append(shapeId).append(name).append(domainsChartId).toHashCode();
+	}
+
 }

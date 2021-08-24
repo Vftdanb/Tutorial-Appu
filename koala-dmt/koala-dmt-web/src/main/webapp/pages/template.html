@@ -1,223 +1,56 @@
-<!-- 缩放 -->
-<div class="scale">
-	<select onchange="zoom(this)">
-		<option value="0.5">50%</option>
-		<option value="1">100%</option>
-		<option value="1.5">150%</option>
-		<option value="2">200%</option>
-		<option value="2.5">250%</option>
-		<option value="3">300%</option>
-	</select>
+<div id="canvas">
+			<!-- 以下内容在多个画布的情况下不能共用，一个画布必须有一个备份 -->
+			<!-- 缩放 -->
+			<div class="scale">
+				<select onchange="zoom(this)">
+					<option value="0.5">50%</option>
+					<option value="1">100%</option>
+					<option value="1.5">150%</option>
+					<option value="2">200%</option>
+					<option value="2.5">250%</option>
+					<option value="3">300%</option>
+				</select>
+				<i class="fa fa-search"></i>
+			</div>
+			<div class="tools folder" >
+				<div class="swich_tool_view" title="切换工具栏视图">
+					<i class="fa fa-angle-double-right"></i>
+				</div>
+				<div class="GFVVQ1VPM"></div>
+				<div class="node cursor"><span>移动</span></div>
+				<div class="GFVVQ1VPM"></div>
+				<div class="node entity"><span>实体</span></div>
+				<div class="node interface"><span>接口</span></div>
+				<div class="node enum"><span>枚举</span></div>
+				<div class="GFVVQ1VPM"></div>
+				<div class="component property"><span>属性</span></div>
+				<div class="component enumItem"><span>枚举项</span></div>
+				<div class="component action"><span>行为</span></div>
+				<div class="GFVVQ1VPM"></div>
+				<div class="line extends"><span>继承</span></div>
+				<div class="line implement"><span>实现</span></div>
+				<div class="line aggregate"><span>聚合</span></div>
+				<div class="line compose"><span>组合</span></div>
+				<div class="line associate"><span>关联</span></div>
+			</div>
+			<div class="canvas_freamwork">
+				<div class="uml_canvas">
+					<!-- 线条画布 -->
+					<svg class="svg_canvas">
+						<g class="uml_lines"></g>
+					</svg>
+					<!-- 节点画布 -->
+				</div>
+			</div>
+
+			<datalist id="property_type_tip">
+				<option value="String"></option>
+				<option value="Set"></option>
+				<option value="List"></option>
+				<option value="Date"></option>
+				<option value="Long"></option>
+				<option value="Integer"></option>
+				<option value="oschinaAoscgitAinline"></option>
+			</datalist>
+		</div>
 </div>
-<div id="tools" class="folder">
-	<div style="background:url('images/icons/swich.png') no-repeat left center;" class="swich_tool_view" title="切换工具栏视图"></div>
-	<div class="node cursor"></div>
-	<hr/>
-	<div class="node entity">
-		<span>实体</span>
-	</div>
-	<div class="node interface">
-		<span>接口</span>
-	</div>
-	<div class="node enum">
-		<span>枚举</span>
-	</div>
-	<hr/>
-	<div class="component attribute">
-		<span>属性</span>
-	</div>
-	<div class="component enum_literal">
-		<span>枚举项</span>
-	</div>
-	<div class="component action">
-		<span>行为</span>
-	</div>
-	<hr/>
-	<div class="line extends">
-		<span>继承</span>
-	</div>
-	<div class="line implement">
-		<span>实现</span>
-	</div>
-	<div class="line aggregate">
-		<span>聚合</span>
-	</div>
-	<div class="line compose">
-		<span>组合</span>
-	</div>
-	<div class="line associate">
-		<span>关联</span>
-	</div>
-</div>
-<div id="canvas_freamwork">
-	<div id="uml_canvas">
-		<!-- 线条画布 -->
-		<svg id="svg_canvas">
-			<defs>
-				<!-- 空心三角形 -->
-				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
-					<path d="M10,10 L16,13 L10,16 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
-				</marker>
-				<!-- 空心菱形 -->
-				<marker id="arrow2" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
-					<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
-				</marker>
-				<!-- 实心菱形 -->
-				<marker id="arrow3" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
-					<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
-				</marker>
-			</defs>
-			<g id="lines"></g>
-		</svg>
-		<!-- 节点画布 -->
-	</div>
-</div>
-<!-- uml元素模板 -->
-<div id="template">
-	<!-- 线条模板 -->
-	<svg id="line-template" style="">
-		<!-- 继承关系连线模板 -->
-		<g class="line extends">
-			<path d="M10,20 L80,20" style="marker-end:url(#arrow1)"></path>
-			<text x="20" y="30">
-				说明文字
-			</text>
-		</g>
-		<!-- 实现关系连线模板 -->
-		<g class="line implement">
-			<path d="M10,70 L80,70" style="marker-end:url(#arrow1);stroke-dasharray:5"></path>
-		</g>
-		<!-- 聚合关系连线模板 -->
-		<g class="line aggregate">
-			<path d="M0,0 L0,0" style="marker-start:url(#arrow2)"></path>
-		</g>
-		<!-- 组合关系连线模板  -->
-		<g class="line compose">
-			<path d="M0,0 L0,0" style="marker-start:url(#arrow3)"></path>
-		</g>
-		<!-- 关联关系连线模板  -->
-		<g class="line associate">
-			<path d="M0,0 L0,0"></path>
-		</g>
-	</svg>
-
-	<!-- 节点模板 -->
-	<div id="node-template">
-		<!-- 实体模板 -->
-		<div class="node entity">
-			<div class="name">
-				User
-			</div>
-			<div class="properties"></div>
-			<div class="actions"></div>
-		</div>
-
-		<!-- 接口模板 -->
-		<div class="node interface">
-			<div class="header">
-				«interface»
-			</div>
-			<div class="name">
-				接口
-			</div>
-			<div class="actions"></div>
-		</div>
-
-		<!-- 枚举模板  -->
-		<div class="node enum">
-			<div class="header">
-				«enum»
-			</div>
-			<div class="name">
-				enum
-			</div>
-			<div class="enumItems"></div>
-		</div>
-
-		<!-- 属性模板  -->
-		<div class="property">
-			<div class="propertyName">
-				emails
-			</div>
-			<div>
-				:
-			</div>
-			<div class="propertyType">
-				Set
-			</div>
-		</div>
-
-		<!-- 枚举项模板 -->
-		<div class="enumItem"></div>
-
-		<!-- 行为模板 -->
-		<div class="action">
-			<div class="actionName">
-				assignPost
-			</div>
-			<div class="parameters">
-				<span>(</span>
-				<span>)</span>
-			</div>
-			<span>:</span>
-			<div class="returnType">
-				void
-			</div>
-		</div>
-
-		<!-- 行为的参数模板 -->
-		<div class="parameter" sortNumber="1">
-			<div class="parameterType">
-				Post
-			</div>
-			<div class="parameterName">
-				post
-			</div>
-		</div>
-	</div>
-
-	<div id="edit_windows">
-		<div id="edit_entity_window">
-
-		</div>
-	</div>
-
-</div>
-<!-- 各种右键编辑菜单 -->
-<div id="edit_contextmenus" style="display:none">
-	<!-- 添加节点成员的右键菜单 -->
-	<div id="add_members" class="contextmenu">
-		<div class="contextmenu_item">
-			asdf
-		</div>
-		<div class="contextmenu_item">
-			asdf
-		</div>
-		<div class="contextmenu_item">
-			asdf
-		</div>
-		<div class="contextmenu_item">
-			asdf
-		</div>
-		<div class="contextmenu_item">
-			asdf
-		</div>
-		<div class="contextmenu_item">
-			asdf
-		</div>
-	</div>
-
-	<!--  -->
-	<div id="">
-
-	</div>
-</div>
-<datalist id="property_type_tip">
-	<option value="String"></option>
-	<option value="Set"></option>
-	<option value="List"></option>
-	<option value="Date"></option>
-	<option value="Long"></option>
-	<option value="Integer"></option>
-	<option value="oschinaAoscgitAinline"></option>
-</datalist>

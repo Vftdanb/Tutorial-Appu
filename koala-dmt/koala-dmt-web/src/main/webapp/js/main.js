@@ -122,23 +122,9 @@ function openTab(url, title, id) {
 	content = $('<div id="' + id + '" class="tab-pane"></div>');
 	$.get(url).done(function(data) {
 		content.html(data);
-		content.find('#canvas_freamwork').height($(window).height()*0.75).css('width', '91.3%');
-		content.find('#tools').height($(window).height()*0.75).css('width', '8.7%');
-		new umlCanvas();
-		function zoom(t) {
-			var value = $(t).val();
-			content.find("#uml_canvas").css("transform", "scale(" + value + ")");
-		}
-		content.find("#tools .swich_tool_view").click(function() {
-			var thiz = $(this);
-			if ($(this).data("closed")) {
-				thiz.data("closed", false);
-				thiz.parent().addClass("folder");
-			} else {
-				thiz.data("closed", true);
-				thiz.parent().removeClass("folder");
-			}
-		});
+		content.find('.canvas_freamwork').height($(window).height()*0.75).css('width', '91%');
+		content.find('.tools ').height($(window).height()*0.75).css('width', '9%');
+		content.find('#canvas').umlCanvas();
 	});
 	contents.append(content);
 	var tab = $('<li>');

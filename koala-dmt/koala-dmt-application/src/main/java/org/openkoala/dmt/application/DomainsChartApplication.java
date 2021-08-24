@@ -14,5 +14,11 @@ public interface DomainsChartApplication {
 	 * @param domainsChart
 	 */
 	void saveDomainsChart(DomainsChart domainsChart);
+
+	/**
+	 * 获取领域图形
+	 * @param domainsChart
+	 */
+	DomainsChart getDomainsChart(String projectName, String name);
 	
 }
