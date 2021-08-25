@@ -86,7 +86,6 @@
 				<!-- 继承关系连线模板 -->
 				<g class="line extends">
 					<path d="M10,20 L80,20" style="marker-end:url(#arrow1)"></path>
-					<text x="20" y="30">说明文字</text>
 				</g>
 				<!-- 实现关系连线模板 -->
 				<g class="line implement">
@@ -95,13 +94,21 @@
 				<!-- 聚合关系连线模板 -->
 				<g class="line aggregate">
 					<path d="M0,0 L0,0" style="marker-start:url(#arrow2)"></path>
+					<text x="20" y="30">说明文字</text>
+					<text x="30" y="40"></text>
 				</g>
 				<!-- 组合关系连线模板  -->
 				<g class="line compose">
 					<path d="M0,0 L0,0" style="marker-start:url(#arrow3)"></path>
+					<text x="20" y="30">说明文字</text>
+					<text x="30" y="40"></text>
 				</g>
 				<!-- 关联关系连线模板  -->
-				<g class="line associate"><path d="M0,0 L0,0"></path></g>
+				<g class="line associate">
+					<path d="M0,0 L0,0"></path>
+					<text x="20" y="30">说明文字</text>
+					<text x="30" y="40"></text>
+				</g>
 			</svg>
 			
 			<!-- 节点模板 -->
@@ -139,9 +146,6 @@
 				<!-- 行为模板 -->
 				<div class="action">
 					<div class="actionName">assignPost</div>
-					<span>(</span>
-					<div class="parameters" style="min-width:10px;">ssss</div>
-					<span>) :</span>
 					<div class="returnType">void</div>
 				</div>
 				

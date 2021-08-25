@@ -150,20 +150,7 @@ commonTool = {
 			outLines : outLines,
 			inLines : inLines
 		};
-	},
-	
-	/*维护输入提示信息，包括添加、删除等操作.option参数为2时表示更新，为1时表示添加，为0时表示删除*/
-	maintainDataList : function(listId,option,data,classSelector){
-		var dataList = $("#"+listId);
-		if(option == 1 && dataList.find("."+classSelector).length == 0){
-			dataList.append($("<option/>").val(data).addClass(classSelector));
-		} else if(option == 2){
-			dataList.find("."+classSelector).val(data);
-		} else if(option ==  0){
-			$("#"+listId).remove("."+classSelector);
-		}
-	},
-	
+	},	
 	/**
 	 * 当节点的dom对象信息更新时，对应的节点缓存信息同步更新。导致调用该方法的事件 包括
 	 * 节点名、属性名、属性类型、行为名、行为参数名、行为参数类型、行为返回值等信息更改
