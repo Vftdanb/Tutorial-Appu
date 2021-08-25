@@ -3,17 +3,38 @@ package org.openkoala.dmt.domain;
 import static org.junit.Assert.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Test;
 
 public class DomainsChartTest extends BaseIntegrationTest {
 
+	private String projectName = "project";
+	private String chartName = "domainschart";
+	
 	@Test
 	public void testSave() {
 		DomainsChart domainsChart = generateDomainsChart();
 		domainsChart.save();
 		assertEquals(domainsChart, DomainsChart.get(DomainsChart.class, domainsChart.getId()));
+	}
+	
+	@Test
+	public void testGetByProjectNameAndName() {
+		DomainsChart domainsChart = generateDomainsChart();
+		domainsChart.save();
+		assertEquals(domainsChart, DomainsChart.getByProjectNameAndName(projectName, chartName));
+	}
+	
+	@Test
+	public void testFindByProjectName() {
+		DomainsChart domainsChart = generateDomainsChart();
+		domainsChart.save();
+		
+		List<DomainsChart> domainsCharts = DomainsChart.findByProjectName(projectName);
+		assertNotNull(domainsCharts);
+		assertTrue(domainsCharts.contains(domainsChart));
 	}
 	
 	private DomainsChart generateDomainsChart() {
@@ -62,7 +83,11 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		line.setLineType(LineType.ASSOCIATE);
 		lines.add(line);
 		
-		result.setName("domainschart");
+		Project project = new Project(projectName);
+		project.save();
+		result.setProject(project);
+		
+		result.setName(chartName);
 		result.setDomainShapes(domainShapes);
 		result.setLines(lines);
 		

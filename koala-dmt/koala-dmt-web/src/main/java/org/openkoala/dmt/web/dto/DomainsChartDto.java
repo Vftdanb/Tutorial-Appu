@@ -8,6 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.Line;
+import org.openkoala.dmt.domain.Project;
 
 public class DomainsChartDto implements Dto {
 
@@ -20,7 +21,7 @@ public class DomainsChartDto implements Dto {
 	
 	private int version;
 	
-	private String projectName;
+	private Project project;
 	
 	private String name;
 	
@@ -44,12 +45,12 @@ public class DomainsChartDto implements Dto {
 		this.version = version;
 	}
 
-	public String getProjectName() {
-		return projectName;
+	public Project getProject() {
+		return project;
 	}
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 	public String getName() {
@@ -81,7 +82,7 @@ public class DomainsChartDto implements Dto {
 		result.setId(id);
 		result.setVersion(version);
 		result.setName(name);
-		result.setProjectName(projectName);
+		result.setProject(project);
 		
 		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
 			result.getDomainShapes().add(domainShapeDto.transformToDomainShape());
@@ -103,7 +104,7 @@ public class DomainsChartDto implements Dto {
 		DomainsChartDto result = new DomainsChartDto();
 		result.setId(domainsChart.getId());
 		result.setVersion(domainsChart.getVersion());
-		result.setProjectName(domainsChart.getProjectName());
+		result.setProject(domainsChart.getProject());
 		result.setName(domainsChart.getName());
 		
 		for (DomainShape domainShape : domainsChart.getDomainShapes()) {
@@ -124,12 +125,12 @@ public class DomainsChartDto implements Dto {
 		if (!(other instanceof DomainsChartDto))
 			return false;
 		DomainsChartDto castOther = (DomainsChartDto) other;
-		return new EqualsBuilder().append(projectName, castOther.projectName).append(name, castOther.name).isEquals();
+		return new EqualsBuilder().append(project, castOther.project).append(name, castOther.name).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(name).append(projectName).toHashCode();
+		return new HashCodeBuilder(17, 37).append(name).append(project).toHashCode();
 	}
 	
 }
