@@ -20,7 +20,7 @@ body{
 .uml_canvas .node {
 	min-width:60px;
 	position:absolute;
-	border-radius:2px;
+	border-radius:0px;
 	padding:1px;
 	border:1px solid #5890c1;
 	font-size:14px;
@@ -61,8 +61,11 @@ marker path {
 	-webkit-transform:scale(0.5);
 	-moz-transform:scale(0.5);
 }
-.node {
+.uml_canvas .node {
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#bbb));
+	-moz-box-shadow: 2px 2px 4px #000;
+	-webkit-box-shadow: 2px 2px 4px #000;
+	box-shadow: 2px 2px 4px #000;
 }
 .property div{
 	height:18px;
@@ -136,16 +139,19 @@ marker path {
 	cursor:pointer;
 	
 }
-.contextmenu_item:hover{
-	border:1px solid blue;
+.contextmenu div:hover{
+	background-color:#c8d7e6;
 }
 .contextmenu_item div{
 	margin:1px 3px;
 	padding-left:20px;
 	font-size:14px;
-	
 }
+
+/*属性、行为、枚举项、常量的右键菜单的显示控制*/
 .contextmenu_item div{background:no-repeat 0 2px;}
 .add_property div{background-image:url("../images/icons/property.png");}
 .add_action div{background-image:url("../images/icons/action.png");}
 .add_enumItem div{background-image:url("../images/icons/enumItem.png");}
+.entity .add_enumItem, .interface .add_enumItem{display:none;}
+.enum .add_action,.enum .add_property{display:none;}
