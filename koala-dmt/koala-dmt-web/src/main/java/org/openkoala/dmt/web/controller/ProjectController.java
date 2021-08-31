@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/project")
-public class ProjectController {
+public class ProjectController extends BaseController {
 
 	@Inject
 	private ProjectApplication projectApplication;
@@ -21,6 +21,13 @@ public class ProjectController {
 	@RequestMapping("/find-all-projects")
 	public List<Project> findAllProjects() {
 		return projectApplication.findAllProjects();
+	}
+	
+	@ResponseBody
+	@RequestMapping("/create")
+	public String createProjects(Project project) {
+		projectApplication.createProject(project);
+		return SUCCESS;
 	}
 
 }

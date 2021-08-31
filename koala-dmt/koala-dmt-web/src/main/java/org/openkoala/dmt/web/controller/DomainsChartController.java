@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/domains-chart")
-public class DomainsChartController {
+public class DomainsChartController extends BaseController {
 
 	@Inject
 	private DomainsChartApplication domainsChartApplication;

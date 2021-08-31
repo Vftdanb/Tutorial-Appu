@@ -17,4 +17,9 @@ public class ProjectApplicationImpl implements ProjectApplication {
 		return Project.findAll(Project.class);
 	}
 
+	@Override
+	public void createProject(Project project) {
+		project.save();
+	}
+
 }
