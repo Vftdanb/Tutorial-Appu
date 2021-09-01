@@ -100,7 +100,7 @@ public class DomainsChartDto implements Dto {
 		return null;
 	}
 
-	public static DomainsChartDto generateDtoBy(DomainsChart domainsChart) {
+	public static DomainsChartDto getInstance(DomainsChart domainsChart) {
 		DomainsChartDto result = new DomainsChartDto();
 		result.setId(domainsChart.getId());
 		result.setVersion(domainsChart.getVersion());
@@ -108,11 +108,11 @@ public class DomainsChartDto implements Dto {
 		result.setName(domainsChart.getName());
 		
 		for (DomainShape domainShape : domainsChart.getDomainShapes()) {
-			result.getDomainShapeDtos().add(DomainShapeDto.generateDtoBy(domainShape));
+			result.getDomainShapeDtos().add(DomainShapeDto.getInstance(domainShape));
 		}
 		
 		for (Line line : domainsChart.getLines()) {
-			result.getLineDtos().add(LineDto.generateDtoBy(line));
+			result.getLineDtos().add(LineDto.getInstance(line));
 		}
 		
 		return result;

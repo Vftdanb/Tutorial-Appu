@@ -10,8 +10,8 @@ import org.junit.Test;
 
 public class DomainsChartTest extends BaseIntegrationTest {
 
-	private String projectName = "project";
 	private String chartName = "domainschart";
+	private Project project = new Project();
 	
 	@Test
 	public void testSave() {
@@ -24,7 +24,7 @@ public class DomainsChartTest extends BaseIntegrationTest {
 	public void testGetByProjectNameAndName() {
 		DomainsChart domainsChart = generateDomainsChart();
 		domainsChart.save();
-		assertEquals(domainsChart, DomainsChart.getByProjectNameAndName(projectName, chartName));
+		assertEquals(domainsChart, DomainsChart.getByProjectAndName(project, chartName));
 	}
 	
 	@Test
@@ -32,7 +32,7 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		DomainsChart domainsChart = generateDomainsChart();
 		domainsChart.save();
 		
-		List<DomainsChart> domainsCharts = DomainsChart.findByProjectName(projectName);
+		List<DomainsChart> domainsCharts = DomainsChart.findByProject(project);
 		assertNotNull(domainsCharts);
 		assertTrue(domainsCharts.contains(domainsChart));
 	}
@@ -83,7 +83,7 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		line.setLineType(LineType.ASSOCIATE);
 		lines.add(line);
 		
-		Project project = new Project(projectName);
+		project.setName("projectname");
 		project.save();
 		result.setProject(project);
 		

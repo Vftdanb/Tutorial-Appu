@@ -1,9 +1,12 @@
 package org.openkoala.dmt.application.impl;
 
+import java.util.List;
+
 import javax.inject.Named;
 
 import org.openkoala.dmt.application.DomainsChartApplication;
 import org.openkoala.dmt.domain.DomainsChart;
+import org.openkoala.dmt.domain.Project;
 import org.springframework.transaction.annotation.Transactional;
 
 @Named
@@ -16,8 +19,13 @@ public class DomainsChartApplicationImpl implements DomainsChartApplication {
 	}
 
 	@Override
-	public DomainsChart getDomainsChart(String projectName, String name) {
-		return DomainsChart.getByProjectNameAndName(projectName, name);
+	public DomainsChart getDomainsChart(Project project, String name) {
+		return DomainsChart.getByProjectAndName(project, name);
+	}
+
+	@Override
+	public List<DomainsChart> findDomainsChartByProject(Project project) {
+		return DomainsChart.findByProject(project);
 	}
 
 }

@@ -97,7 +97,7 @@ public class LineDto implements Dto {
 		return result;
 	}
 
-	public static LineDto generateDtoBy(Line line) {
+	public static LineDto getInstance(Line line) {
 		LineDto result = new LineDto();
 		result.setId(line.getId());
 		result.setVersion(line.getVersion());

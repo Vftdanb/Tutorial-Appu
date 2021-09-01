@@ -76,9 +76,9 @@ public class DomainsChart extends AbstractEntity {
 	 * @param projectName
 	 * @return
 	 */
-	public static List<DomainsChart> findByProjectName(String projectName) {
+	public static List<DomainsChart> findByProject(Project project) {
 		return getRepository().createCriteriaQuery(DomainsChart.class)
-				.eq("project.name", projectName).list();
+				.eq("project", project).list();
 	}
 
 	/**
@@ -87,9 +87,9 @@ public class DomainsChart extends AbstractEntity {
 	 * @param name
 	 * @return
 	 */
-	public static DomainsChart getByProjectNameAndName(String projectName, String name) {
+	public static DomainsChart getByProjectAndName(Project project, String name) {
 		return getRepository().createCriteriaQuery(DomainsChart.class)
-				.eq("project.name", projectName)
+				.eq("project", project)
 				.eq("name", name).singleResult();
 	}
 	
