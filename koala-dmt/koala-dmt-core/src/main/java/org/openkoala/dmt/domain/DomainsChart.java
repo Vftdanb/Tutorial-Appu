@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -47,7 +48,7 @@ public class DomainsChart extends AbstractEntity {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Set<DomainShape> getDomainShapes() {
 		return domainShapes;
 	}
@@ -56,7 +57,7 @@ public class DomainsChart extends AbstractEntity {
 		this.domainShapes = domainShapes;
 	}
 
-	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Set<Line> getLines() {
 		return lines;
 	}
