@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -22,7 +23,7 @@ public class EntityShape extends DomainShape {
 	
 	private Boolean isMappedSuperClass = false;
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "ENTITY_PROPERTIES", joinColumns = @JoinColumn(name = "ENTITY_SHAPE_ID"))
 	public Set<Property> getProperties() {
 		return properties;

@@ -6,6 +6,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -19,7 +22,7 @@ public class DomainsChart extends AbstractEntity {
 
 	private static final long serialVersionUID = 3043999013741427550L;
 
-	private String projectName;
+	private Project project;
 	
 	private String name;
 	
@@ -27,12 +30,14 @@ public class DomainsChart extends AbstractEntity {
 
 	private Set<Line> lines = new HashSet<Line>();
 	
-	public String getProjectName() {
-		return projectName;
+	@ManyToOne
+	@JoinColumn(name = "PROJECT_ID")
+	public Project getProject() {
+		return project;
 	}
 
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 	public String getName() {
@@ -43,7 +48,7 @@ public class DomainsChart extends AbstractEntity {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Set<DomainShape> getDomainShapes() {
 		return domainShapes;
 	}
@@ -52,7 +57,7 @@ public class DomainsChart extends AbstractEntity {
 		this.domainShapes = domainShapes;
 	}
 
-	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Set<Line> getLines() {
 		return lines;
 	}
@@ -72,9 +77,9 @@ public class DomainsChart extends AbstractEntity {
 	 * @param projectName
 	 * @return
 	 */
-	public static List<DomainsChart> findByProjectName(String projectName) {
+	public static List<DomainsChart> findByProject(Project project) {
 		return getRepository().createCriteriaQuery(DomainsChart.class)
-				.eq("projectName", projectName).list();
+				.eq("project", project).list();
 	}
 
 	/**
@@ -83,9 +88,9 @@ public class DomainsChart extends AbstractEntity {
 	 * @param name
 	 * @return
 	 */
-	public static DomainsChart getByProjectNameAndName(String projectName, String name) {
+	public static DomainsChart getByProjectAndName(Project project, String name) {
 		return getRepository().createCriteriaQuery(DomainsChart.class)
-				.eq("projectName", projectName)
+				.eq("project", project)
 				.eq("name", name).singleResult();
 	}
 	
@@ -96,12 +101,12 @@ public class DomainsChart extends AbstractEntity {
 		if (!(other instanceof DomainsChart))
 			return false;
 		DomainsChart castOther = (DomainsChart) other;
-		return new EqualsBuilder().append(projectName, castOther.projectName).append(name, castOther.name).isEquals();
+		return new EqualsBuilder().append(project, castOther.project).append(name, castOther.name).isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(name).append(projectName).toHashCode();
+		return new HashCodeBuilder(17, 37).append(name).append(project).toHashCode();
 	}
 
 	@Override

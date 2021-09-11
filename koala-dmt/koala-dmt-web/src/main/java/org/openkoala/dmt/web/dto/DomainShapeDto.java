@@ -254,7 +254,7 @@ public class DomainShapeDto implements Dto {
 		return result;
 	}
 
-	public static DomainShapeDto generateDtoBy(DomainShape domainShape) {
+	public static DomainShapeDto getInstance(DomainShape domainShape) {
 		DomainShapeDto result = new DomainShapeDto();
 		result.setId(domainShape.getId());
 		result.setVersion(domainShape.getVersion());
