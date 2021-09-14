@@ -3,21 +3,21 @@ svgGraph = {
 	/*画一条线*/
 	drawLine : function(start ,end , name){
 		var line = $("#line-template ."+name).clone();
-		var path = line.children();
+		var pline = line.children();
 		
 		/*线条的路径*/
-		path.attr("d", 
-			"M" + start[0] 	+ "," + start[1] 	+ " " + 
-			"L" + end[0] 	+ "," + end[1] 		+ " ");
+		pline.attr("points", 
+			start[0]	+ "," + start[1] 	+ " " + 
+			end[0]		+ "," + end[1] 		+ " ");
 			
 		return line;
 	} ,
 	
 	/*移动一条直线*/
 	moveLine : function(line ,start ,end){
-		line.children("path").attr("d", 
-			"M" + start[0] 	+ "," + start[1] 	+ " "+
-			"L" + end[0] 	+ "," + end[1] 		+ " ");
+		line.children("polyline").attr("points", 
+			start[0] 	+ "," + start[1] 	+ " " +
+			end[0] 		+ "," + end[1] 		+ " ");
 	},
 	
 	//重构所有连向某个结点的线的显示，传参结构为nodes数组的一个单元结构
@@ -132,6 +132,24 @@ commonTool = {
 		return {
 			left : e.clientX + document.documentElement.scrollLeft - document.body.clientLeft,
 			top : e.clientY + document.documentElement.scrollTop - document.body.clientTop
+		};
+	},
+	
+	/*获取元素的绝对位置*/
+	domPosition : function(dom) {
+		var t = dom.offsetTop,
+			l = dom.offsetLeft;
+			dom = dom.offsetParent;
+		
+		while (dom) {
+			t += dom.offsetTop;
+			l += dom.offsetLeft;
+			dom = dom.offsetParent;
+		};
+		
+		return {
+			top : t,
+			left : l
 		};
 	},
 	

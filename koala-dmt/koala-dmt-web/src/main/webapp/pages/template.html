@@ -1,45 +1,44 @@
+<!-- 以下内容在多个画布的情况下不能共用，一个画布必须有一个备份 -->
+<!-- 缩放 -->
 <div id="canvas">
-		<!-- 以下内容在多个画布的情况下不能共用，一个画布必须有一个备份 -->
-		<!-- 缩放 -->
-		<div class="scale">
-			<select onchange="zoom(this)">
-				<option value="0.5">50%</option>
-				<option value="1">100%</option>
-				<option value="1.5">150%</option>
-				<option value="2">200%</option>
-				<option value="2.5">250%</option>
-				<option value="3">300%</option>
-			</select>
-			<i class="fa fa-search"></i>
+	<div class="scale">
+		<select onchange="zoom(this)">
+			<option value="0.5">50%</option>
+			<option value="1">100%</option>
+			<option value="1.5">150%</option>
+			<option value="2">200%</option>
+			<option value="2.5">250%</option>
+			<option value="3">300%</option>
+		</select>
+		<i class="fa fa-search"></i>
+	</div>
+	<div class="tools folder" >
+		<div class="swich_tool_view" title="切换工具栏视图">
+			<i class="fa fa-angle-double-right"></i>
 		</div>
-		<div class="tools folder" >
-			<div class="swich_tool_view" title="切换工具栏视图">
-				<i class="fa fa-angle-double-right"></i>
-			</div>
-			<div class="GFVVQ1VPM"></div>
-			<div class="node cursor"><span>移动</span></div>
-			<div class="GFVVQ1VPM"></div>
-			<div class="node entity"><span>实体</span></div>
-			<div class="node interface"><span>接口</span></div>
-			<div class="node enum"><span>枚举</span></div>
-			<div class="GFVVQ1VPM"></div>
-			<div class="component property"><span>属性</span></div>
-			<div class="component enumItem"><span>枚举项</span></div>
-			<div class="component action"><span>行为</span></div>
-			<div class="GFVVQ1VPM"></div>
-			<div class="line extends"><span>继承</span></div>
-			<div class="line implement"><span>实现</span></div>
-			<div class="line aggregate"><span>聚合</span></div>
-			<div class="line compose"><span>组合</span></div>
-			<div class="line associate"><span>关联</span></div>
-		</div>
-		
-		<div class="canvas_freamwork">
-			<div class="uml_canvas">
-				<!-- 线条画布 -->
-				<svg class="svg_canvas"><g class="uml_lines"></g></svg>
-				<!-- 节点画布 -->
-			</div>
+		<div class="GFVVQ1VPM"></div>
+		<div class="node cursor"><span>移动</span></div>
+		<div class="GFVVQ1VPM"></div>
+		<div class="node entity"><span>实体</span></div>
+		<div class="node interface"><span>接口</span></div>
+		<div class="node enum"><span>枚举</span></div>
+		<div class="GFVVQ1VPM"></div>
+		<div class="component property"><span>属性</span></div>
+		<div class="component enumItem"><span>枚举项</span></div>
+		<div class="component action"><span>行为</span></div>
+		<div class="GFVVQ1VPM"></div>
+		<div class="line extends"><span>继承</span></div>
+		<div class="line implement"><span>实现</span></div>
+		<div class="line aggregate"><span>聚合</span></div>
+		<div class="line compose"><span>组合</span></div>
+		<div class="line associate"><span>关联</span></div>
+	</div>
+	
+	<div class="uml_easel">
+		<div class="uml_canvas">
+			<!-- 线条画布 -->
+			<svg class="svg_canvas"><g class="uml_lines"></g></svg>
+			<!-- 节点画布 -->
 		</div>
 	</div>
 </div>

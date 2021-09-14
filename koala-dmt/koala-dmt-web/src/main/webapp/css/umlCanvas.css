@@ -1,7 +1,7 @@
 body{
 	font-family: "微软雅黑";
 }
-.canvas_freamwork{
+.uml_easel{
 	width:700px;
 	height:400px;
 	overflow:auto;
@@ -42,11 +42,11 @@ marker path {
 	fill:#FFF;
 	stroke:#5890c1;
 }
-.uml_lines path {
+.uml_lines polyline {
 	stroke-width:2px;
 	stroke:#5890c1;
 }
-#line-template path {
+#line-template polyline {
 	stroke:#5890c1;
 	stroke-width:2px;
 	cursor:pointer;
@@ -164,3 +164,12 @@ marker path {
 .add_entity div{background-image:url("../images/icons/class.png");}
 .add_interface div{background-image:url("../images/icons/interface.gif");}
 .add_enum div{background-image:url("../images/icons/enum.png");}
+
+.uml_canvas .legal{
+	background:#CCFFCC!important;
+	border-color:#009933;
+}
+.uml_canvas .illegal{
+	background:#FFCCCC!important;
+	border-color:#FF6666;
+}
