@@ -27,74 +27,71 @@ svgGraph = {
 		
 		/*重画指出的线*/
 		for(var i in outLines){
-			endpoints = this.getStartEnd(node,nodes[outLines[i].to].nodeObj);
-			this.moveLine(lines[i].lineObj, endpoints.start, endpoints.end);
+			endpoints = this.getStartEnd(node,nodes[outLines[i].toShapeId]);
+			this.moveLine(lines[i], endpoints.start, endpoints.end);
 		}
 		
 		/*重画指入的线*/
 		for(var i in inLines){
-			endpoints = this.getStartEnd(nodes[inLines[i].from].nodeObj,node);
-			this.moveLine(lines[i].lineObj, endpoints.start, endpoints.end);
+			endpoints = this.getStartEnd(nodes[inLines[i].fromShapeId],node);
+			this.moveLine(lines[i], endpoints.start, endpoints.end);
 		}
 	},
 	
-	/*在画直线时，根据两个节点计算连线起止点*/
-	getStartEnd : function(n1, n2) {
-		var start = [],	end = [];
-		//左右判断：
-		var x11 = n1.position().left , x12 = n1.position().left + n1.outerWidth(), 
-			x21 = n2.position().left , x22 = n2.position().left + n2.outerWidth();
+	/*
+	 * 当两个节点之间连直线时，计算连线的起点和终点
+	 */
+	getStartEnd : function(n1,n2){
+		var p1 = n1.position(),
+			p2 = n2.position(),
+			c1 = {
+				left : p1.left + n1.outerWidth()/2,
+				top : p1.top + n1.outerHeight()/2
+			},
+			c2 = {
+				left : p2.left + n2.width()/2,
+				top : p2.top + n2.height()/2
+			},
+			start 	= this.getPoint(p1,n1.outerWidth(),n1.outerHeight(),c2),
+			end 	= this.getPoint(p2,n2.outerWidth(),n2.outerHeight(),c1);
 			
-		//结点2在结点1左边
-		if (x11 >= x22) {
-			start[0] = x11;
-			end[0] = x22;
-		} else if (x12 <= x21) {
-			start[0] = x12;
-			end[0] = x21;
-		} else if (x11 <= x21 && x12 >= x21 && x12 <= x22) { //结点2在结点1水平部分重合
-			start[0] = (x12 + x21) / 2;
-			end[0] = start[0];
-		} else if (x11 >= x21 && x12 <= x22) {
-			start[0] = (x11 + x12) / 2;
-			end[0] = start[0];
-		} else if (x21 >= x11 && x22 <= x12) {
-			start[0] = (x21 + x22) / 2;
-			end[0] = start[0];
-		} else if (x11 <= x22 && x12 >= x22) {
-			start[0] = (x11 + x22) / 2;
-			end[0] = start[0];
-		}
-
-		//上下判断：
-		var y11 = n1.position().top, y12 = n1.position().top + n1.outerHeight(), 
-			y21 = n2.position().top, y22 = n2.position().top + n2.outerHeight();
-			
-		//结点2在结点1上边
-		if (y11 >= y22) {
-			start[1] = y11;
-			end[1] = y22;
-		} else if (y12 <= y21) { //结点2在结点1下边
-			start[1] = y12;
-			end[1] = y21;
-		} else if (y11 <= y21 && y12 >= y21 && y12 <= y22) { //结点2在结点1垂直部分重合
-			start[1] = (y12 + y21) / 2;
-			end[1] = start[1];
-		} else if (y11 >= y21 && y12 <= y22) {
-			start[1] = (y11 + y12) / 2;
-			end[1] = start[1];
-		} else if (y21 >= y11 && y22 <= y12) {
-			start[1] = (y21 + y22) / 2;
-			end[1] = start[1];
-		} else if (y11 <= y22 && y12 >= y22) {
-			start[1] = (y11 + y22) / 2;
-			end[1] = start[1];
-		}
-		
 		return {
 			"start" : start,
 			"end" 	: end
 		};
+	},
+	
+	/**
+	 * 在矩形中心与矩形外任意一点连线时，获取该连线与矩形的边的交点
+	 * p1：矩形左上角坐标
+	 * w：矩形的width
+	 * h：矩形的height
+	 * p2：矩形外的点
+	 */
+	getPoint : function(p1,w,h,p2){
+		var x1,y1,x,y;
+		
+		x1 = p1.left + w/2;
+		y1 = p1.top + h/2;
+		
+		var tan1 = (p2.top - y1) / (p2.left - x1);
+		var tan2 = h/w;
+		
+		if(Math.abs(tan1) > Math.abs(tan2)){
+			var dx = Math.abs( (h*(p2.left-x1)) / (2*(p2.top-y1)) );
+			
+			dx = (p2.left > x1 ? dx : -dx);
+			x = p1.left + w/2 + dx;
+			y = (p2.top > y1 ? p1.top+h : p1.top);
+		} else {
+			var dy = Math.abs( (w*(p2.top-y1)) / (2*(p2.left-x1)) );
+			
+			dy = (p2.top > y1 ? dy : -dy);
+			y = p1.top + h/2 + dy;
+			x = (p2.left > x1 ? p1.left+w : p1.left);
+		}
+		
+		return [x,y];
 	}
 };
 
@@ -155,11 +152,11 @@ commonTool = {
 	
 	/*找出和某个节点连接的所有线条（分连出和连入两种）*/
 	findRelatedLines : function(nodeId,lines){
-		var outLines = [], inLines = [];
+		var outLines = {}, inLines = {};
 		for(var i in lines){
-			if(lines[i].to == nodeId){
+			if(lines[i].toShapeId == nodeId){
 				inLines[i] = lines[i];
-			} else if(lines[i].from == nodeId){
+			} else if(lines[i].fromShapeId == nodeId){
 				outLines[i] = lines[i];
 			}
 		}
@@ -182,31 +179,94 @@ commonTool = {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*uml图对象*/
+function DomainChar(name){
+	this.project 		= null;
+	this.name			= name;
+	this.domainShapeDtos = null;
+	this.lineDtos		= null;
+}
+
+/*线条数据结构*/
+function Line(chartId,type,from,to,desc){
+	this.fromShapeId 	= from;
+	this.toShapeId		= to;
+	this.lineType 		= type;
+	this.description	= desc;
+	this.domainsChartId	= chartId;
+}
+
+/*节点数据结构*/
+function DomainShape(id,charid,name,point,type,desc){
+	this.shapeId			= id;
+	this.leftTopPoint 		= point;
+	this.shapeType			= type;
+	this.name				= name;
+	this.description		= desc;
+	this.domainsChartId		= charid;
+}
+
 /****************************顶级数据结构****************************/
 /*实体类*/
-function Entity(name){
-	this.package;
-	this.name			= name;
-	this.extends		= null;	//父类(连线时级联产生)
-	this.implementsList = [];	//实现（连线时接连产生，有可能要自动实现方法）
-	this.constants		= [];	//常量数组（常量对象数组）
-	this.properties 	= []; 	//属性数组（属性对象数组）
-	this.actions		= []; 	//行为数组（行为对象数组）
+function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
+	DomainShape.call(this, id,charid,name,point,type,desc); 		//继承DomainShap
+	
+	this.extends			= null;			//父类(连线时级联产生)
+	this.implementsList 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
+	this.constants			= [];			//常量数组（常量对象数组）
+	
+	
+	this.properties 		= []; 			//属性数组（属性对象数组）
+	this.actions			= []; 			//行为数组（行为对象数组）
+	this.isAbstractEntity 	= isAbstract;
+	this.isMappedSuperClass = isMapped;
 	
 }
+
 /*值对象*/
-function ValueObject(name){
+function ValueObject(id,charid,name,point,type,desc){
+	DomainShape.call(this, id,charid,name,point,type,desc);
+	
 	this.name 			=  name;
 }
 /*接口类*/
-function Interface(name){
+function InterfaceShape(id,charid,name,point,type,desc){
+	DomainShape.call(this, id,charid,name,point,type,desc);
+	
 	this.name 		= name;
 	this.actions 	= [];	//
 }
 /*枚举*/
-function Enum(name){
-	this.name 		= name;
-	this.enumItems 	= [];
+function EnumShape(){
+	this.enumItems = [];
 }
 
 
@@ -214,10 +274,15 @@ function Enum(name){
 /****************************二级数据结构****************************/
 /*属性类*/
 function Property(name,type){
-	this.propertyName 	= name;
-	this.propertyType 	= type;
-	this.propertyScope	= null;
+	this.name 			= name;
+	this.type 			= type;
+	this.genericity		= null;
+	this.propertyScope	= "private";
 	this.relation		= null;
+	this.nullable		= true;
+	this.isUnique		= false;
+	this.transientPro	= false;
+	this.relation		= null;		//manytonone,manytomany...
 }
 
 /*常量类*/
@@ -244,4 +309,9 @@ function Parameter(name ,type){
 	this.parameterName 	= name;
 	this.parameterType 	= type;
 	this.sortNumber 	= null;
+}
+
+/*工程类*/
+function Project(name){
+	this.name = name;
 }

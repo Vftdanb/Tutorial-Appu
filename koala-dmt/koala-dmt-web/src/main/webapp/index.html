@@ -102,7 +102,7 @@
 					<text x="20" y="30">说明文字</text>
 				</g>
 				<!-- 实现关系连线模板 -->
-				<g class="line implement">
+				<g class="line implements">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1);stroke-dasharray:5"></polyline>
 				</g>
 				<!-- 聚合关系连线模板 -->
@@ -142,8 +142,14 @@
 				
 				<!-- 属性模板  -->
 				<div class="property">
-					<div class="propertyName">property</div><div>:</div>
+					<div class="propertyName">property</div>
+					<div> : </div>
 					<div class="propertyType">String</div>
+					<div class="genericity" style="display:none;">
+						<span>&lt;</span>
+						<span class="value"></span>
+						<span>&gt;</span>
+					</div>
 				</div>
 				
 				<!-- 枚举项模板 -->
