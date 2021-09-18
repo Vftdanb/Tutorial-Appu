@@ -2,8 +2,8 @@ body{
 	font-family: "微软雅黑";
 }
 .uml_easel{
-	width:700px;
-	height:400px;
+	width:800px;
+	height:600px;
 	overflow:auto;
 	background-color:#CCFFCC!important;
 }
@@ -62,14 +62,11 @@ marker path {
 }
 .uml_canvas .node {
 	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#bbb));
-	-moz-box-shadow: 2px 2px 4px #000;
-	-webkit-box-shadow: 2px 5px 10px rgba(0,0,0,.4);
-	box-shadow: 2px 5px 10px rgba(0,0,0,.4);
 }
 .property div{
 	height:18px;
 	line-height:18px;
-	display:inline-block;
+	display:inline;
 }
 .node .property:before{
 	content:"+ ";
@@ -79,7 +76,7 @@ marker path {
 	
 }
 .node .action div{
-	display	: inline-block;
+	display	: inline;
 }
 .node .action:before{
 	content:"+ ";
@@ -115,7 +112,7 @@ marker path {
 .tools .enumItem{background:url("../images/icons/enumItem.png") no-repeat 0 1px;}
 .tools .action{background:url("../images/icons/action.png") no-repeat 0 1px;}
 .tools .extends{background:url("../images/icons/generalizatic.gif") no-repeat 0 1px;}
-.tools .implement{background:url("../images/icons/realization.gif") no-repeat 0 1px;}
+.tools .implements{background:url("../images/icons/realization.gif") no-repeat 0 1px;}
 .tools .aggregate{background:url("../images/icons/aggregate.gif") no-repeat 0 1px;}
 .tools .compose{background:url("../images/icons/compose.gif") no-repeat 0 1px;}
 .tools .associate{background:url("../images/icons/associate.gif") no-repeat 0 1px;}
@@ -173,3 +170,5 @@ marker path {
 	background:#FFCCCC!important;
 	border-color:#FF6666;
 }
+.uml_canvas .legal *{cursor:crosshair!important;}
+.uml_canvas .illegal *{cursor:not-allowed!important;}
