@@ -14,7 +14,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 @RunWith(SpringJUnit4ClassRunner.class)
 //@Transactional(propagation = Propagation.REQUIRED)
 @ContextConfiguration(locations = {"classpath*:META-INF/spring/root.xml"})
-@TransactionConfiguration(transactionManager = "transactionManager",defaultRollback = true) 
+@TransactionConfiguration(transactionManager = "transactionManager_dmt", defaultRollback = true) 
 public abstract class BaseIntegrationTest extends AbstractTransactionalJUnit4SpringContextTests {
 	
     @Before
