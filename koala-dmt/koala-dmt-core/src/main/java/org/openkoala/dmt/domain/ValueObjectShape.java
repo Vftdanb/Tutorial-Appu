@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 
 @Entity
-@DiscriminatorValue("EntityShape")
+@DiscriminatorValue("ValueObjectShape")
 public class ValueObjectShape extends DomainShape {
 	
 	private static final long serialVersionUID = -202101819505897756L;
