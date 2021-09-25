@@ -22,8 +22,26 @@
 		var endpoints 	= null;
 		var startP 		= null;
 		var line;
+		
+		/*提示划线工具是否可以应用在当前节点*/
+		umlCanvas.delegate(".node","mouseenter",function(e){
+			if(curTool.type != line) return;
+			var thiz = $(this),tname = curTool.name;
+			
+			thiz.addClass("illegal");
+			thiz.addClass("legal");
+						
+			if(tname == "extends" ){
+				
+			}
+		});
+		
+		umlCanvas.delegate(".node","mouseleave",function(e){
+			$(this).removeClass("illegal legal");
+		});
+		
 		umlCanvas.delegate(".node","mousedown",function(e){
-			if($(e.target).is(".name") || $(e.target).is(".header") || curTool.type != "line") return;
+			if(curTool.type != "line" || $(e.target).is(".name") || $(e.target).is(".header")) return;
 			
 			drawing 	= true;
 			startNode 	= $(this);
@@ -67,13 +85,19 @@
 		/*点击鼠标添加节点*/
 		umlCanvas.delegate("svg","click",function(e){
 			if(curTool.type == "node"){
-				var id = addNode(e);
-				commonTool.maintainDataList("property_type_tip",1,"class",id);
+				addNode(e);
 			}
 			
 			/*当画布被点击一次时，如果当前不是线条工具，将工具切换回鼠标工具*/
 			if(curTool.type == "node"){
 				swichTool("cursor");
+			}
+		});
+		
+		umlCanvas.contextmenu(function(e){
+			var target = $(e.target);
+			if(target.is("svg")){
+				showContextmenu(target,e,"add_nodes");
 			}
 		});
 		
@@ -83,11 +107,23 @@
 				addProperty($(this));
 			} else if(curTool.name == "action"){ 	//添加行为
 				addAction($(this));
-			}
+			} 
 			var relatedLines = commonTool.findRelatedLines($(this).attr("id"),lines);
 			svgGraph.resetLines($(this),nodes,lines,relatedLines.outLines,relatedLines.inLines);
 			
 			swichTool("cursor");
+		});
+		
+		//右键菜单添加领域模型
+		$("#add_nodes").delegate(".contextmenu_item","click",function(e){
+			var thiz = $(this);
+			if(thiz.is(".add_entity")){
+				addNode(e,"entity");
+			} else if(thiz.is(".add_interface")){
+				addNode(e,"interface");
+			} else if(thiz.is(".add_enum")){
+				addNode(e,"enum");
+			}
 		});
 		
 		/*右键菜单添加行为或属性*/
@@ -98,6 +134,8 @@
 				addProperty(target);
 			} else if(thiz.is(".add_action")){
 				addAction(target);
+			} else if(thiz.is(".add_enumItem")){
+				addEnumItem(target);
 			}
 		});
 		
@@ -148,10 +186,9 @@
 			/*编辑节点名字*/
 			$(this).miniedit({
 				type:'input',
-				css:{"margin-left":"-2px","margin-top":"-2px",height:"14px"},
 				afterEdit:function(target,input){
 					if(input.val() == ""){
-						alert("请输入属性名");
+						alert("请输入模型名");
 						input.focus();
 						return false;
 					} else {
@@ -161,6 +198,22 @@
 				}
 			});
 		});
+		
+		function zoom(t){
+			var value = $(t).val();
+			$(".uml_canvas").css("transform","scale("+value+")");
+		}
+		/*工具栏切换*/
+		toolBar.find(".swich_tool_view").click(function(){
+			var thiz = $(this);
+			if($(this).data("closed")){
+				thiz.data("closed",false);
+				thiz.parent().addClass("folder");
+			} else {
+				thiz.data("closed",true);
+				thiz.parent().removeClass("folder");
+			}
+		});	
 		
 		/* 双击方式编辑属性或行为 */
 		umlCanvas.delegate(".properties,.actions,.name","dblclick",function(e){
@@ -175,18 +228,17 @@
 			} else if(thiz.is(".actions")){
 				action = t.parent().data("action");
 			}
-			
+			var css = {"font-size":"12px",width:"50%",height:"20px","margin-top":"-1px"};
 			if(t.is(".propertyName")){ 		//编辑节点名字
 				t.miniedit({ //利用一个行内编辑插件编辑
 					type:'input',
-					css:{height:"14px","margin-top":"-1px"},
+					css:css,
 					afterEdit:function(target,input){
 						if(input.val() == ""){
 							alert("请输入属性名");
 							input.focus();
 							return false;
 						} else {
-							commonTool.maintainDataList();
 							property.propertyName = input.val(); //同步更新
 							console.log(JSON.stringify(model));
 							return true;
@@ -197,7 +249,7 @@
 				t.miniedit({
 					type:'input',
 					dataList:"property_type_tip",
-					css:{"min-width" : "50%",height:"14px","margin-top":"-1px"},
+					css:css,
 					afterEdit:function(target,input){
 						if(input.val() == ""){
 							alert("请输入属性类型");
@@ -213,7 +265,7 @@
 			} else if(t.is(".actionName")){
 				t.miniedit({
 					type:'input',
-					css:{height:"16px"},
+					css:css,
 					afterEdit:function(target,input){
 						if(input.val() == ""){
 							alert("请输入方法名");
@@ -229,7 +281,7 @@
 				t.miniedit({
 					type:'input',
 					dataList:"property_type_tip",
-					css:{height:"16px","min-width":"50%"},
+					css:css,
 					afterEdit:function(target,input){
 						if(input.val() == ""){
 							alert("请输入方法名");
@@ -249,7 +301,6 @@
 		
 		/*右键添加属性或行为或枚举项等等*/
 		umlCanvas.delegate(".node","contextmenu",function(e){
-			e.preventDefault();
 			var thiz = $(this);
 			var selector;
 			
@@ -264,11 +315,10 @@
 			showContextmenu(thiz,e,"add_members",selector);
 		});
 		
-		$("#edit_contextmenus").delegate(".contextmenu","click",function(){
-			$(this).slideUp(50);
+		/*收起右键菜单*/
+		$("body").click(function(){
+			$("#edit_contextmenus .contextmenu").slideUp(50);
 		});
-		
-		
 		
 		/*切换工具的方法*/
 		function swichTool(name){
@@ -284,6 +334,8 @@
 		
 		/*显示右键菜单*/
 		function showContextmenu(target,e,menuName,selector){
+			e.preventDefault();
+			$("#edit_contextmenus .contextmenu").slideUp(50);
 			var position = commonTool.mousePosition(e);
 			
 			$("#"+menuName)
@@ -297,14 +349,14 @@
 		}
 		
 		/*页面上添加一个节点，对应业务上的一个类或接口*/
-		function addNode(e){
+		function addNode(e,name){
 			var id = commonTool.guid();
-			var toolName = curTool.name;
 			var position = {
 					left:e.clientX - canvas_offset.left,
 					top:e.clientY - canvas_offset.top
 				};
-			var node = $("#node-template ."+curTool.name).clone().css({
+			var nodeName = name ? name : curTool.name;
+			var node = $("#node-template ."+nodeName).clone().css({
 					left:position.left,
 					top:position.top
 				});
@@ -314,14 +366,13 @@
 					top		: position.top
 				};
 				
-				
 			/*判断要生成那种领域模型*/
 			var domainModel = null;
-			if(toolName == "entity"){
+			if(nodeName == "entity"){
 				domainModel = new Entity("Entity");
-			} else if(toolName == "interface"){
+			} else if(nodeName == "interface"){
 				domainModel = new Interface("Interface");
-			} else if(toolName == "enum"){
+			} else if(nodeName == "enum"){
 				domainModel = new Enum("Enum");
 			}
 			
@@ -358,7 +409,7 @@
 		}
 		/*添加枚举项*/
 		function addEnumItem(target){
-			target.find(".").append($("#node-template .enumItem").clone());
+			target.find(".enumItems").append($("#node-template .enumItem").clone());
 			/*TODO:同步更新缓存数据*/
 			var id = target.attr("id");
 			var enumItem = new EnumItem("enum item");
@@ -391,25 +442,5 @@
 		function deleteEnumItem(){
 			/*TODO:同步更新缓存数据*/
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 	};
 })($);

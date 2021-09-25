@@ -93,7 +93,7 @@
 				Copyright @koala, All rights reserved.
 			</div>
 		</div>
-				<div id="template">
+		<div id="template">
 			<!-- 线条模板 -->
 			<svg id="line-template" style="">
 				<!-- 继承关系连线模板 -->
@@ -121,7 +121,7 @@
 			<div id="node-template">
 				<!-- 实体模板 -->
 				<div class="node entity">
-					<div class="name">User</div>
+					<div class="name">Entity</div>
 					<div class="properties"></div>
 					<div class="actions"></div>
 				</div>
@@ -129,34 +129,32 @@
 				<!-- 接口模板 -->
 				<div class="node interface">
 					<div class="header">«interface»</div>
-					<div class="name">接口</div>
+					<div class="name">Interface</div>
 					<div class="actions"></div>	
 				</div>
 				
 				<!-- 枚举模板  -->
 				<div class="node enum">
 					<div class="header">«enum»</div>
-					<div class="name">enum</div>
+					<div class="name">Enum</div>
 					<div class="enumItems"></div>
 				</div>
 				
 				<!-- 属性模板  -->
 				<div class="property">
-					<div class="propertyName">emails</div><div>:</div>
-					<div class="propertyType">Set</div>
+					<div class="propertyName">property</div><div>:</div>
+					<div class="propertyType">String</div>
 				</div>
 				
 				<!-- 枚举项模板 -->
-				<div class="enumItem"></div>
+				<div class="enumItem">ENUMITEM</div>
 				
 				<!-- 行为模板 -->
 				<div class="action">
-					<div class="actionName">assignPost</div>
-					<div class="parameters">
-						<span>(</span>
-						<span>)</span>
-					</div>
-					<span>:</span>
+					<div class="actionName">action</div>
+					<span>(</span>
+					<div class="parameters" style="min-width:10px;">ssss</div>
+					<span>) : </span>
 					<div class="returnType">void</div>
 				</div>
 				
@@ -201,14 +199,25 @@
 			</div>
 			
 			<!--  -->
-			<div id="">
+			<div id="add_nodes" class="contextmenu">
+				<div class="contextmenu_item add_entity"><div>添加实体</div></div>
+				<div class="contextmenu_item add_interface"><div>添加接口</div></div>
+				<div class="contextmenu_item add_enum"><div>添加枚举</div></div>
 			</div>
 		</div>
+		
+		
+		<datalist id="property_type_tip">
+			<option value="String"></option>
+			<option value="Set"></option>
+			<option value="List"></option>
+			<option value="Date"></option>
+			<option value="Long"></option>
+			<option value="Integer"></option>
+		</datalist>
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
 		<script type="text/javascript" src="lib/bootstrap-3.1.1/js/bootstrap.js" ></script>
 		<script type="text/javascript" src="lib/tiny.tree.min.js" ></script>
-		<script type="text/javascript" src="js/umlCanvas.js" ></script>
-		<script type="text/javascript" src="js/umlCanvasProtorype.js" ></script>
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
 		<script type="text/javascript" src="js/tool.js" ></script>
 		<script type="text/javascript" src="plugins/inlineedit/jquery.miniedit.js" ></script>

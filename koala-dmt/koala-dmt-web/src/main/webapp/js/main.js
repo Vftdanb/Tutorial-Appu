@@ -76,7 +76,7 @@ $(function() {
 		'icon-class' : 'orange',
 		"type" : "folder",
 		"actionUrl" : ""
-	}]
+	}];
 	$('#projectTree').tree({
 		localData : data,
 		loadingHTML : '<div class="tree-loading"><i class="fa fa-refresh fa fa-spin blue"></i></div>',
@@ -89,7 +89,7 @@ $(function() {
 	$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function() {
 		var title = $(this).text();
 		var id = $(this).attr('id');
-		openTab('/pages/template.html', title, 'id' + id);
+		openTab('pages/template.html', title, 'id' + id);
 	});
 });
 
@@ -97,11 +97,11 @@ $.ajaxSetup({
 	error : function(XMLHttpRequest, textStatus) {
 
 		if (XMLHttpRequest.status == 404 || XMLHttpRequest.status == 500) {
-			$.get('/errors/' + XMLHttpRequest.status + '.html').done(function(html) {
+			$.get('errors/' + XMLHttpRequest.status + '.html').done(function(html) {
 				$('#tabContent .active').html(html);
 			});
 		} else {
-			$.get('/errors/404.html').done(function(html) {
+			$.get('errors/404.html').done(function(html) {
 				$('#tabContent .active').html(html);
 			});
 		}
@@ -122,8 +122,7 @@ function openTab(url, title, id) {
 	content = $('<div id="' + id + '" class="tab-pane"></div>');
 	$.get(url).done(function(data) {
 		content.html(data);
-		content.find('.canvas_freamwork').height($(window).height()*0.75).css('width', '91%');
-		content.find('.tools ').height($(window).height()*0.75).css('width', '9%');
+		content.find('.canvas_freamwork');
 		content.find('#canvas').umlCanvas();
 	});
 	contents.append(content);
