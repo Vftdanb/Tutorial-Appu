@@ -8,6 +8,7 @@ $(function() {
 		$('#projectExplorer .panel-body').height(0.36 * height);
 		$('#propertiesExplorer .panel-body').height(0.24 * height);
 		$('#gwtTabLayoutPanel .panel-body').height(0.80 * height);
+		$('#home').height(0.80 * height);
 		//		$('.diagram').height($(window).height() * 0.80 - 28);
 		//		$('.tool-container').height($(window).height() * 0.80 - 28);
 		//		$('.tool-bar').height($(window).height() * 0.80 - 48);

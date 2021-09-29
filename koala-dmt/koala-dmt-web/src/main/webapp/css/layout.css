@@ -380,3 +380,6 @@ body {
 	margin: 0 auto 2px auto;
 	clear: both;
 }
+#home {
+	overflow: auto;
+}
