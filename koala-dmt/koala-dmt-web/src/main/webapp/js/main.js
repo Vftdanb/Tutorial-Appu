@@ -15,83 +15,50 @@ $(function() {
 	});
 	$(window).trigger('resize');
 
-	var data = [{
-		"id" : 1,
-		"name" : "项目一",
-		"children" : [{
-			"id" : 7,
-			"name" : "类1",
-			"type" : "folder",
-			"actionUrl" : "forum",
-			"children" : [{
-				"id" : 7,
-				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
-				"type" : "item",
-				"actionUrl" : "forum"
-			}, {
-				"id" : 7,
-				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
-				"type" : "item",
-				"actionUrl" : "forum"
-			}]
-		}],
-		'icon-class' : 'red',
-		"type" : "folder",
-		"actionUrl" : ""
-	}, {
-		"id" : 2,
-		"name" : "项目二",
-		"children" : [{
-			"id" : 4,
-			"name" : "类1",
-			"type" : "folder",
-			"actionUrl" : "repair",
-			"children" : [{
-				"id" : 7,
-				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
-				"type" : "item",
-				"actionUrl" : "forum"
-			}, {
-				"id" : 7,
-				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
-				"type" : "item",
-				"actionUrl" : "forum"
-			}]
-		}, {
-			"id" : 5,
-			"name" : "类2",
-			"type" : "folder",
-			"actionUrl" : "comment",
-			"children" : [{
-				"id" : 7,
-				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性1",
-				"type" : "item",
-				"actionUrl" : "forum"
-			}, {
-				"id" : 7,
-				"name" : "<i class=\"fa fa-file\"></i>&nbsp;属性2",
-				"type" : "item",
-				"actionUrl" : "forum"
-			}]
-		}],
-		'icon-class' : 'orange',
-		"type" : "folder",
-		"actionUrl" : ""
-	}];
-	$('#projectTree').tree({
-		localData : data,
-		loadingHTML : '<div class="tree-loading"><i class="fa fa-refresh fa fa-spin blue"></i></div>',
-		'open-icon' : 'fa-folder-open fa',
-		'close-icon' : 'fa-folder fa',
-		'selectable' : false,
-		'selected-icon' : null,
-		'unselected-icon' : null
+	$.get('domains-chart/find-all').done(function(data) {
+		var items = [];
+		$.each(data, function() {
+			var item = {};
+			item.id = this.projectId;
+			item.name = this.projectName;
+			item.type = "folder";
+			item.children = [];
+			if (this.domainsChartDtos) {
+				getChilren(item.children, this.domainsChartDtos, 'folder');
+			}
+			items.push(item);
+		});
+		$('#projectTree').tree({
+			localData : items,
+			loadingHTML : '<div class="tree-loading"><i class="fa fa-refresh fa fa-spin blue"></i></div>',
+			'open-icon' : 'fa-folder-open fa',
+			'close-icon' : 'fa-folder fa',
+			'selectable' : false,
+			'selected-icon' : null,
+			'unselected-icon' : null
+		});
+		$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function() {
+			var title = $(this).text();
+			var id = $(this).attr('id');
+			openTab('pages/template.html', title, 'id' + id);
+		});
 	});
-	$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function() {
-		var title = $(this).text();
-		var id = $(this).attr('id');
-		openTab('pages/template.html', title, 'id' + id);
-	});
+	var getChilren = function(children, domainsChartDtos, type) {
+		$.each(domainsChartDtos, function() {
+			var item = {};
+			item.id = this.id;
+			item.name = (type == 'item' ? '<i class=\"fa fa-file\"></i>&nbsp;'+this.name　:　this.name);
+			item.type = type;
+			item.children = [];
+			if (this.domainShapeDtos) {
+				getChilren(item.children, this.domainShapeDtos, 'item');
+			}
+			if (this.lineDtos) {
+				getChilren(item.children, this.lineDtos, 'item');
+			}
+			children.push(item);
+		});
+	};
 });
 
 $.ajaxSetup({
