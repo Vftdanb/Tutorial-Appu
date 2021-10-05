@@ -93,7 +93,7 @@
 				Copyright @koala, All rights reserved.
 			</div>
 		</div>
-		<div id="template">
+		<div id="template" style="display: none;">
 			<!-- 线条模板 -->
 			<svg id="line-template" style="">
 				<!-- 继承关系连线模板 -->
@@ -173,7 +173,7 @@
 		</div>
 		<!-- 以下内在多个画板时的情况下可以共用 ，包括图形的模板、右键菜单等元素-->
 		<!-- uml元素模板 -->
-		<svg>
+		<svg style="display: none;">
 			<defs>
 				<!-- 空心三角形 -->
 				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
@@ -190,7 +190,7 @@
 			</defs>
 		</svg>
 		<!-- 各种右键编辑菜单 -->
-		<div id="edit_contextmenus">
+		<div id="edit_contextmenus" style="display: none;">
 			<!-- 添加节点成员的右键菜单 -->
 			<div id="add_members" class="contextmenu">
 				<div class="contextmenu_item add_property"><div>添加属性</div></div>
@@ -207,7 +207,7 @@
 		</div>
 		
 		
-		<datalist id="property_type_tip">
+		<datalist id="property_type_tip" style="display: none;">
 			<option value="String"></option>
 			<option value="Set"></option>
 			<option value="List"></option>
