@@ -5,6 +5,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -27,7 +28,7 @@ public class Line extends AbstractEntity {
 	
 	private DomainsChart domainsChart;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "FROM_DS_ID")
 	public DomainShape getFromShape() {
 		return fromShape;
@@ -37,7 +38,7 @@ public class Line extends AbstractEntity {
 		this.fromShape = fromShape;
 	}
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "TO_DS_ID")
 	public DomainShape getToShape() {
 		return toShape;
