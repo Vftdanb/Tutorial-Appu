@@ -141,7 +141,7 @@ function openTab(url, title, id) {
 	}).find('a:first').tab('show').find('.close');
 	closeBtn.css({
 		position : 'absolute',
-		right : (closeBtn.width() - 10) + 'px',
+		right : '1px',
 		top : -1 + 'px'
 	}).on('click', function() {
 		var prev = tab.prev('li').find('a:first');
