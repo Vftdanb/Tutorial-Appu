@@ -85,7 +85,7 @@ public class DomainsChartDto implements Dto {
 		result.setProject(project);
 		
 		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
-			result.getDomainShapes().add(domainShapeDto.transformToDomainShape());
+			result.getDomainShapes().add(domainShapeDto.transformToDomainShape(this));
 		}
 		
 		return result;
@@ -94,7 +94,7 @@ public class DomainsChartDto implements Dto {
 	public DomainShape getDomainShapeByShapeId(String shapeId) {
 		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
 			if (shapeId.equals(domainShapeDto.getShapeId())) {
-				return domainShapeDto.transformToDomainShape();
+				return domainShapeDto.transformToDomainShape(this);
 			}
 		}
 		return null;

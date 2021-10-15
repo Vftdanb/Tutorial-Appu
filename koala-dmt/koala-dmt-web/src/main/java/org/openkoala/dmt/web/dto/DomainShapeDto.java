@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.openkoala.dmt.domain.Constant;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.EntityShape;
@@ -43,6 +44,8 @@ public class DomainShapeDto implements Dto {
 	
 	private String name;
 	
+	private Set<Constant> constants = new HashSet<Constant>();
+	
 	private Set<Property> properties = new HashSet<Property>();
 
 	private Boolean isAbstractEntity = false;
@@ -52,6 +55,8 @@ public class DomainShapeDto implements Dto {
 	private List<String> enumItems = new ArrayList<String>();
 	
 	private String description;
+	
+	private String parentShapeId;
 	
 	private Long domainsChartId;
 	
@@ -119,6 +124,14 @@ public class DomainShapeDto implements Dto {
 		this.name = name;
 	}
 
+	public Set<Constant> getConstants() {
+		return constants;
+	}
+
+	public void setConstants(Set<Constant> constants) {
+		this.constants = constants;
+	}
+
 	public Set<Property> getProperties() {
 		return properties;
 	}
@@ -159,6 +172,14 @@ public class DomainShapeDto implements Dto {
 		this.description = description;
 	}
 
+	public String getParentShapeId() {
+		return parentShapeId;
+	}
+
+	public void setParentShapeId(String parentShapeId) {
+		this.parentShapeId = parentShapeId;
+	}
+
 	public Long getDomainsChartId() {
 		return domainsChartId;
 	}
@@ -167,83 +188,70 @@ public class DomainShapeDto implements Dto {
 		this.domainsChartId = domainsChartId;
 	}
 
-	public DomainShape transformToDomainShape() {
+	public DomainShape transformToDomainShape(DomainsChartDto domainsChartDto) {
 		if (ShapeType.EntityShape.equals(shapeType)) {
-			return generateEntityShape();
+			return generateEntityShape(domainsChartDto);
+		}
+		
+		if (ShapeType.ValueObjectShape.equals(shapeType)) {
+			return generateValueObjectShape(domainsChartDto);
 		}
 		
 		if (ShapeType.InterfaceShape.equals(shapeType)) {
-			return generateInterfaceShape();
+			return generateInterfaceShape(domainsChartDto);
 		}
 		
 		if (ShapeType.EnumShape.equals(shapeType)) {
-			return generateEnumShape();
+			return generateEnumShape(domainsChartDto);
 		}
 		
 		return null;
 	}
 	
-	public EntityShape generateEntityShape() {
+	public EntityShape generateEntityShape(DomainsChartDto domainsChartDto) {
 		EntityShape result = new EntityShape();
-		result.setId(id);
-		result.setVersion(version);
-		result.setShapeId(shapeId);
-		result.setName(name);
-		result.setLeftTopPoint(leftTopPoint);
-		result.setHeight(height);
-		result.setWidth(width);
+		setCommonsPropertiesValue(result, domainsChartDto);
 		result.setIsAbstractEntity(isAbstractEntity);
 		result.setIsMappedSuperClass(isMappedSuperClass);
 		result.setProperties(properties);
-		result.setDescription(description);
-		result.setDomainsChart(generateDomainsChart());
 		
 		return result;
 	}
 	
-	public ValueObjectShape generateValueObjectShape() {
+	public <T extends DomainShape> T setCommonsPropertiesValue(T domainShape, DomainsChartDto domainsChartDto) {
+		domainShape.setId(id);
+		domainShape.setVersion(version);
+		domainShape.setShapeId(shapeId);
+		domainShape.setName(name);
+		domainShape.setLeftTopPoint(leftTopPoint);
+		domainShape.setHeight(height);
+		domainShape.setWidth(width);
+		domainShape.setConstants(constants);
+		domainShape.setDescription(description);
+		domainShape.setParent(domainsChartDto.getDomainShapeByShapeId(parentShapeId));
+//		result.setDomainsChart(generateDomainsChart());
+		return domainShape;
+	}
+	
+	public ValueObjectShape generateValueObjectShape(DomainsChartDto domainsChartDto) {
 		ValueObjectShape result = new ValueObjectShape();
-		result.setId(id);
-		result.setVersion(version);
-		result.setShapeId(shapeId);
-		result.setName(name);
-		result.setLeftTopPoint(leftTopPoint);
-		result.setHeight(height);
-		result.setWidth(width);
+		setCommonsPropertiesValue(result, domainsChartDto);
 		result.setProperties(properties);
-		result.setDescription(description);
-		result.setDomainsChart(generateDomainsChart());
 		
 		return result;
 	}
 	
-	public InterfaceShape generateInterfaceShape() {
+	public InterfaceShape generateInterfaceShape(DomainsChartDto domainsChartDto) {
 		InterfaceShape result = new InterfaceShape();
-		result.setId(id);
-		result.setVersion(version);
-		result.setShapeId(shapeId);
-		result.setName(name);
-		result.setLeftTopPoint(leftTopPoint);
-		result.setHeight(height);
-		result.setWidth(width);
-		result.setDescription(description);
-		result.setDomainsChart(generateDomainsChart());
+		setCommonsPropertiesValue(result, domainsChartDto);
 		
 		return result;
 	}
 	
-	public EnumShape generateEnumShape() {
+	public EnumShape generateEnumShape(DomainsChartDto domainsChartDto) {
 		EnumShape result = new EnumShape();
-		result.setId(id);
-		result.setVersion(version);
-		result.setShapeId(shapeId);
-		result.setName(name);
-		result.setLeftTopPoint(leftTopPoint);
-		result.setHeight(height);
-		result.setWidth(width);
+		setCommonsPropertiesValue(result, domainsChartDto);
 		result.setEnumItems(enumItems);
-		result.setDescription(description);
-		result.setDomainsChart(generateDomainsChart());
 		
 		return result;
 	}
