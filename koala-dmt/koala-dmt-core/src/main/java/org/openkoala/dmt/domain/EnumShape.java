@@ -7,6 +7,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 
 @Entity
@@ -17,7 +18,7 @@ public class EnumShape extends DomainShape {
 	
 	private List<String> enumItems = new ArrayList<String>();
 	
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "ENUM_ITEMS", joinColumns = @JoinColumn(name = "ENUM_ID"))
 	public List<String> getEnumItems() {
 		return enumItems;

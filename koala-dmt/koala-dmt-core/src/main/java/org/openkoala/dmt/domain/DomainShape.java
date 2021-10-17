@@ -1,5 +1,8 @@
 package org.openkoala.dmt.domain;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -38,7 +41,11 @@ public abstract class DomainShape extends AbstractEntity {
 	
 	private String name;
 
+	private Set<Constant> constants = new HashSet<Constant>();
+	
 	private String description;
+	
+	private DomainShape parent;
 	
 	private DomainsChart domainsChart;
 	
@@ -84,12 +91,30 @@ public abstract class DomainShape extends AbstractEntity {
 		this.name = name;
 	}
 
+	public Set<Constant> getConstants() {
+		return constants;
+	}
+
+	public void setConstants(Set<Constant> constants) {
+		this.constants = constants;
+	}
+
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	@ManyToOne
+	@JoinColumn(name = "PARENT_ID")
+	public DomainShape getParent() {
+		return parent;
+	}
+
+	public void setParent(DomainShape parent) {
+		this.parent = parent;
 	}
 
 	@ManyToOne
