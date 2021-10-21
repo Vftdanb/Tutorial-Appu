@@ -21,40 +21,53 @@ svgGraph = {
 	},
 	
 	//重构所有连向某个结点的线的显示，传参结构为nodes数组的一个单元结构
-	resetLines : function(node, nodes, lines, outLines, inLines) {
+	resetLines : function(node, nodes, lines, outs, ins) {
 		var line,startNode,endNode;
 		var endPoints;
 		
 		/*重画指出的线*/
-		for(var i in outLines){
-			endpoints = this.getStartEnd(node,nodes[outLines[i].toShapeId]);
-			this.moveLine(lines[i], endpoints.start, endpoints.end);
+		for(var i=outs.length-1 ; i>=0 ; i--){
+			endpoints = this.getEndpoints(node,nodes[outs[i].toShapeId]);
+			this.moveLine(lines[outs[i].lineId],endpoints.start, endpoints.end);
 		}
 		
 		/*重画指入的线*/
-		for(var i in inLines){
-			endpoints = this.getStartEnd(nodes[inLines[i].fromShapeId],node);
-			this.moveLine(lines[i], endpoints.start, endpoints.end);
+		for(var i=ins.length-1 ; i>=0 ; i--){
+			endpoints = this.getEndpoints(nodes[ins[i].fromShapeId],node);
+			this.moveLine(lines[ins[i].lineId],endpoints.start, endpoints.end);
 		}
 	},
 	
 	/*
 	 * 当两个节点之间连直线时，计算连线的起点和终点
 	 */
-	getStartEnd : function(n1,n2){
-		var p1 = n1.position(),
-			p2 = n2.position(),
-			c1 = {
-				left : p1.left + n1.outerWidth()/2,
-				top : p1.top + n1.outerHeight()/2
-			},
-			c2 = {
-				left : p2.left + n2.width()/2,
-				top : p2.top + n2.height()/2
-			},
-			start 	= this.getPoint(p1,n1.outerWidth(),n1.outerHeight(),c2),
-			end 	= this.getPoint(p2,n2.outerWidth(),n2.outerHeight(),c1);
-			
+	getEndpoints : function(n1,n2){
+		var start , end , center2;
+		
+		/*在获取起点之前，要先知道第二个节点中心*/
+		if(n2 instanceof Array){
+			center2 = [n2[0] ,n2[1]];
+		} else {
+			var p2 = n2.position();
+			center2 = [p2.left+n2.width()/2 , p2.top+n2.height()/2];
+		}
+		
+		/*获取起点*/
+		if(n1 instanceof Array){
+			start = n1;
+		} else {
+			var p1 = n1.position();
+			start = this.getPoint([p1.left,p1.top],n1.outerWidth(),n1.outerHeight(),center2);
+		}
+		
+		/*获取终点*/
+		if(n2 instanceof Array){
+			end = n2;
+		} else {
+			var p2 = n2.position();
+			end = this.getPoint([p2.left,p2.top],n2.outerWidth(),n2.outerHeight(),start);
+		}
+		
 		return {
 			"start" : start,
 			"end" 	: end
@@ -63,32 +76,32 @@ svgGraph = {
 	
 	/**
 	 * 在矩形中心与矩形外任意一点连线时，获取该连线与矩形的边的交点
-	 * p1：矩形左上角坐标
+	 * p1：矩形左上角坐标，数组
 	 * w：矩形的width
 	 * h：矩形的height
-	 * p2：矩形外的点
+	 * p2：矩形外的点，数组
 	 */
 	getPoint : function(p1,w,h,p2){
 		var x1,y1,x,y;
 		
-		x1 = p1.left + w/2;
-		y1 = p1.top + h/2;
+		x1 = p1[0] + w/2;
+		y1 = p1[1] + h/2;
 		
-		var tan1 = (p2.top - y1) / (p2.left - x1);
+		var tan1 = (p2[1] - y1) / (p2[0] - x1);
 		var tan2 = h/w;
 		
 		if(Math.abs(tan1) > Math.abs(tan2)){
-			var dx = Math.abs( (h*(p2.left-x1)) / (2*(p2.top-y1)) );
+			var dx = Math.abs( (h*(p2[0]-x1)) / (2*(p2[1]-y1)) );
 			
-			dx = (p2.left > x1 ? dx : -dx);
-			x = p1.left + w/2 + dx;
-			y = (p2.top > y1 ? p1.top+h : p1.top);
+			dx = (p2[0] > x1 ? dx : -dx);
+			x = p1[0] + w/2 + dx;
+			y = (p2[1] > y1 ? p1[1]+h : p1[1]);
 		} else {
-			var dy = Math.abs( (w*(p2.top-y1)) / (2*(p2.left-x1)) );
+			var dy = Math.abs( (w*(p2[1]-y1)) / (2*(p2[0]-x1)) );
 			
-			dy = (p2.top > y1 ? dy : -dy);
-			y = p1.top + h/2 + dy;
-			x = (p2.left > x1 ? p1.left+w : p1.left);
+			dy = (p2[1] > y1 ? dy : -dy);
+			y = p1[1] + h/2 + dy;
+			x = (p2[0] > x1 ? p1[0]+w : p1[0]);
 		}
 		
 		return [x,y];
@@ -152,12 +165,12 @@ commonTool = {
 	
 	/*找出和某个节点连接的所有线条（分连出和连入两种）*/
 	findRelatedLines : function(nodeId,lines){
-		var outLines = {}, inLines = {};
+		var outLines = [], inLines = [];
 		for(var i in lines){
 			if(lines[i].toShapeId == nodeId){
-				inLines[i] = lines[i];
+				inLines.push(lines[i]);
 			} else if(lines[i].fromShapeId == nodeId){
-				outLines[i] = lines[i];
+				outLines.push(lines[i]);
 			}
 		}
 		
@@ -216,7 +229,8 @@ function DomainChar(name){
 }
 
 /*线条数据结构*/
-function Line(chartId,type,from,to,desc){
+function Line(chartId,id,type,from,to,desc){
+	this.lineId				= id;
 	this.fromShapeId 	= from;
 	this.toShapeId		= to;
 	this.lineType 		= type;

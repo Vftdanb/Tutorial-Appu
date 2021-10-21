@@ -1,24 +1,22 @@
 ;(function($){
 	$.fn.umlCanvas = function(opts){
 		/*全局变量*/
-		var thiz 		= $(this);
-		var zoom		= 1;						//uml图的缩放值
-		var easel		= thiz.find(".uml_easel");	//画布容器（画架）
-		var svgLines 	= thiz.find(".uml_lines");  //线条容器
-		var umlCanvas 	= thiz.find(".uml_canvas");	//所有图形元素的容器
-		var toolBar		= thiz.find(".tools");		//切换工具的工具栏
-		var focusItem 	= null;						//当前被选中的元素
-		var curTool		= {type:"cursor",name:null};//当前的工具（currentTool）
-		var focusItem	= null;						//当前被选中的节点或线条
-		var chartId		= 000000000;				//当前uml图的id
+		var THIZ 		= $(this);
+		var ZOOM		= 1;						//uml图的缩放值
+		var EASEL		= THIZ.find(".uml_easel");	//画布容器（画架）
+		var SVGLINES 	= THIZ.find(".uml_lines");  //线条容器
+		var UMLCANVAS 	= THIZ.find(".uml_canvas");	//所有图形元素的容器
+		var TOOLBAR		= THIZ.find(".tools");		//切换工具的工具栏
+		var CURTOOL		= {type:"cursor",name:null};//当前的工具（currentTool）
+		var FOCUSITEM	= null;						//当前被选中的节点或线条
+		var CHARTID		= 000000000;				//当前uml图的id
 		
 		/*需要持久化的数据*/
-		var lines 		= {}; 	//所有线条的控制数据(json对象,需要持久化)
-		var models 		= {}; 	//所有节点的控制数据(json对象,需要持久化)
+		var LINES 		= {}; 	//所有线条的控制数据(json对象,需要持久化)
+		var MODELS 		= {}; 	//所有节点的控制数据(json对象,需要持久化)
 		/*全局缓存*/
-		var lineDoms	= {};	//页面上的所有线条对象
-		var nodeDoms	= {};	//页面上的所有节点对象
-		
+		var LINEDOMS	= {};	//页面上的所有线条对象
+		var NODEDOMS	= {};	//页面上的所有节点对象
 		
 		/*拖动鼠标画连线*/
 		(function(){
@@ -31,24 +29,24 @@
 			var offset;
 			
 			/*拖动划线*/
-			umlCanvas.delegate(".node","mousedown",function(e){
-				if(curTool.type != "line" || $(this).is(".illegal")) return;
-				offset 		= umlCanvas.offset();
+			UMLCANVAS.delegate(".node","mousedown",function(e){
+				if(CURTOOL.type != "line" || $(this).is(".illegal")) return;
+				offset 		= UMLCANVAS.offset();
 				drawing 	= true;
 				startP 		= [e.clientX - offset.left,e.clientY-offset.top];
-				line 		= svgGraph.drawLine(startP,[e.clientX - offset.left,e.clientY - offset.top],curTool.name);
+				line 		= svgGraph.drawLine(startP,[e.clientX - offset.left,e.clientY - offset.top],CURTOOL.name);
 				n1 			= $(this);
 				
 				line.attr("id",commonTool.guid());
-				svgLines.append(line);
+				SVGLINES.append(line);
 			})
 			
 			
 			.delegate(".node","mouseenter",function(e){ 	//结束节点的获取
-				if(curTool.type != "line") return;
+				if(CURTOOL.type != "line") return;
 				
 				var thiz  = $(this),
-					tname = curTool.name, 						//toolname
+					tname = CURTOOL.name, 						//toolname
 					nodeT = thiz.attr("class").split(" ")[1];	//nodeType
 				
 				/*连线起点的合法性检查*/
@@ -60,7 +58,7 @@
 					} else if(tname == "implements"){
 						((nodeT == "entity")) ? //只能有类实现接口
 							thiz.addClass("legal") : thiz.addClass("illegal");
-					} else if(tname == "aggregate") {
+					} else if(tname == "aggregate" || tname == "compose") {
 						((nodeT != "interface")) ? 
 							thiz.addClass("legal") : thiz.addClass("illegal");
 					} else {
@@ -79,7 +77,7 @@
 					} else if(tname == "implements"){
 						((nodeT == "interface") && ($.inArray(m2.name, m1.implementsList) < 0)) ? 
 							thiz.addClass("legal") : thiz.addClass("illegal");
-					} else if(tname == "aggregate"){
+					} else if(tname == "aggregate" || tname == "compose"){
 						thiz.addClass("legal");
 					} else {
 						thiz.addClass("illegal");
@@ -88,21 +86,20 @@
 					if($(this).is(".illegal")) n2 = null;
 				}
 			})
-			
-			
-			
 			.delegate(".node","mouseleave",function(e){ 	//结束节点的取消
 				$(this).removeClass("illegal legal");
 				n2 = null;
 			})
-			
-			
-			
-			
 			.mousemove(function(e){						//拖动划线效果
 				if(drawing){
 					e.preventDefault();
-					svgGraph.moveLine(line,startP ,[e.clientX - offset.left,e.clientY - offset.top]);
+					
+					if(n2){
+						endpoints = svgGraph.getEndpoints(n1,n2);
+					} else {
+						endpoints = svgGraph.getEndpoints(n1,[e.clientX - offset.left,e.clientY - offset.top]);
+					}
+					svgGraph.moveLine(line, endpoints.start , endpoints.end);
 				}
 			}).mouseup(function(e){ 						//划线成功效果
 				if((drawing && n2 == null)){
@@ -113,19 +110,19 @@
 						m1.extends = m2.name;
 					} else if(line.is(".implements")){
 						m1.implementsList.push(m2.name);
-					} else if(line.is(".aggregate")){
+					} else if(line.is(".aggregate,.compose")){
 						addProperty(n1,"List",m2.name,line.attr("id"));
 					} else if(line.is(".")){
 						
 					}
 					
-					endpoints = svgGraph.getStartEnd(n1,n2);
+					endpoints = svgGraph.getEndpoints(n1,n2);
 					svgGraph.moveLine(line,endpoints.start ,endpoints.end);
 					
 					var id 	= line.attr("id");
 					var type = line.attr("class").split(" ")[1];
-					lines[id] = new Line(chartId, type ,n1.attr("id") ,n2.attr("id"),null);
-					lineDoms[id] = line;	//把新增的连线缓存起来
+					LINES[id] = new Line(CHARTID, id ,type ,n1.attr("id") ,n2.attr("id"),null);
+					LINEDOMS[id] = line;	//把新增的连线缓存起来
 				}
 				
 				line = null;
@@ -138,7 +135,6 @@
 			});
 		})();
 		
-		
 		/*拖拽节点，线条联动*/
 		(function(){
 			var target 			= null;	//被拖动的元素
@@ -150,30 +146,30 @@
 			var drag = function(e){
 				e.preventDefault();
 				target.css({
-					top : startPosition.top  + e.clientY - downPosition.top  + easel.scrollTop(),
-					left: startPosition.left + e.clientX - downPosition.left + easel.scrollLeft()
+					top : startPosition.top  + e.clientY - downPosition.top  + EASEL.scrollTop(),
+					left: startPosition.left + e.clientX - downPosition.left + EASEL.scrollLeft()
 				});
 				/*改变连线*/
-				svgGraph.resetLines(target, nodeDoms, lineDoms, relatedLines.outLines, relatedLines.inLines);
+				svgGraph.resetLines(target, NODEDOMS, LINEDOMS, relatedLines.outLines, relatedLines.inLines);
 			};
 			
-			umlCanvas.mousedown(function(e) {
+			UMLCANVAS.mousedown(function(e) {
 				var header = $(e.target);
 				
-				if((header.is(".name") || header.is(".header")) && curTool.type != "line"){
+				if((header.is(".name") || header.is(".header")) && CURTOOL.type != "line"){
 					target 			= header.parents(".node");
 					startPosition 	= target.position();
 					downPosition 	= {left : e.clientX ,top : e.clientY};
-					relatedLines 	= commonTool.findRelatedLines(header.parent().attr("id"),lines);
-					startPosition.top = startPosition.top - easel.scrollTop();
-					startPosition.left = startPosition.left - easel.scrollLeft();
+					relatedLines 	= commonTool.findRelatedLines(header.parent().attr("id"),LINES);
+					startPosition.top = startPosition.top - EASEL.scrollTop();
+					startPosition.left = startPosition.left - EASEL.scrollLeft();
 					$(this).bind("mousemove",drag);
 					moving = true;
 				}
 			}).mouseup(function(){
 				if(moving){
 					$(this).unbind("mousemove",drag);
-					var model  = models[target.attr("id")];
+					var model  = MODELS[target.attr("id")];
 					model.leftTopPoint.x = target.position().left;
 					model.leftTopPoint.y = target.position().top;
 					
@@ -182,22 +178,19 @@
 			});
 		})();
 		
-		
-		
-		
 		/*点击鼠标添加节点*/
-		umlCanvas.delegate("svg","click",function(e){
-			if(curTool.type == "node"){
+		UMLCANVAS.delegate("svg","click",function(e){
+			if(CURTOOL.type == "node"){
 				addNode(e);
 			}
 			
 			/*当画布被点击一次时，如果当前不是线条工具，将工具切换回鼠标工具*/
-			if(curTool.type == "node"){
+			if(CURTOOL.type == "node"){
 				swichTool("cursor");
 			}
 		});
 		
-		umlCanvas.contextmenu(function(e){
+		UMLCANVAS.contextmenu(function(e){
 			var target = $(e.target);
 			if(target.is("svg")){
 				showContextmenu(target,e,"add_nodes");
@@ -205,52 +198,27 @@
 		});
 		
 		/*点击节点，添加属性或行为*/
-		umlCanvas.delegate(".node","click",function(e){
-			if(curTool.name == "property"){			//添加属性
+		UMLCANVAS.delegate(".node","click",function(e){
+			if(CURTOOL.name == "property"){			//添加属性
 				addProperty($(this),"String");
-			} else if(curTool.name == "action"){ 	//添加行为
+			} else if(CURTOOL.name == "action"){ 	//添加行为
 				addAction($(this));
 			} 
-			var relatedLines = commonTool.findRelatedLines($(this).attr("id"),lines);
-			svgGraph.resetLines($(this),nodeDoms,lineDoms,relatedLines.outLines,relatedLines.inLines);
+			var relatedLines = commonTool.findRelatedLines($(this).attr("id"),LINES);
+			svgGraph.resetLines($(this),NODEDOMS,LINEDOMS,relatedLines.outLines,relatedLines.inLines);
 			
 			swichTool("cursor");
 		});
 		
-		//右键菜单添加领域模型
-		$("#add_nodes").delegate(".contextmenu_item","click",function(e){
-			var thiz = $(this);
-			if(thiz.is(".add_entity")){
-				addNode(e,"entity");
-			} else if(thiz.is(".add_interface")){
-				addNode(e,"interface");
-			} else if(thiz.is(".add_enum")){
-				addNode(e,"enum");
-			}
-		});
-		
-		/*右键菜单添加行为或属性*/
-		$("#add_members").delegate(".contextmenu_item","click",function(e){
-			var thiz = $(this) ,target = thiz.parent().data("target");
-			
-			if(thiz.is(".add_property")){
-				addProperty(target,"String");
-			} else if(thiz.is(".add_action")){
-				addAction(target);
-			} else if(thiz.is(".add_enumItem")){
-				addEnumItem(target);
-			}
-		});
-		
 		/*点击工具切换*/
-		toolBar.delegate(".cursor,.node,.line,.component","click",function(e){
+		TOOLBAR.delegate(".cursor,.node,.line,.component","click",function(e){
 			swichTool($(this).attr("class").split(" ")[1]);
 		});
 		
 		/** 
 		 * 编辑节点名字 
 		 */
-		umlCanvas.delegate(".name","dblclick",function(e){
+		UMLCANVAS.delegate(".name","dblclick",function(e){
 			var node = $(this).parent(),
 				dmodel = node.data("model");
 				
@@ -271,7 +239,7 @@
 		});
 		
 		/* 双击方式编辑属性或行为 */
-		umlCanvas.delegate(".properties,.actions,.name","dblclick",function(e){
+		UMLCANVAS.delegate(".properties,.actions,.name","dblclick",function(e){
 			e.preventDefault();
 			var thiz = $(this),t=$(e.target);
 			var property,action;
@@ -352,10 +320,58 @@
 			
 		});
 		
-		/*右键添加属性或行为或枚举项等等*/
-		umlCanvas.delegate(".node","contextmenu",function(e){
-			console.log(JSON.stringify($(this).data("model")));
+		/*工具栏切换*/
+		TOOLBAR.find(".swich_tool_view").click(function(){
+			var thiz = $(this);
+			if($(this).data("closed")){
+				thiz.data("closed",false);
+				thiz.parent().addClass("folder");
+			} else {
+				thiz.data("closed",true);
+				thiz.parent().removeClass("folder");
+			}
+		});	
+		
+		/*************************************右键功能*************************************/
+		//右键菜单添加领域模型
+		$("#add_nodes").delegate(".contextmenu_item","click",function(e){
+			var thiz = $(this);
+			if(thiz.is(".add_entity")){
+				addNode(e,"entity");
+			} else if(thiz.is(".add_interface")){
+				addNode(e,"interface");
+			} else if(thiz.is(".add_enum")){
+				addNode(e,"enum");
+			}
+		});
+		
+		/*右键菜单添加行为或属性*/
+		$("#add_members").delegate(".contextmenu_item","click",function(e){
+			var thiz = $(this) ,target = thiz.parent().data("target");
 			
+			if(thiz.is(".add_property")){
+				addProperty(target,"String");
+			} else if(thiz.is(".add_action")){
+				addAction(target);
+			} else if(thiz.is(".add_enumItem")){
+				addEnumItem(target);
+			} else if(thiz.is(".delete")){
+				deleteNode(target);
+			}
+		});
+		
+		/*右键编辑 */
+		$("#edit_lines").delegate(".contextmenu_item","click",function(){
+			var thiz = $(this),
+				target = thiz.parent().data("target"),
+				line = LINES[target.attr("id")];
+				
+				if(thiz.is(".delete")){
+					deleteLines([line]);
+				}
+		});
+		/*右键添加属性或行为或枚举项等等*/
+		UMLCANVAS.delegate(".node","contextmenu",function(e){
 			var thiz = $(this);
 			var selector;
 			
@@ -370,35 +386,30 @@
 			showContextmenu(thiz,e,"add_members",selector);
 		});
 		
-		/*工具栏切换*/
-		toolBar.find(".swich_tool_view").click(function(){
-			var thiz = $(this);
-			if($(this).data("closed")){
-				thiz.data("closed",false);
-				thiz.parent().addClass("folder");
-			} else {
-				thiz.data("closed",true);
-				thiz.parent().removeClass("folder");
-			}
-		});	
+		/*编辑线条的右键菜单*/
+		SVGLINES.delegate(".line","contextmenu",function(e){
+			showContextmenu($(this),e,"edit_lines");
+		});
+		
 		/*收起右键菜单*/
 		$("body").click(function(){
 			$("#edit_contextmenus .contextmenu").slideUp(50);
 		});
+		/*************************************右键功能*************************************/
 		
-		function zoom(t){
+		function ZOOM(t){
 			var value = $(t).val();
 			$(".uml_canvas").css("transform","scale("+value+")");
 		}
 		/*切换工具的方法*/
 		function swichTool(name){
-			var tool = toolBar.find("."+name);
+			var tool = TOOLBAR.find("."+name);
 			var curtool  = tool.attr("class").split(" ");
 			
-			curTool.type = curtool[0];
-			curTool.name = curtool[1];
+			CURTOOL.type = curtool[0];
+			CURTOOL.name = curtool[1];
 			
-			toolBar.find(".current-tool").removeClass("current-tool");
+			TOOLBAR.find(".current-tool").removeClass("current-tool");
 			tool.addClass("current-tool");
 		}
 		
@@ -419,34 +430,43 @@
 		}
 		
 		/*页面上添加一个节点，对应业务上的一个类或接口*/
-		function addNode(e,name){
+		function addNode(e,type){
 			var id = commonTool.guid();
-			var offset 	= umlCanvas.offset();
+			var offset 	= UMLCANVAS.offset();
 			var position = {
 					x:e.clientX - offset.left,
 					y:e.clientY - offset.top
 				};
-			var nodeName = name ? name : curTool.name;
-			var node = $("#node-template ."+nodeName).clone().css({
-					left:position.x,
-					top:position.y
+			var nodeType = type ? type : CURTOOL.name;
+			var node = $("#node-template ."+nodeType).clone().css({
+					left : position.x,
+					top  : position.y
 				});
 				
 			/*判断要生成那种领域模型*/
-			var model = null;
-			if(nodeName == "entity"){
-				model = new EntityShape(id,chartId,"Entity",position,"entity","",false,false);
-			} else if(nodeName == "interface"){
-				model = new InterfaceShape(id,chartId,"interface1",position,"interface","Interface",false,false);
-			} else if(nodeName == "enum"){
-				model = new Enum(id,chartId,"name",position,"enum","");
+			var model = null ,name;
+			if(nodeType == "entity"){
+				
+				name 	= getName("entity",getNodeNameSpace()).firstUpcase();
+				model 	= new EntityShape(id,CHARTID,name,position,"entity","",false,false);
+				
+			} else if(nodeType == "interface"){
+				
+				name 	= getName("interface",getNodeNameSpace()).firstUpcase();
+				model 	= new InterfaceShape(id,CHARTID,name,position,"interface","Interface",false,false);
+				
+			} else if(nodeType == "enum"){
+				
+				name 	= getName("enum",getNodeNameSpace()).firstUpcase();
+				model 	= new EnumShape(id,CHARTID,name,position,"enum","");
 			}
 			
+			node.find(".name").html(name);
 			node.attr("id",id).data("model",model); //把对应领域模型缓存在dom节点上，方便查找
-			umlCanvas.append(node);
+			UMLCANVAS.append(node);
 			
-			models[id] = model;									//节点的控制数据（前端用）
-			nodeDoms[id] = node;
+			MODELS[id] = model;									//节点的控制数据（前端用）
+			NODEDOMS[id] = node;
 			return id;
 		}
 		
@@ -454,12 +474,20 @@
 		/*添加属性*/
 		function addProperty(target,type,genericity,autoBy){
 			/*TODO:同步添加缓存数据*/
-			var dmodel = target.data("model");
-			var property = new Property("property1",type);
-			var proDom = $("#node-template .property").clone();
-						
+			var dmodel = target.data("model"),
+				name = getName("property",(function(){
+					var namespace = [];
+					$.each(dmodel.properties,function(i,p){
+						namespace.push(p.name);
+					});
+					return namespace;
+				})()),
+				property = new Property(name,type),
+				proDom = $("#node-template .property").clone(); 
+			
 			property.genericity = genericity;
 			proDom.find(".propertyType").html(type);
+			proDom.find(".name").html(name);
 			
 			/*如果属性由连线时自动生成，则记录生成属性对应的线段*/
 			if(autoBy){
@@ -496,7 +524,7 @@
 		
 		/*更新名字，需要级联更改自动生成的属性的类型名*/
 		function updateNodeName(target,newName,oldName){
-			var inAout 	= commonTool.findRelatedLines(target.attr("id"),lines);
+			var inAout 	= commonTool.findRelatedLines(target.attr("id"),LINES);
 			var model	= target.data("model");
 			
 			var ins 	= inAout.inLines;
@@ -504,19 +532,25 @@
 			
 			model.name 	= newName;
 			
-			var n,m,l;
-			for(var i in ins){
-				l = ins[i];
-				n = $("#"+l.fromShapeId);
+			var n,m; //node and domainmodel
+			$.each(ins,function(i,line){
+				line = ins[i];
+				n = $("#"+line.fromShapeId);
 				m = n.data("model");
 				
-				switch (l.lineType){
+				switch (line.lineType){
+					/**
+					 * 被继承者更名时，继承者的继承对象要更名 
+					 */
 					case "extends" : {
 						m.extends = newName;
 						break;
 					};
+					
+					/**
+					 * 被实现者更名时，实现者的实现对象要更名
+					 */
 					case "implements" : {
-						alert(23);
 						var list = m.implementsList;
 						for(var i=0 ;i<list.length ;i++){
 							if(list[i] == oldName){
@@ -526,27 +560,110 @@
 						}
 						break;
 					};
-					case "aggregate" : {
-						var pnode 	= n.find("." + i);
+					
+					/**
+					 * 被聚合（组合）者更名时，关联的属性（泛型）类型也要更名
+					 */
+					case "aggregate" : 
+					case "compose"   : {
+						var pnode 	= n.find("." + line.lineId);
 						var property = pnode.data("property");
 						pnode.find(".value").html(newName);
 						property.name = newName;
+						break;
+					};
+					
+					/**
+					 * 联合
+					 */
+					case "associate" : {
+						
+						
+						break;
+					};
+				}
+			});
+			
+			for(var i in ins){
+			}
+		}
+		
+		/*删除节点*/
+		function deleteNode(node){
+			var id = node.attr("id");
+			var ls = commonTool.findRelatedLines(id,LINES);
+			
+			/*删除节点的连线*/
+			deleteLines(ls.inLines);
+			deleteLines(ls.outLines);
+			
+			/*删除节点*/
+			delete MODELS[id];
+			delete NODEDOMS[id];
+			node.remove();
+		}
+		
+		/**
+		 * 删除连线.
+		 * 有级联操作
+		 */
+		function deleteLines(lines){
+			var ldom,id;
+			$.each(lines,function(i,line){
+				id		= line.lineId;
+				ldom 	= LINEDOMS[id];
+				
+				switch(line.lineType){
+					/*
+					 * 如果
+					 */
+					case "extends" : {		//继承线的删除
+						var from = MODELS[line.fromShapeId];
+						if(from){
+							from.extends = null;
+						}
+						break;
+					};
+					
+					/**
+					 * 如果被实现者被删除，要把被实现者从实现者的实现列表里删除
+					 * 如果实现者被删除，不需要做任何级联操作
+					 * TODO:还可能要级联删除实现的方法
+					 */
+					case "implements" : {
+						var from = MODELS[line.fromShapeId], to	= MODELS[line.toShapeId];
+						if(from){
+							var list = from.implementsList;
+							list.remove($.inArray(list,to.name));
+						}
+						break;
+					};
+					
+					/**
+					 * 
+					 */
+					case "aggregate":
+					case "compose" 	: {
+						var from 	= MODELS[line.fromShapeId];
+						if(from){
+							var to 			= MODELS[line.toShapeId],
+								fromNode 	= NODEDOMS[from.shapeId],
+								properties 	= from.properties,
+								propertyDom = fromNode.find("."+id);
+								
+							properties.removeByEquals(propertyDom.data("property"));
+						}
 						break;
 					};
 					case "" : {
 						break;
 					};
 				}
-			}
-
-			for(var i in outs){
 				
-			}
-		}
-		
-		/*更新属性*/
-		function updateProperty(){
-			
+				delete LINES[id]
+				delete LINEDOMS[id];
+				ldom.remove();
+			});
 		}
 		
 		/*删除属性*/
@@ -560,6 +677,53 @@
 		/*删除枚举项*/
 		function deleteEnumItem(){
 			/*TODO:同步更新缓存数据*/
+		}
+		
+		/**
+		 * 自动命名。
+		 * 在某个命名空间内，采用递增的方式获取一个可用的命名
+		 */
+		function getName(nodeType,nameSpace){
+			var name;
+			for(var i=1 ; ; i++){
+				name = nodeType + i;
+				if($.inArray(name,nameSpace) < 0)  break;
+			}
+			return name;
+		}
+		
+		/*获取所有已经被占用的节点名(忽略大小写)*/
+		function getNodeNameSpace(){
+			var namespace = [];
+			for(i in MODELS){
+				namespace.push(MODELS[i].name.toLowerCase());
+			}
+			return namespace;
+		}
+		
+		THIZ.find("#print").click(function(){
+			console.log("LINES:"+JSON.stringify(LINES));
+			console.log("MODELS:"+JSON.stringify(MODELS));
+			//console.log(JSON.stringify());
+			//console.log(JSON.stringify(LINES));
+		});
+		
+		/*移除数组的指定索引的元素*/
+		Array.prototype.remove = function(i){
+			this.splice(i,1);
+		}
+		
+		/*内部使用 "===" 实现*/
+		Array.prototype.removeByEquals = function(target){
+			for(var i=this.length-1 ; i>=0 ; i--){
+				if(this[i] === target){
+					this.remove(i);
+				}
+			}
+		}
+		String.prototype.firstUpcase = function(){	
+			var str = this.toString();	
+			return (str.substr(0,1).toUpperCase() + str.substr(1));
 		}
 	};
 })($);

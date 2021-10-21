@@ -45,6 +45,7 @@ marker path {
 .uml_lines polyline {
 	stroke-width:2px;
 	stroke:#5890c1;
+	cursor:pointer;
 }
 #line-template polyline {
 	stroke:#5890c1;

@@ -179,7 +179,7 @@
 		</div>
 		<!-- 以下内在多个画板时的情况下可以共用 ，包括图形的模板、右键菜单等元素-->
 		<!-- uml元素模板 -->
-		<svg style="display: none;">
+		<svg>
 			<defs>
 				<!-- 空心三角形 -->
 				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
@@ -196,12 +196,13 @@
 			</defs>
 		</svg>
 		<!-- 各种右键编辑菜单 -->
-		<div id="edit_contextmenus" style="display: none;">
+		<div id="edit_contextmenus">
 			<!-- 添加节点成员的右键菜单 -->
 			<div id="add_members" class="contextmenu">
 				<div class="contextmenu_item add_property"><div>添加属性</div></div>
 				<div class="contextmenu_item add_action"><div>添加行为</div></div>
 				<div class="contextmenu_item add_enumItem"><div>添加枚举项</div></div>
+				<div class="contextmenu_item delete"><div>删除</div></div>
 			</div>
 			
 			<!--  -->
@@ -209,6 +210,13 @@
 				<div class="contextmenu_item add_entity"><div>添加实体</div></div>
 				<div class="contextmenu_item add_interface"><div>添加接口</div></div>
 				<div class="contextmenu_item add_enum"><div>添加枚举</div></div>
+			</div>
+			
+			<!-- 编辑线条的右键菜单  -->
+			<div id="edit_lines" class="contextmenu">
+				<div class="contextmenu_item delete"><div>直线</div></div>
+				<div class="contextmenu_item delete"><div>折线</div></div>
+				<div class="contextmenu_item delete"><div>删除</div></div>
 			</div>
 		</div>
 		
@@ -221,6 +229,7 @@
 			<option value="Long"></option>
 			<option value="Integer"></option>
 		</datalist>
+		
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
 		<script type="text/javascript" src="lib/bootstrap-3.1.1/js/bootstrap.js" ></script>
 		<script type="text/javascript" src="lib/tiny.tree.min.js" ></script>
