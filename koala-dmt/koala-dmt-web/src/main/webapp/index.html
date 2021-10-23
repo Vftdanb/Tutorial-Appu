@@ -97,46 +97,53 @@
 			<!-- 线条模板 -->
 			<svg id="line-template" style="">
 				<!-- 继承关系连线模板 -->
-				<g class="line extends">
+				<g class="line extends templine">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1)"></polyline>
 					<text x="20" y="30">说明文字</text>
 				</g>
 				<!-- 实现关系连线模板 -->
-				<g class="line implements">
+				<g class="line implements templine">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1);stroke-dasharray:5"></polyline>
 				</g>
 				<!-- 聚合关系连线模板 -->
-				<g class="line aggregate">
+				<g class="line aggregate templine">
 					<polyline points="0,0 0,0" style="marker-start:url(#arrow2)"></polyline>
 				</g>
 				<!-- 组合关系连线模板  -->
-				<g class="line compose">
+				<g class="line compose templine">
 					<polyline points="0,0 0,0" style="marker-start:url(#arrow3)"></polyline>
 				</g>
 				<!-- 关联关系连线模板  -->
-				<g class="line associate"><polyline points="0,0 0,0"></polyline></g>
+				<g class="line associate templine"><polyline points="0,0 0,0"></polyline></g>
 			</svg>
 			
 			<!-- 节点模板 -->
 			<div id="node-template">
 				<!-- 实体模板 -->
 				<div class="node entity">
-					<div class="name">Entity</div>
+					<div class="header">
+						<span>«</span><span class="type">Entity</span><span>»</span>
+						<div class="name">Entity</div>
+					</div>
 					<div class="properties"></div>
 					<div class="actions"></div>
 				</div>
 				
 				<!-- 接口模板 -->
 				<div class="node interface">
-					<div class="header">«interface»</div>
-					<div class="name">Interface</div>
+					<div class="header">
+						<div>«interface»</div>
+						<div class="name">Interface</div>
+					</div>
 					<div class="actions"></div>	
 				</div>
 				
 				<!-- 枚举模板  -->
 				<div class="node enum">
-					<div class="header">«enum»</div>
-					<div class="name">Enum</div>
+					<div class="header">
+						<div>«enum»</div>
+						<div class="name">Enum</div>
+					</div>
 					<div class="enumItems"></div>
 				</div>
 				
@@ -145,11 +152,7 @@
 					<div class="propertyName">property</div>
 					<div> : </div>
 					<div class="propertyType">String</div>
-					<div class="genericity" style="display:none;">
-						<span>&lt;</span>
-						<span class="value"></span>
-						<span>&gt;</span>
-					</div>
+					<div class="genericity" style="display:none;">&lt;<span class="value"></span>&gt;</div>
 				</div>
 				
 				<!-- 枚举项模板 -->
@@ -219,7 +222,6 @@
 				<div class="contextmenu_item delete"><div>删除</div></div>
 			</div>
 		</div>
-		
 		
 		<datalist id="property_type_tip" style="display: none;">
 			<option value="String"></option>

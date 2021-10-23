@@ -279,7 +279,8 @@ function InterfaceShape(id,charid,name,point,type,desc){
 	this.actions 	= [];	//
 }
 /*枚举*/
-function EnumShape(){
+function EnumShape(id,charid,name,point,type,desc){
+	DomainShape.call(this, id,charid,name,point,type,desc);
 	this.enumItems = [];
 }
 

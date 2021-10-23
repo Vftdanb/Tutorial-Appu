@@ -18,11 +18,12 @@ body{
 	text-align:center;
 }
 .uml_canvas .node {
-	min-width:60px;
+	min-width:100px;
 	position:absolute;
 	border-radius:0px;
-	padding:1px;
 	border:1px solid #5890c1;
+	font-size:14px;
+	
 }
 .svg_canvas {
 	position:absolute;
@@ -46,12 +47,13 @@ marker path {
 	stroke-width:2px;
 	stroke:#5890c1;
 	cursor:pointer;
+	transition: 0.3s stroke-width;
 }
-#line-template polyline {
-	stroke:#5890c1;
-	stroke-width:2px;
-	cursor:pointer;
+
+.uml_lines .active polyline{
+	stroke-width:3px;
 }
+
 #template{display:none;}
 #node-template .node{
 	cursor:pointer;
@@ -62,12 +64,23 @@ marker path {
 	-moz-transform:scale(0.5);
 }
 .uml_canvas .node {
-	background: -webkit-gradient(linear, 0 0, 0 100%, from(#eee), to(#bbb));
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#CCFFFF), to(#CCFFFF));
+	font-size:13px;
 }
-.property div{
+.node .property{
+	transition: 0.3s;
+	padding:0 3px;
+}
+.uml_canvas .property div{
 	height:18px;
 	line-height:18px;
 	display:inline;
+}
+.uml_canvas .properties .active{
+	-moz-box-shadow: 0px 0px 12px #CCCCCC;
+	-webkit-box-shadow: 0px 0px 12px #CCCCCC;
+	box-shadow: 0px 0px 12px #CCCCCC;
+	background:#F7E1B5;
 }
 .node .property:before{
 	content:"+ ";
@@ -75,6 +88,9 @@ marker path {
 .propertyName,.propertyType,.relation{min-width:30px;}
 .properties,.actions{
 	
+}
+.node .action {
+	padding:0 3px;
 }
 .node .action div{
 	display	: inline;
@@ -168,7 +184,7 @@ marker path {
 	border-color:#009933;
 }
 .uml_canvas .illegal{
-	background:#FFCCCC!important;
+	background:#CCFFFF!important;
 	border-color:#FF6666;
 }
 .uml_canvas .legal *{cursor:crosshair!important;}

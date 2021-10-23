@@ -123,8 +123,9 @@
 					var type = line.attr("class").split(" ")[1];
 					LINES[id] = new Line(CHARTID, id ,type ,n1.attr("id") ,n2.attr("id"),null);
 					LINEDOMS[id] = line;	//把新增的连线缓存起来
+					
+					line.attr("class",line.attr("class").replace("templine",""));
 				}
-				
 				line = null;
 				n2 = null;
 				n1 = null;
@@ -153,22 +154,20 @@
 				svgGraph.resetLines(target, NODEDOMS, LINEDOMS, relatedLines.outLines, relatedLines.inLines);
 			};
 			
-			UMLCANVAS.mousedown(function(e) {
-				var header = $(e.target);
-				
-				if((header.is(".name") || header.is(".header")) && CURTOOL.type != "line"){
-					target 			= header.parents(".node");
+			UMLCANVAS.delegate(".header","mousedown",function(e){
+				if(CURTOOL.type != "line" && !$(e.target).is("input")){
+					target 			= $(this).parent();
 					startPosition 	= target.position();
 					downPosition 	= {left : e.clientX ,top : e.clientY};
-					relatedLines 	= commonTool.findRelatedLines(header.parent().attr("id"),LINES);
+					relatedLines 	= commonTool.findRelatedLines(target.attr("id"),LINES);
 					startPosition.top = startPosition.top - EASEL.scrollTop();
 					startPosition.left = startPosition.left - EASEL.scrollLeft();
-					$(this).bind("mousemove",drag);
+					UMLCANVAS.bind("mousemove",drag);
 					moving = true;
 				}
 			}).mouseup(function(){
 				if(moving){
-					$(this).unbind("mousemove",drag);
+					UMLCANVAS.unbind("mousemove",drag);
 					var model  = MODELS[target.attr("id")];
 					model.leftTopPoint.x = target.position().left;
 					model.leftTopPoint.y = target.position().top;
@@ -219,7 +218,7 @@
 		 * 编辑节点名字 
 		 */
 		UMLCANVAS.delegate(".name","dblclick",function(e){
-			var node = $(this).parent(),
+			var node = $(this).parents(".node"),
 				dmodel = node.data("model");
 				
 			/*编辑节点名字*/
@@ -332,7 +331,7 @@
 			}
 		});	
 		
-		/*************************************右键功能*************************************/
+		/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓右键功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 		//右键菜单添加领域模型
 		$("#add_nodes").delegate(".contextmenu_item","click",function(e){
 			var thiz = $(this);
@@ -395,7 +394,60 @@
 		$("body").click(function(){
 			$("#edit_contextmenus .contextmenu").slideUp(50);
 		});
-		/*************************************右键功能*************************************/
+		/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑右键功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+		
+		
+		
+		/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓鼠标滑过线条提示，增加体验↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/		
+		SVGLINES.delegate(".line:not(.templine)","mouseenter",function(e){
+			var line = LINES[$(this).attr("id")],
+				from = NODEDOMS[line.fromShapeId],
+				l	= LINEDOMS[line.lineId];	
+				
+				
+				
+			l.attr("class",l.attr("class") + " active");
+			from.find("."+line.lineId).addClass("active");
+		}).delegate(".line:not(.templine)","mouseout",function(e){
+			var line = LINES[$(this).attr("id")],
+				from = NODEDOMS[line.fromShapeId],
+				l	= LINEDOMS[line.lineId];
+				
+			l.attr("class",l.attr("class").replace(" active" , ""));
+			from.find("."+line.lineId).removeClass("active");
+		});
+		
+		/*自动生成 */
+		UMLCANVAS.delegate(".auto_generated","mouseenter",function(e){
+			if(CURTOOL.type == "common"){
+				var thiz = $(this),
+					line = LINEDOMS[thiz.attr("generated_by")];
+					
+				thiz.addClass("active");
+				line.attr("class",line.attr("class") + " active");
+			}
+		}).delegate(".auto_generated","mouseleave",function(e){
+			if(CURTOOL.type == "common"){
+				var thiz = $(this),
+					line = LINEDOMS[thiz.attr("generated_by")];
+					
+				thiz.removeClass("active");
+				line.attr("class",line.attr("class").replace(" active" , ""));
+			}
+		});
+		/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑鼠标滑过线条提示，增加体验↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		function ZOOM(t){
 			var value = $(t).val();
@@ -465,11 +517,16 @@
 			node.attr("id",id).data("model",model); //把对应领域模型缓存在dom节点上，方便查找
 			UMLCANVAS.append(node);
 			
-			MODELS[id] = model;									//节点的控制数据（前端用）
+			MODELS[id] = model;						//节点的控制数据（前端用）
 			NODEDOMS[id] = node;
 			return id;
 		}
 		
+		/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+		
+		/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+		
+				
 		/**************************************添加节点的各种成员******************************************/
 		/*添加属性*/
 		function addProperty(target,type,genericity,autoBy){
@@ -485,16 +542,18 @@
 				property = new Property(name,type),
 				proDom = $("#node-template .property").clone(); 
 			
-			property.genericity = genericity;
 			proDom.find(".propertyType").html(type);
-			proDom.find(".name").html(name);
+			proDom.find(".propertyName").html(name);
 			
 			/*如果属性由连线时自动生成，则记录生成属性对应的线段*/
 			if(autoBy){
 				proDom.addClass(autoBy);
+				proDom.addClass("auto_generated");
+				proDom.attr("generated_by",autoBy);
 			}
 			
-			if(type == "Set" || type == "List"){
+			if(genericity){
+				property.genericity = genericity;
 				proDom.find(".genericity").css("display","inline-block");
 				proDom.find(".genericity .value").html(genericity);
 			}
@@ -652,6 +711,7 @@
 								propertyDom = fromNode.find("."+id);
 								
 							properties.removeByEquals(propertyDom.data("property"));
+							propertyDom.remove();
 						}
 						break;
 					};
