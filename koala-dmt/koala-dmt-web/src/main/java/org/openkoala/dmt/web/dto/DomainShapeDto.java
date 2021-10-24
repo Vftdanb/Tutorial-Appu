@@ -11,11 +11,11 @@ import org.openkoala.dmt.domain.Constant;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.EntityShape;
+import org.openkoala.dmt.domain.EntityType;
 import org.openkoala.dmt.domain.EnumShape;
 import org.openkoala.dmt.domain.InterfaceShape;
 import org.openkoala.dmt.domain.LeftTopPoint;
 import org.openkoala.dmt.domain.Property;
-import org.openkoala.dmt.domain.ValueObjectShape;
 
 public class DomainShapeDto implements Dto {
 
@@ -23,7 +23,6 @@ public class DomainShapeDto implements Dto {
 
 	private enum ShapeType {
 		EntityShape,
-		ValueObjectShape,
 		InterfaceShape,
 		EnumShape
 	}
@@ -44,19 +43,19 @@ public class DomainShapeDto implements Dto {
 	
 	private String name;
 	
+	private EntityType entityType;
+	
 	private Set<Constant> constants = new HashSet<Constant>();
 	
 	private Set<Property> properties = new HashSet<Property>();
 
-	private Boolean isAbstractEntity = false;
-	
-	private Boolean isMappedSuperClass = false;
-	
 	private List<String> enumItems = new ArrayList<String>();
 	
 	private String description;
 	
 	private String parentShapeId;
+	
+	private Set<String> implementsInterfaceShapeIds = new HashSet<String>();
 	
 	private Long domainsChartId;
 	
@@ -124,6 +123,14 @@ public class DomainShapeDto implements Dto {
 		this.name = name;
 	}
 
+	public EntityType getEntityType() {
+		return entityType;
+	}
+
+	public void setEntityType(EntityType entityType) {
+		this.entityType = entityType;
+	}
+
 	public Set<Constant> getConstants() {
 		return constants;
 	}
@@ -138,22 +145,6 @@ public class DomainShapeDto implements Dto {
 
 	public void setProperties(Set<Property> properties) {
 		this.properties = properties;
-	}
-
-	public Boolean getIsAbstractEntity() {
-		return isAbstractEntity;
-	}
-
-	public void setIsAbstractEntity(Boolean isAbstractEntity) {
-		this.isAbstractEntity = isAbstractEntity;
-	}
-
-	public Boolean getIsMappedSuperClass() {
-		return isMappedSuperClass;
-	}
-
-	public void setIsMappedSuperClass(Boolean isMappedSuperClass) {
-		this.isMappedSuperClass = isMappedSuperClass;
 	}
 
 	public List<String> getEnumItems() {
@@ -180,6 +171,15 @@ public class DomainShapeDto implements Dto {
 		this.parentShapeId = parentShapeId;
 	}
 
+	public Set<String> getImplementsInterfaceShapeIds() {
+		return implementsInterfaceShapeIds;
+	}
+
+	public void setImplementsInterfaceShapeIds(
+			Set<String> implementsInterfaceShapeIds) {
+		this.implementsInterfaceShapeIds = implementsInterfaceShapeIds;
+	}
+
 	public Long getDomainsChartId() {
 		return domainsChartId;
 	}
@@ -191,10 +191,6 @@ public class DomainShapeDto implements Dto {
 	public DomainShape transformToDomainShape(DomainsChartDto domainsChartDto) {
 		if (ShapeType.EntityShape.equals(shapeType)) {
 			return generateEntityShape(domainsChartDto);
-		}
-		
-		if (ShapeType.ValueObjectShape.equals(shapeType)) {
-			return generateValueObjectShape(domainsChartDto);
 		}
 		
 		if (ShapeType.InterfaceShape.equals(shapeType)) {
@@ -211,14 +207,25 @@ public class DomainShapeDto implements Dto {
 	public EntityShape generateEntityShape(DomainsChartDto domainsChartDto) {
 		EntityShape result = new EntityShape();
 		setCommonsPropertiesValue(result, domainsChartDto);
-		result.setIsAbstractEntity(isAbstractEntity);
-		result.setIsMappedSuperClass(isMappedSuperClass);
+		result.setEntityType(entityType);
 		result.setProperties(properties);
+		result.setImplementsInterfaceShapes(obtainImplementsInterfaceShapes(domainsChartDto));
 		
 		return result;
 	}
 	
-	public <T extends DomainShape> T setCommonsPropertiesValue(T domainShape, DomainsChartDto domainsChartDto) {
+	private Set<InterfaceShape> obtainImplementsInterfaceShapes(DomainsChartDto domainsChartDto) {
+		Set<InterfaceShape> results = new HashSet<InterfaceShape>();
+		for (String shapeId : implementsInterfaceShapeIds) {
+			DomainShape domainShape = domainsChartDto.getDomainShapeByShapeId(shapeId);
+			if (domainShape != null) {
+				results.add((InterfaceShape) domainShape);
+			}
+		}
+		return results;
+	}
+	
+	private <T extends DomainShape> T setCommonsPropertiesValue(T domainShape, DomainsChartDto domainsChartDto) {
 		domainShape.setId(id);
 		domainShape.setVersion(version);
 		domainShape.setShapeId(shapeId);
@@ -231,14 +238,6 @@ public class DomainShapeDto implements Dto {
 		domainShape.setParent(domainsChartDto.getDomainShapeByShapeId(parentShapeId));
 //		result.setDomainsChart(generateDomainsChart());
 		return domainShape;
-	}
-	
-	public ValueObjectShape generateValueObjectShape(DomainsChartDto domainsChartDto) {
-		ValueObjectShape result = new ValueObjectShape();
-		setCommonsPropertiesValue(result, domainsChartDto);
-		result.setProperties(properties);
-		
-		return result;
 	}
 	
 	public InterfaceShape generateInterfaceShape(DomainsChartDto domainsChartDto) {
@@ -272,20 +271,18 @@ public class DomainShapeDto implements Dto {
 		result.setHeight(domainShape.getHeight());
 		result.setWidth(domainShape.getWidth());
 		result.setDescription(domainShape.getDescription());
+		result.setConstants(domainShape.getConstants());
 		result.setDomainsChartId(domainShape.getDomainsChart().getId());
 		
 		if (domainShape instanceof EntityShape) {
 			EntityShape entityShape = (EntityShape) domainShape;
 			result.setShapeType(ShapeType.EntityShape);
-			result.setIsAbstractEntity(entityShape.getIsAbstractEntity());
-			result.setIsMappedSuperClass(entityShape.getIsMappedSuperClass());
+			result.setEntityType(entityShape.getEntityType());
 			result.setProperties(entityShape.getProperties());
-		}
-		
-		if (domainShape instanceof ValueObjectShape) {
-			ValueObjectShape valueObjectShape = (ValueObjectShape) domainShape;
-			result.setShapeType(ShapeType.ValueObjectShape);
-			result.setProperties(valueObjectShape.getProperties());
+			
+			for (InterfaceShape interfaceShape : entityShape.getImplementsInterfaceShapes()) {
+				result.getImplementsInterfaceShapeIds().add(interfaceShape.getShapeId());
+			}
 		}
 		
 		if (domainShape instanceof InterfaceShape) {
