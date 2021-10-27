@@ -8,21 +8,35 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Entity
 @DiscriminatorValue("EntityShape")
 public class EntityShape extends DomainShape {
 	
 	private static final long serialVersionUID = 8316188536715463152L;
+
+	private EntityType entityType;
 	
 	private Set<Property> properties = new HashSet<Property>();
 
-	private Boolean isAbstractEntity = false;
-	
-	private Boolean isMappedSuperClass = false;
-	
+	private Set<InterfaceShape> implementsInterfaceShapes = new HashSet<InterfaceShape>();
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "ENTITY_TYPE")
+	public EntityType getEntityType() {
+		return entityType;
+	}
+
+	public void setEntityType(EntityType entityType) {
+		this.entityType = entityType;
+	}
+
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(name = "ENTITY_PROPERTIES", joinColumns = @JoinColumn(name = "ENTITY_SHAPE_ID"))
 	public Set<Property> getProperties() {
@@ -33,22 +47,15 @@ public class EntityShape extends DomainShape {
 		this.properties = properties;
 	}
 
-	@Column(name = "IS_ABSTRACT_ENTITY")
-	public Boolean getIsAbstractEntity() {
-		return isAbstractEntity;
+	@ManyToMany
+	@JoinTable(name = "ENTITY_INTERFACE_SHAPES", inverseJoinColumns = @JoinColumn(name = "IS_ID"), joinColumns = @JoinColumn(name = "ES_ID"))
+	public Set<InterfaceShape> getImplementsInterfaceShapes() {
+		return implementsInterfaceShapes;
 	}
 
-	public void setIsAbstractEntity(Boolean isAbstractEntity) {
-		this.isAbstractEntity = isAbstractEntity;
+	public void setImplementsInterfaceShapes(
+			Set<InterfaceShape> implementsInterfaceShapes) {
+		this.implementsInterfaceShapes = implementsInterfaceShapes;
 	}
-
-	@Column(name = "IS_MAPPED_SUPER_CLASS")
-	public Boolean getIsMappedSuperClass() {
-		return isMappedSuperClass;
-	}
-
-	public void setIsMappedSuperClass(Boolean isMappedSuperClass) {
-		this.isMappedSuperClass = isMappedSuperClass;
-	}
-
+	
 }
