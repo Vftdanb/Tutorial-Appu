@@ -262,6 +262,8 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	this.actions			= []; 			//行为数组（行为对象数组）
 	this.isAbstractEntity 	= isAbstract;
 	this.isMappedSuperClass = isMapped;
+	this.entityType 		= "AbstractEntity";
+	this.scope				= "Public";
 	
 }
 

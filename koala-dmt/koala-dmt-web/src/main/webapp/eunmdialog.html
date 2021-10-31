@@ -1,0 +1,71 @@
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<style>
+			body{
+				font-family:"微软雅黑";
+				font-size:14px;
+			}
+			.panel{
+				border:#009933 1px solid;
+				margin:4px;
+				float:left;
+				padding:10px;
+			}
+			.label{
+				display:inline-block;
+				width:70px;
+			}
+			select,input[type="text"],textarea{
+				display:inline-block;
+				resize:none;
+				width:200px;
+			}
+			input[type="checkbox"]{
+				vertical-align:text-bottom;
+			}
+			.panel > div{
+				margin:10px 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="dialog">
+			<div class="tabs">
+				<div class="tab"></div>
+			</div>
+			<div class="panel">
+				<div class="panel abstractClass_panel">
+					<div>
+						<div class="label">类名</div>
+						<input class="entityName" type="text"/>
+					</div>
+					<div>
+						<div class="label">实体范围</div>
+						<select class="entityScope" style="height:22px;">
+							<option value="public">public</option>
+							<option value="private">private</option>
+							<option value="protected">protected</option>
+							<option value="package">package</option>
+						</select>
+					</div>
+					<div>
+						<div class="label" style="vertical-align:top;">备注</div>
+						<textarea class="desc" style="height:100px;margin-top:2px;"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<datalist id="type_tip">
+			<option value="String"></option>
+			<option value="Set"></option>
+			<option value="List"></option>
+			<option value="Date"></option>
+			<option value="Long"></option>
+			<option value="Integer"></option>
+		</datalist>
+	</body>
+	<script src="lib/jquery-2.1.0.min.js"></script>
+	<script></script>
+</html>
