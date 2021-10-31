@@ -3,96 +3,122 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>领域建模工具</title>
-		<link rel="stylesheet" href="lib/bootstrap-3.1.1/css/bootstrap.css" />
-		<link rel="stylesheet" href="lib/font-awesome-4.0.3/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="css/layout.css" />
 		<link rel="stylesheet" href="css/umlCanvas.css" />
+		<style>
+			.left{
+				width:344px;
+				float:left;
+				height:100%;
+			}
+			.right{
+				margin-left:355px;
+				height:100%;
+			}
+			#projectExplorer{
+				border:#3879d9 1px solid;
+				min-height:300px;
+				margin-bottom:6px;
+				padding:4px;
+			}
+			
+			.label{
+				display:inline-block;
+				width:70px;
+			}
+			select,input[type="text"],textarea{
+				display:inline-block;
+				resize:none;
+				width:200px;
+			}
+			input[type="checkbox"]{
+				vertical-align:text-bottom;
+			}
+			/*tab样式*/
+			.dialog{
+				width:344px;
+			}
+			.panel > div{
+				margin:10px 0;
+			}
+			.tabs{
+				border:#3879d9 1px solid;
+				padding:0 3px;
+				margin:0 0 -1px 0;
+			}
+			.tab{
+				display: inline-block;
+				margin-left:3px;
+				margin-bottom:-2px;
+				border:1px #3879d9 solid;
+				border-bottom: none;
+				padding:1px 4px;
+				margin-top:10px;
+				cursor:pointer;
+			}
+			.tab.active{
+				background:#FFFFFF;
+			}
+			.panels{
+				border:#3879d9 1px solid;
+			}
+			.panel{
+				padding:10px;
+				display:none;
+			}
+			.panel.active{
+				display:block;
+			}
+			#layout > .header ,#layout > .footer{
+				clear:both;
+				margin:6px 0;
+				text-align:center;
+				border:1px #3879d9 solid;
+			}
+			#layout >  .header{
+				height:60px;
+			}
+		</style>
 	</head>
 	<body>
-		<div class="widget-container" id="widgetContainer">
-			<div class="g-head" id="gHead"></div>
-			<div class="g-main" id="gMain">
-				<div class="col-xs-3 u-left">
-					<div class="panel panel-primary" id="projectExplorer">
-						<div class="panel-heading">
-							项目列表
-						</div>
-						<div class="panel-body">
-							<div id="projectTree" class="tree tree-unselectable"></div>
-						</div>
+		<div id="layout">
+			<div class="header"></div>
+			<div>
+				<div class="left">
+					<div class="project_tree" id="projectExplorer">
+						<div class="panel-heading">项目列表</div>
+						<div id="projectTree" class="tree tree-unselectable"></div>
 					</div>
-					<div class="panel panel-primary" id="propertiesExplorer">
-						<div class="panel-heading">
-							属性
-						</div>
-						<div class="panel-body">
-							<form class="form-horizontal">
-								<div class="form-group">
-									<label for="name" class="col-sm-3 control-label">name:</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="name">
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="type" class="col-sm-3 control-label">type:</label>
-									<div class="col-sm-9">
-										<select class="form-control" id="type">
-											<option value="Boolean">Boolean</option>
-											<option value="Integer">Integer</option>
-											<option value="String">String</option>
-											<option value="Date">Date</option>
-										</select>
-									</div>
-								</div>
-								<div class="form-group">
-									<label for="Visibility" class="col-sm-3 control-label">Visibility:</label>
-									<div class="col-sm-9">
-										<select class="form-control" id="Visibility">
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="public">public</option>
-										</select>
-									</div>
-								</div>
-							</form>
-						</div>
-					</div>
+					<!-- 编辑对话框 -->
+					<div id="dialog_container"></div>
 				</div>
-				<div class="col-xs-9 u-right">
-					<div class="panel panel-primary" id="gwtTabLayoutPanel">
-						<div class="panel-heading">
-							<ul class="nav nav-tabs" id="navTabs">
-								<li class="active">
-									<a href="#home" data-toggle="tab">
-										主页
-									</a>
-								</li>
-							</ul>
+				
+				<div class="right">
+					<div class="main_panel">
+						<div class="tabs">
+							<div class="tab active" for="index">主页</div>
 						</div>
-						<div class="panel-body">
-							<div class="tab-content" id="tabContent">
-								<div id="home" class="tab-pane active">
-									<div class="welcome">
-										<h1>欢迎使用领域建模工具</h1>
-										<p class="welcome">
-											Here is your dashboard, you can <strong>create</strong> a new project or <strong>clone</strong> the examples. Invite your teammates to work (in real-time) on yours models using the share settings.  For any help, write in the
-											<a class="gwt-Anchor">
-												feedback area
-											</a>
-											, we gladly help you out. Enjoy collaborative modeling!
-										</p>
-										<img src="images/koala-domain-model-tool-demo.png" alt="示例图">
-									</div>
-								</div>
+						<div class="panels">
+							<div class="panel index active" style="text-align:center;">
+								<h1>欢迎使用领域建模工具</h1>
+								<p class="welcome">
+									Here is your dashboard, you can <strong>create</strong> a new project or <strong>clone</strong> the examples. Invite your teammates to work (in real-time) on yours models using the share settings.  For any help, write in the
+									<a class="gwt-Anchor">feedback area</a>
+									, we gladly help you out. Enjoy collaborative modeling!
+								</p>
+								<img src="images/koala-domain-model-tool-demo.png" alt="示例图">
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="g-footer" id="gFooter">
-				Copyright @koala, All rights reserved.
-			</div>
+			
+			<div class="footer">Copyright @koala, All rights reserved.</div>
 		</div>
+
+
+		
+		<!-- 一些共用模板 -->
 		<div id="template" style="display: none;">
 			<!-- 线条模板 -->
 			<svg id="line-template" style="">
@@ -122,7 +148,7 @@
 				<!-- 实体模板 -->
 				<div class="node entity">
 					<div class="header">
-						<span>«</span><span class="type">Entity</span><span>»</span>
+						<span>«</span><span class="entityType">Entity</span><span>»</span>
 						<div class="name">Entity</div>
 					</div>
 					<div class="properties"></div>
@@ -173,12 +199,6 @@
 					<div class="parameterName">post</div>
 				</div>
 			</div>
-			
-			<div id="edit_windows">
-				<div id="edit_entity_window">
-					
-				</div>
-			</div>
 		</div>
 		<!-- 以下内在多个画板时的情况下可以共用 ，包括图形的模板、右键菜单等元素-->
 		<!-- uml元素模板 -->
@@ -223,6 +243,159 @@
 			</div>
 		</div>
 		
+		
+		<!-- 编辑对话框的模板 -->
+		<div id="dialog-template">
+			<div class="dialog entity_dialog">
+				<div class="tabs">
+					<div class="tab active" for="entity_panel">实体</div>
+					<div class="tab" for="panel_property">属性</div>
+					<div class="tab" for="panel_action">行为</div>
+				</div>
+				<div class="panels">
+					<!-- 实体面板 -->
+					<div class="panel entity_panel active">
+						<div>
+							<div class="label">实体名</div>
+							<input class="entityName" name="name" type="text"/>
+						</div>
+						<div>
+							<div class="label">实体类型</div>
+							<select class="entityType" name="entityType" style="height:22px;">
+								<option value="Entity">Entity</option>
+								<option value="AbstractEntity">AbstractEntity</option>
+								<option value="ValueObject">ValueObject</option>
+								<option value="MappedSuperClass">MappedSuperClass</option>
+							</select>
+						</div>
+						<div>
+							<div class="label">实体范围</div>
+							<select class="entityScope" name="entityScope" style="height:22px;">
+								<option value="public">public</option>
+								<option value="private">private</option>
+								<option value="protected">protected</option>
+								<option value="package">package</option>
+							</select>
+						</div>
+						<div>
+							<div class="label" style="vertical-align:top;">备注</div>
+							<textarea class="desc" name="description" style="height:100px;margin-top:2px;"></textarea>
+						</div>
+					</div>
+					
+					<!-- 属性面板 -->
+					<div class="panel panel property_panel">
+						<div>
+							<div class="label">属性名</div>
+							<input type="text" name="propertyName"/>
+						</div>
+						<div>
+							<div class="label">可见性</div>
+							<select style="height:22px;" name="">
+								<option value="public">public</option>
+								<option value="private">private</option>
+								<option value="protected">protected</option>
+								<option value="package">package</option>
+							</select>
+						</div>
+						<div>
+							<div class="label">类型</div>
+							<input type="text" name="propertyType" list="type_tip"/>
+						</div>
+						<div>
+							
+						</div>
+						<div>
+							<table style="font-size:14px">
+								<tr>
+									<td><input type="checkbox" name="isUnique"/>isUnique</td>
+									<td><input type="checkbox" name="isStatic"/>isStatic</td>
+									<td><input type="checkbox" name="isOrdered"/>isOrdered<br/></td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" name="isDerived"/>isDerived</td>
+									<td><input type="checkbox" name="isLeaf"/>isLeaf</td>
+									<td><input type="checkbox" name="isReadOnly"/>isReadOnly</td>
+								</tr>
+							</table>
+						</div>
+						<table class="properties" border="1" width="100%" cellspacing=0 style="font-size:14px">
+							<tr class="property">
+								<th>属性名</th>
+								<th>属性类型</th>
+								<th>初始值</th>
+							</tr>
+							<tr>
+								<td>emails</td>
+								<td>List</td>
+								<td>null</td>
+							</tr>
+						</table>
+					</div>
+					
+					<!-- 行为面板 -->
+					<div class="panel action_panel">
+						<div>
+							<div class="label">行为名</div>
+							<input class="actionName" type="text"/>
+						</div>
+						<div>
+							<div class="label">作用范围</div>
+							<select class="actionScope" style="height:22px;">
+								<option value="public">public</option>
+								<option value="private">private</option>
+								<option value="protected">protected</option>
+								<option value="package">package</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- 接口对话框 -->
+			<div class="dialog interface_dialog">
+				<div class="tabs">
+					<div class="tab active" for="me">实体</div>
+					<div class="tab" for="her">属性</div>
+				</div>
+				<div class="panels">
+					<div class="panel interface_panel active">
+						<div>
+							<div class="label">实体名</div>
+							<input name="name" type="text"/> 
+						</div>
+						<div>
+							<div class="label">实体范围</div>
+							<select class="scope" name="entityScope" style="height:22px;">
+								<option value="public">public</option>
+								<option value="private">private</option>
+								<option value="protected">protected</option>
+								<option value="package">package</option>
+							</select>
+						</div>
+						<div>
+							<div class="label" style="vertical-align:top;">备注</div>
+							<textarea class="desc" name="description" style="height:100px;margin-top:2px;"></textarea>
+						</div>
+					</div>
+					<div class="panel panel_action her">
+						<div>
+							<div class="label">行为名</div>
+							<input class="actionName" type="text"/>
+						</div>
+						<div>
+							<div class="label">作用范围</div>
+							<select class="actionScope" style="height:22px;">
+								<option value="public">public</option>
+								<option value="private">private</option>
+								<option value="protected">protected</option>
+								<option value="package">package</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>	
+		</div>
 		<datalist id="property_type_tip" style="display: none;">
 			<option value="String"></option>
 			<option value="Set"></option>
@@ -231,13 +404,16 @@
 			<option value="Long"></option>
 			<option value="Integer"></option>
 		</datalist>
-		
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
 		<script type="text/javascript" src="lib/bootstrap-3.1.1/js/bootstrap.js" ></script>
-		<script type="text/javascript" src="lib/tiny.tree.min.js" ></script>
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
+		<script type="text/javascript" src="lib/tiny.tree.min.js" ></script>
+		<script type="text/javascript" src="js/editDialog.js"></script>
 		<script type="text/javascript" src="js/tool.js" ></script>
 		<script type="text/javascript" src="plugins/inlineedit/jquery.miniedit.js" ></script>
 		<script src="js/main.js"></script>
+		<script>
+			
+		</script>
 	</body>
 </html>

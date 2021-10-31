@@ -2,15 +2,15 @@
 	<head>
 		<meta charset="UTF-8"/>
 		<style>
+			*{
+				outline-color:#3879d9;
+			}
 			body{
 				font-family:"微软雅黑";
 				font-size:14px;
 			}
-			.panel{
-				border:#009933 1px solid;
-				margin:4px;
-				float:left;
-				padding:10px;
+			.dialog{
+				display:inline-block;
 			}
 			.label{
 				display:inline-block;
@@ -24,19 +24,57 @@
 			input[type="checkbox"]{
 				vertical-align:text-bottom;
 			}
+			
+			
+			/*tab样式*/
+			.dialog{
+				width:340px;
+			}
 			.panel > div{
 				margin:10px 0;
+			}
+			.tabs{
+				border:#3879d9 1px solid;
+				padding:0 3px;
+				margin:0 0 -1px 0;
+			}
+			.tab{
+				display: inline-block;
+				margin-left:3px;
+				margin-bottom:-2px;
+				border:1px #3879d9 solid;
+				border-bottom: none;
+				padding:1px 4px;
+				margin-top:10px;
+				cursor:pointer;
+			}
+			.tab.active{
+				background:#FFFFFF;
+			}
+			.panels{
+				height:300px;
+				border:#3879d9 1px solid;
+			}
+			.panel{
+				padding:10px;
+				display:none;
+			}
+			.panel.active{
+				display:block;
 			}
 		</style>
 	</head>
 	<body>
 		<div class="dialog">
-			<div class="tabs" for=""></div>
+			<div class="tabs">
+				<div class="tab active" for="me">实体</div>
+				<div class="tab" for="her">属性</div>
+			</div>
 			<div class="panels">
-				<div class="panel panel_interface">
+				<div class="panel panel_interface me active">
 					<div>
 						<div class="label">实体名</div>
-						<input class="entityName" type="text"/>
+						<input class="entityName" type="text"/> 
 					</div>
 					<div>
 						<div class="label">实体范围</div>
@@ -52,7 +90,7 @@
 						<textarea class="desc" style="height:100px;margin-top:2px;"></textarea>
 					</div>
 				</div>
-				<div class="panel panel_action">
+				<div class="panel panel_action her">
 					<div>
 						<div class="label">行为名</div>
 						<input class="actionName" type="text"/>
@@ -72,5 +110,25 @@
 	</body>
 	
 	<script src="lib/jquery-2.1.0.min.js"></script>
-	<script></script>
+	<script>
+		(function($){
+			$.fn.tab = function(){
+				var TAB = $(this),
+					TABS = TAB.find(".tabs"),
+					PANELS = TAB.find(".panels");
+					
+				TABS.delegate(".tab","click",function(){
+					var thiz = $(this);
+					if(!thiz.is(".active")){
+						TABS.find(".active").removeClass("active");
+						thiz.addClass("active");
+						PANELS.find(".active").removeClass("active");						
+						PANELS.find("."+thiz.attr("for")).addClass("active");
+					}
+				});
+			}
+		})($);
+		
+		$(".dialog").tab();
+	</script>
 </html>

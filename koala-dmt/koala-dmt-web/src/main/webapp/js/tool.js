@@ -230,7 +230,7 @@ function DomainChar(name){
 
 /*线条数据结构*/
 function Line(chartId,id,type,from,to,desc){
-	this.lineId				= id;
+	this.lineId			= id;
 	this.fromShapeId 	= from;
 	this.toShapeId		= to;
 	this.lineType 		= type;
@@ -262,9 +262,8 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	this.actions			= []; 			//行为数组（行为对象数组）
 	this.isAbstractEntity 	= isAbstract;
 	this.isMappedSuperClass = isMapped;
-	this.entityType 		= "AbstractEntity";
-	this.scope				= "Public";
-	
+	this.entityType 		= "Entity";
+	this.scope				= "public";
 }
 
 /*值对象*/

@@ -1,20 +1,67 @@
-$(function() {
-	$(window).on('resize', function() {
-		var height = $(window).height();
-		$('#widgetContainer').height(height);
-		$('#gHead').height(0.06 * height);
-		$('#gMain').height(0.89 * height);
-		$('#gFooter').height(0.05 * height);
-		$('#projectExplorer .panel-body').height(0.36 * height);
-		$('#propertiesExplorer .panel-body').height(0.24 * height);
-		$('#gwtTabLayoutPanel .panel-body').height(0.80 * height);
-		//		$('.diagram').height($(window).height() * 0.80 - 28);
-		//		$('.tool-container').height($(window).height() * 0.80 - 28);
-		//		$('.tool-bar').height($(window).height() * 0.80 - 48);
-	});
-	$(window).trigger('resize');
+(function($){
+	$.fn.tab = function(){
+		var TAB = $(this),
+			TABS = TAB.find(".tabs"),
+			PANELS = TAB.find(".panels");
+			
+		TABS.delegate(".tab","click",function(){
+			var thiz = $(this);
+			if(!thiz.is(".active")){
+				TABS.find(".active").removeClass("active");
+				thiz.addClass("active");
+				PANELS.find(".active").removeClass("active");						
+				PANELS.find("."+thiz.attr("for")).addClass("active");
+			}
+		});
+		
+		var tab = {};
+		
+		tab.TABS 	= TABS;
+		tab.PANELS 	= PANELS;
+		
+		/**
+		 * 添加一个tab和对应的panel,
+		 * 添加完成后执行fn回调函数,
+		 * 你可以为新加的tab指定一个class，方便以后查找
+		 * 返回值是一个随机的字符串，这个字符串是新加tab的class，你可以通过这个class找到对应的tab
+		 */
+		tab.addTab = function(title,content,fn,selec){
+			var cls = "panel_"+((1 + Math.random())*0x100000000).toString(16).substring(1),
+				tab = $("<div class='tab " + cls + "' for='" + cls +"'>" + title + "</div>"),
+				panel = $("<div class='panel " + cls + "'>" + content + "</div>");
+			
+			TABS.append(tab);
+			PANELS.append(panel);
+			fn ? fn(tab,panel) : "";
+			selec ? tab.addClass(selec) : "";
+			
+			this.active("."+cls);
+			
+			return cls;
+		};
+		/*激活指定索引的tab*/
+		tab.active = function(sel){
+			var tab = TABS.find(sel);
+			
+			TABS.find(".active").removeClass("active");
+			tab.addClass("active");
+			PANELS.find(".active").removeClass("active");
+			PANELS.find("."+tab.attr("for")).addClass("active");
+		}
+		
+		/*关闭*/
+		tab.close = function(index){
+			var tab = TABS.find(".tab").get(index);
+			/*TODO*/
+		};
+		return tab;
+	}
+})($);
 
-	var data = [{
+$(".dialog").tab();
+var MAINTAB = $(".main_panel").tab();
+
+var data = [{
 		"id" : 1,
 		"name" : "项目一",
 		"children" : [{
@@ -77,71 +124,24 @@ $(function() {
 		"type" : "folder",
 		"actionUrl" : ""
 	}];
-	$('#projectTree').tree({
-		localData : data,
-		loadingHTML : '<div class="tree-loading"><i class="fa fa-refresh fa fa-spin blue"></i></div>',
-		'open-icon' : 'fa-folder-open fa',
-		'close-icon' : 'fa-folder fa',
-		'selectable' : false,
-		'selected-icon' : null,
-		'unselected-icon' : null
-	});
-	$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function() {
-		var title = $(this).text();
-		var id = $(this).attr('id');
-		openTab('pages/template.html', title, 'id' + id);
+	
+$('#projectTree').tree({
+	localData : data,
+	loadingHTML : '<div class="tree-loading"><i class="fa fa-refresh fa fa-spin blue"></i></div>',
+	'open-icon' : 'fa-folder-open fa',
+	'close-icon' : 'fa-folder fa',
+	'selectable' : false,
+	'selected-icon' : null,
+	'unselected-icon' : null
+});
+$('#projectTree').find('>.tree-folder>.tree-folder-header').on('click', function() {
+	var title = $(this).text();
+
+	MAINTAB.addTab("title","",function(t,p){
+		$.get('pages/template.html').done(function(data) {
+			p.html(data);
+			p.find('#canvas').umlCanvas();
+		});
+		p.umlCanvas();
 	});
 });
-
-$.ajaxSetup({
-	error : function(XMLHttpRequest, textStatus) {
-
-		if (XMLHttpRequest.status == 404 || XMLHttpRequest.status == 500) {
-			$.get('errors/' + XMLHttpRequest.status + '.html').done(function(html) {
-				$('#tabContent .active').html(html);
-			});
-		} else {
-			$.get('errors/404.html').done(function(html) {
-				$('#tabContent .active').html(html);
-			});
-		}
-	}
-});
-
-/*
- *打开一个Tab
- */
-function openTab(url, title, id) {
-	var tabs = $('#navTabs');
-	var contents = $('#tabContent');
-	var content = contents.find('#' + id);
-	if (content.length > 0) {
-		tabs.find('a[href="#' + id + '"]').tab('show');
-		return;
-	}
-	content = $('<div id="' + id + '" class="tab-pane"></div>');
-	$.get(url).done(function(data) {
-		content.html(data);
-		content.find('.canvas_freamwork');
-		content.find('#canvas').umlCanvas();
-	});
-	contents.append(content);
-	var tab = $('<li>');
-	tab.append($('<a href="#' + id + '" data-toggle="tab"></a>')).find('a').html('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><span>' + title + '<span>');
-	var closeBtn = tab.appendTo(tabs).on('click', function() {
-		var $this = $(this);
-		if ($this.hasClass('active')) {
-			return;
-		}
-		$this.find('a:first').tab('show');
-	}).find('a:first').tab('show').find('.close');
-	closeBtn.css({
-		position : 'absolute',
-		right : (closeBtn.width() - 10) + 'px',
-		top : -1 + 'px'
-	}).on('click', function() {
-		var prev = tab.prev('li').find('a:first');
-		content.remove() && tab.remove();
-		prev.tab('show');
-	});
-};

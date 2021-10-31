@@ -6,39 +6,18 @@
 				font-family:"微软雅黑";
 				font-size:14px;
 			}
-			.panel{
-				border:#009933 1px solid;
-				margin:4px;
-				float:left;
-				padding:10px;
-			}
-			.label{
-				display:inline-block;
-				width:70px;
-			}
-			select,input[type="text"],textarea{
-				display:inline-block;
-				resize:none;
-				width:200px;
-			}
-			input[type="checkbox"]{
-				vertical-align:text-bottom;
-			}
-			.panel > div{
-				margin:10px 0;
-			}
 		</style>
 	</head>
 	<body>
 		<div class="dialog">
-			<div class="tabs" for="">
-				<div class="tab">实体</div>
-				<div class="tab">属性</div>
-				<div class="tab">行为</div>
+			<div class="tabs">
+				<div class="tab active" for="entity_panel">实体</div>
+				<div class="tab" for="panel_property">属性</div>
+				<div class="tab" for="panel_action">行为</div>
 			</div>
 			<div class="panels">
 				<!-- 实体面板 -->
-				<div class="panel entity_panel">
+				<div class="panel entity_panel active">
 					<div>
 						<div class="label">实体名</div>
 						<input class="entityName" type="text"/>
@@ -134,34 +113,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		
-		
-		
-		
-		
-		
-		
-		<div class="panel abstractClass_panel">
-			<div>
-				<div class="label">类名</div>
-				<input class="entityName" type="text"/>
-			</div>
-			<div>
-				<div class="label">实体范围</div>
-				<select class="entityScope" style="height:22px;">
-					<option value="public">public</option>
-					<option value="private">private</option>
-					<option value="protected">protected</option>
-					<option value="package">package</option>
-				</select>
-			</div>
-			<div>
-				<div class="label" style="vertical-align:top;">备注</div>
-				<textarea class="desc" style="height:100px;margin-top:2px;"></textarea>
-			</div>
-		</div>
-		
+		</div>		
 		<datalist id="type_tip">
 			<option value="String"></option>
 			<option value="Set"></option>
@@ -172,5 +124,25 @@
 		</datalist>
 	</body>
 	<script src="lib/jquery-2.1.0.min.js"></script>
-	<script></script>
+	<script>
+		(function($){
+			$.fn.tab = function(){
+				var TAB = $(this),
+					TABS = TAB.find(".tabs"),
+					PANELS = TAB.find(".panels");
+					
+				TABS.delegate(".tab","click",function(){
+					var thiz = $(this);
+					if(!thiz.is(".active")){
+						TABS.find(".active").removeClass("active");
+						thiz.addClass("active");
+						PANELS.find(".active").removeClass("active");						
+						PANELS.find("."+thiz.attr("for")).addClass("active");
+					}
+				});
+			}
+		})($);
+		
+		$(".dialog").tab();
+	</script>
 </html>
