@@ -1,6 +1,115 @@
 dataOperation = {
+	ZOOM : function(t){
+			var value = $(t).val();
+			$(".uml_canvas").css("transform","scale("+value+")");
+	},
+	/*切换工具的方法*/
+	swichTool : function(name){
+		var tool = TOOLBAR.find("."+name);
+		var curtool  = tool.attr("class").split(" ");
+		
+		CURTOOL.type = curtool[0];
+		CURTOOL.name = curtool[1];
+		
+		TOOLBAR.find(".current-tool").removeClass("current-tool");
+		tool.addClass("current-tool");
+	},
+	
+	/*显示右键菜单*/
+	 showContextmenu : function(target,e,menuName,selector){
+		e.preventDefault();
+		$("#edit_contextmenus .contextmenu").slideUp(50);
+		var position = commonTool.mousePosition(e);
+		
+		$("#"+menuName)
+		.css({ top : position.top,left : position.left})
+		.data("target",target)
+		.removeClass(function(index,clazz){
+			return clazz.split(" ")[1];
+		})
+		.addClass(selector)
+		.slideDown(50);
+	},
+	
+	/*页面上添加一个节点，对应业务上的一个类或接口*/
+	addNode : function(e,type){
+		var id = commonTool.guid();
+		var offset 	= UMLCANVAS.offset();
+		var position = {
+				x:e.clientX - offset.left,
+				y:e.clientY - offset.top
+			};
+		var nodeType = type ? type : CURTOOL.name;
+		var node = $("#node-template ."+nodeType).clone().css({
+				left : position.x,
+				top  : position.y
+			});
+			
+		/*判断要生成那种领域模型*/
+		var model = null ,name;
+		if(nodeType == "entity"){
+			
+			name 	= getName("entity",getNodeNameSpace()).firstUpcase();
+			model 	= new EntityShape(id,CHARTID,name,position,"entity","",false,false);
+			
+		} else if(nodeType == "interface"){
+			
+			name 	= getName("interface",getNodeNameSpace()).firstUpcase();
+			model 	= new InterfaceShape(id,CHARTID,name,position,"interface","Interface",false,false);
+			
+		} else if(nodeType == "enum"){
+			
+			name 	= getName("enum",getNodeNameSpace()).firstUpcase();
+			model 	= new EnumShape(id,CHARTID,name,position,"enum","");
+		}
+		
+		node.find(".name").html(name);
+		node.attr("id",id).data("model",model); //把对应领域模型缓存在dom节点上，方便查找
+		UMLCANVAS.append(node);
+		
+		MODELS[id] = model;						//节点的控制数据（前端用）
+		NODEDOMS[id] = node;
+		return id;
+	},
+	
+	/**************************************添加节点的各种成员******************************************/
+	/*添加属性*/
+	addProperty : function(target,type,genericity,autoBy){
+		/*TODO:同步添加缓存数据*/
+		var dmodel = target.data("model"),
+			name = getName("property",(function(){
+				var namespace = [];
+				$.each(dmodel.properties,function(i,p){
+					namespace.push(p.name);
+				});
+				return namespace;
+			})()),
+			property = new Property(name,type),
+			proDom = $("#node-template .property").clone(); 
+		
+		proDom.find(".propertyType").html(type);
+		proDom.find(".propertyName").html(name);
+		
+		/*如果属性由连线时自动生成，则记录生成属性对应的线段*/
+		if(autoBy){
+			proDom.addClass(autoBy);
+			proDom.addClass("auto_generated");
+			proDom.attr("generated_by",autoBy);
+		}
+		
+		if(genericity){
+			property.genericity = genericity;
+			proDom.find(".genericity").css("display","inline-block");
+			proDom.find(".genericity .value").html(genericity);
+		}
+		
+		dmodel.properties.push(property);
+		target.find(".properties").append(proDom);
+		/*把对应的属性对象缓存到dom节点上，方便查找*/
+		proDom.data("property",property);
+	},
 	/*添加行为*/
-	addAction ：function(target){
+	addAction : function(target){
 		var dmodel = target.data("model");
 		var action = new Action("action","void");
 		var actDom = $("#node-template .action").clone();
@@ -156,7 +265,7 @@ dataOperation = {
 				};
 			}
 			
-			delete LINES[id]
+			delete LINES[id];
 			delete LINEDOMS[id];
 			ldom.remove();
 		});
@@ -196,4 +305,4 @@ dataOperation = {
 		}
 		return namespace;
 	}
-}
+};

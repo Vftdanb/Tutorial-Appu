@@ -722,7 +722,7 @@
 					};
 				}
 				
-				delete LINES[id]
+				delete LINES[id];
 				delete LINEDOMS[id];
 				ldom.remove();
 			});
