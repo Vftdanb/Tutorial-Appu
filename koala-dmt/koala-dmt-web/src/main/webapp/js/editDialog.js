@@ -20,13 +20,13 @@ $("#dialog_container").delegate("input,select,textarea","change",function(e){
 		model 	= panel.data("model"),
 		node	= panel.data("node"),
 		data 	= panel.data("data"),
-		attr 	= $(this).attr("name");
+		attr 	= $(this).attr("name"),
+		claz	= $(this).attr("class");
 	
-	node.find("."+attr).html($(this).val());
+	node.find("."+claz).html($(this).val());
 	data[attr] = $(this).val();
 	
 	console.log(JSON.stringify(data));
-	console.log(attr);
 });
 
 
@@ -52,13 +52,12 @@ editDialog = {
 			dialog 	= $("#dialog-template .entity_dialog").clone();
 			this.initClassPanel(dialog.find(".entity_panel") ,model ,node);
 			this.initPropertyPanel(dialog.find(".property_panel") , node.find(".property"));
-			this.initActionPanel(dialog , node.find(".action"));
+			//this.initActionPanel(dialog , node.find(".action"));
 		} else if(node.is(".interface")){
 			dialog = $("#dialog-template .interface_dialog").clone();
 			
 			this.initInterfacePanel(dialog.find(".interface_panel") ,model ,node);
-			this.initPropertyPanel(dialog.find(".property_panel") , node.find(".property"));
-			this.initActionPanel(dialog , node.find(".action"));
+			//this.initActionPanel(dialog , node.find(".action"));
 		} else if(node.is(".enum")){
 			dialog = $("#dialog-template .enum_dialog").clone();
 			
@@ -78,7 +77,7 @@ editDialog = {
 	initClassPanel : function(p,m,n){
 		p.data("data",m);
 		p.data("node",n);
-		p.find(".entityName").val(m.name);
+		p.find("input[name='name']").val(m.name);
 		p.find(".entityType").select(m.entityType);
 		p.find(".entityScope").select(m.entityScope);
 		p.find(".desc").val(m.description);
@@ -96,11 +95,48 @@ editDialog = {
 	},
 	
 	/*初始化属性编辑窗口*/
-	initPropertyPanel : function(d,ps){
-		var	table = $("<table/>");
+	initPropertyPanel : function(p,ps){
+		if(ps.length > 0){
+			this.initPropertyForm(p,$(ps[0]));
+			this.initPropertyTable(p,ps);
+		}
+	},
+	
+	/**
+	 * 初始化对话框中的属性表格 
+	 */
+	initPropertyTable : function(p,ps){
+		var table = p.find("table"),
+			tr 	= null,
+			data = null;
 			
-		d.append(table);
-		$.each(ps,function(i,p){});
+		$.each(ps,function(i,t){
+			data = $(t).data("property");
+			tr = $("<tr><td>"+data.name+"</td>"+
+					"<td>"+data.type+"</td>"+
+					"<td>"+data.type+"</td></tr>");
+
+			tr.data("node",$(t)); 
+			
+			table.append(tr);
+		});
+		
+		var initForm = this.initPropertyForm;
+		table.delegate("tr","click",function(){
+			initForm(p,$(this).data("node"));
+		});
+	},
+	
+	initPropertyForm : function(p,pro){
+		var node = pro,
+			data = node.data("property");
+			
+		p.data("node",node);
+		p.data("data",data);
+		
+		p.find("input[name='name']").val(data.name);
+		p.find("input[name='scope']").select(data.scope);
+		p.find("input[name='type']").val(data.type);
 	},
 	
 	initActionPanel : function(dialog,as){

@@ -188,37 +188,23 @@ commonTool = {
 	}
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/*移除数组的指定索引的元素*/
+Array.prototype.remove = function(i){
+	this.splice(i,1);
+};
+/*内部使用 "===" 实现*/
+Array.prototype.removeByEquals = function(target){
+	for(var i=this.length-1 ; i>=0 ; i--){
+		if(this[i] === target){
+			this.remove(i);
+		}
+	}
+};
+/*字符串的第一个字母大写*/
+String.prototype.firstUpcase = function(){	
+	var str = this.toString();	
+	return (str.substr(0,1).toUpperCase() + str.substr(1));
+};
 
 /*uml图对象*/
 function DomainChar(name){
@@ -293,7 +279,7 @@ function Property(name,type){
 	this.name 			= name;
 	this.type 			= type;
 	this.genericity		= null;
-	this.propertyScope	= "private";
+	this.scope			= "private";
 	this.relation		= null;
 	this.nullable		= true;
 	this.isUnique		= false;
@@ -303,28 +289,28 @@ function Property(name,type){
 
 /*常量类*/
 function Constant(name ,type){
-	this.constantName 	= name;
-	this.constantType 	= type;
-	this.constantValue 	= null;
+	this.name 	= name;
+	this.type 	= type;
+	this.value 	= null;
 }
 /*行为类*/
 function Action(name ,returnType){
-	this.actionName = name;
-	this.returnType = returnType;
+	this.name = name;
+	this.type = returnType;
 	this.parameters = [];
 }
 
 /*枚举项类*/
 function EnumItem(name){
-	this.enumName = name;
+	this.name = name;
 }
 
 /****************************三级级数据结构****************************/
 /*行为参数类*/
 function Parameter(name ,type){
-	this.parameterName 	= name;
-	this.parameterType 	= type;
-	this.sortNumber 	= null;
+	this.name 	= name;
+	this.type 	= type;
+	this.number = null;
 }
 
 /*工程类*/

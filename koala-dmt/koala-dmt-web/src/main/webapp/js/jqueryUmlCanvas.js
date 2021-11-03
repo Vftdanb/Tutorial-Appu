@@ -769,23 +769,5 @@
 			//console.log(JSON.stringify());
 			//console.log(JSON.stringify(LINES));
 		});
-		
-		/*移除数组的指定索引的元素*/
-		Array.prototype.remove = function(i){
-			this.splice(i,1);
-		}
-		
-		/*内部使用 "===" 实现*/
-		Array.prototype.removeByEquals = function(target){
-			for(var i=this.length-1 ; i>=0 ; i--){
-				if(this[i] === target){
-					this.remove(i);
-				}
-			}
-		}
-		String.prototype.firstUpcase = function(){	
-			var str = this.toString();	
-			return (str.substr(0,1).toUpperCase() + str.substr(1));
-		}
 	};
 })($);
