@@ -36,7 +36,7 @@
 						<ul id="projectTree" class="ztree"></ul>
 					</div>
 					<!-- 编辑对话框 -->
-					<div class="dialog_container">
+					<div class="dialog_container" id="dialog_container">
 						<div class="dialog entity_dialog">
 							<div class="tabs">
 								<div class="tab active" for="entity_panel">实体</div>
@@ -48,7 +48,7 @@
 								<div class="panel entity_panel active">
 									<div>
 										<div class="label">实体名</div>
-										<input class="name" name="name" type="text" onchange="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),null,$(this).parents('.dialog').data('canvas'))"/>
+										<input class="name" name="name" type="text" onchange="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/>
 									</div>
 									<div>
 										<div class="label">实体类型</div>
@@ -135,18 +135,18 @@
 						<!-- 接口对话框 -->
 						<div class="dialog interface_dialog">
 							<div class="tabs">
-								<div class="tab active" for="me">实体</div>
-								<div class="tab" for="her">属性</div>
+								<div class="tab active" for="interface_panel">实体</div>
+								<div class="tab" for="panel_action">属性</div>
 							</div>
 							<div class="panels">
 								<div class="panel interface_panel active">
 									<div>
 										<div class="label">实体名</div>
-										<input name="name" type="text"/> 
+										<input name="name" type="text" onchange="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
 									</div>
 									<div>
 										<div class="label">实体范围</div>
-										<select class="scope" name="entityScope" style="height:22px;">
+										<select class="scope" name="entityScope" style="height:22px;" onchange="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
 											<option value="public">public</option>
 											<option value="private">private</option>
 											<option value="protected">protected</option>
@@ -155,10 +155,10 @@
 									</div>
 									<div>
 										<div class="label" style="vertical-align:top;">备注</div>
-										<textarea class="desc" name="description" style="height:100px;margin-top:2px;"></textarea>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
 									</div>
 								</div>
-								<div class="panel panel_action her">
+								<div class="panel panel_action">
 									<div>
 										<div class="label">行为名</div>
 										<input class="actionName" type="text"/>
@@ -233,7 +233,7 @@
 				<!-- 实体模板 -->
 				<div class="node entity">
 					<div class="header">
-						<span>«</span><span class="entityType">Entity</span><span>»</span>
+						<span class="entityType node_type">Entity</span>
 						<div class="name">Entity</div>
 					</div>
 					<div class="properties"></div>
@@ -243,7 +243,7 @@
 				<!-- 接口模板 -->
 				<div class="node interface">
 					<div class="header">
-						<div>«interface»</div>
+						<div class="node_type">interface</div>
 						<div class="name">Interface</div>
 					</div>
 					<div class="actions"></div>	
@@ -252,29 +252,28 @@
 				<!-- 枚举模板  -->
 				<div class="node enum">
 					<div class="header">
-						<div>«enum»</div>
+						<div class="node_type">enum</div>
 						<div class="name">Enum</div>
 					</div>
 					<div class="enumItems"></div>
 				</div>
 				
 				<!-- 属性模板  -->
-				<div class="property">
+				<div class="property public">
 					<div class="propertyName">property</div>
-					<div> : </div>
-					<div class="propertyType">String</div>
-					<div class="genericity" style="display:none;">&lt;<span class="value"></span>&gt;</div>
+					<div class="property_type">
+						<span class="propertyType"></span>
+						<span class="genericity"></span>
+					</div>
 				</div>
 				
 				<!-- 枚举项模板 -->
 				<div class="enumItem">ENUMITEM</div>
 				
 				<!-- 行为模板 -->
-				<div class="action">
+				<div class="action public">
 					<div class="actionName">action</div>
-					<span>(</span>
 					<div class="parameters" style="min-width:10px;">ssss</div>
-					<span>) : </span>
 					<div class="returnType">void</div>
 				</div>
 				

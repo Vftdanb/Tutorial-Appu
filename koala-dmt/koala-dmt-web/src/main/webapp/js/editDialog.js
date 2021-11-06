@@ -15,24 +15,9 @@
 	};
 })($);
 
-/*$("#dialog_container").delegate("input,select,textarea","change",function(e){
-	var panel 	= $(this).parents(".panel"),
-		data 	= panel.data("data"),
-		node	= panel.data("node"),
-		data 	= panel.data("data"),
-		attr 	= $(this).attr("name"),
-		claz	= $(this).attr("class");
-	
-	node.find("."+claz).html($(this).val());
-	data[attr] = $(this).val();
-	
-	console.log(JSON.stringify(data));
-});*/
-
-
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
 editDialog = {
-	initDialog : function(node ,C){
+	initDialog : function(node ,UMLCANVAS){
 		var dialog = null;
 		if(node.is(".node")){
 			dialog = this.initEntityDialog(node);
@@ -40,31 +25,36 @@ editDialog = {
 			
 		}
 		
+		/*将在对话框中要用到的数据进行缓存，减少查找成本*/
 		dialog
 			.data("data",node.data("data"))	//被编辑的模型对象
-			.data("node",node)					//被编辑的节点对象
-			.data("canvas",C);					//画布对象
+			.data("node",node)				//被编辑的节点对象
+			.data("canvas",UMLCANVAS);		//画布对象
 		
 		node.data("dialog",dialog);	
-		
-		dialog.tab();
 	},
 	
 	initEntityDialog : function(node){
-		var dialog 	= null,
-			data	= node.data("data");
-			
+		var data	= node.data("data");
+		
+		/*隐藏上一个对话框*/
+		$("#dialog_container>.active_dialog").removeClass("active_dialog");
+		
+		
+		var dialog = $("."+data.shapeType+"_dialog").addClass("active_dialog");
+		
 		if(node.is(".entity")){
-			dialog 	= this.activeDialog("entity_dialog");
-			this.initClassPanel(dialog.find(".entity_panel") ,data ,node);
-			this.initPropertyPanel(dialog.find(".property_panel") , node.find(".property"));
+			this.initClassPanel(dialog ,data, node);
+			this.initPropertyPanel(dialog ,node);
+			
+			
+			
 		} else if(node.is(".interface")){
-			dialog = this.activeDialog("interface_dialog");
-			this.initInterfacePanel(dialog.find(".interface_panel") ,data ,node);
+			this.initInterfacePanel(dialog ,data ,node);
 		} else if(node.is(".enum")){
-			dialog = this.activeDialog("enum_dialog");
-			this.initInterfacePanel(dialog.find(".enum_panel") ,data ,node);
+			this.initInterfacePanel(dialog ,data ,node);
 		}
+		
 		return dialog;
 	},
 	
@@ -72,18 +62,20 @@ editDialog = {
 	 * 初始化类编辑窗口。
 	 * 同时会初始化该类的属性和行为编辑窗口
 	 */
-	initClassPanel : function(p,m,n){
-		p.data("node",n);
-		p.find("input[name='name']").val(m.name);
-		p.find(".entityType").select(m.entityType);
-		p.find(".entityScope").select(m.entityScope);
-		p.find(".desc").val(m.description);
+	initClassPanel : function(dialog, data, node){
+		var p = dialog.find(".entity_panel");
+		p.data("node",node);
+		p.find("input[name='name']").val(data.name);
+		p.find(".entityType").select(data.entityType);
+		p.find(".entityScope").select(data.entityScope);
+		p.find(".desc").val(data.description);
 	},
 	
 	/*
 	 * 初始化接口面板
 	 */
-	initInterfacePanel : function(p,m,n){
+	initInterfacePanel : function(dialog,m,n){
+		var p = dialog.find(".interface_panel");
 		p.data("node",n);
 		p.find("input[name='name']").val(m.name);
 		p.find("select[name='scope']").select(m.scope);
@@ -91,8 +83,10 @@ editDialog = {
 	},
 	
 	/*初始化属性编辑窗口*/
-	initPropertyPanel : function(p,ps){
-		if(ps.length > 0){
+	initPropertyPanel : function(dialog,node){
+		var properties = node.find(".property");
+		var p = dialog.find();
+		if(properties.length > 0){
 			this.initPropertyForm(p,$(ps[0]));
 			this.initPropertyTable(p,ps);
 		} else {

@@ -1,3 +1,14 @@
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑，编辑结果实时同步↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+(function(){
+	var dialogs = $(".dialog_container");
+	
+	dialogs.find(".entity_panel").delegate("input");
+	
+	
+	
+})();
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑，编辑结果实时同步↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+
 function ZOOM(t,canvas){
 		var value = $(t).val();
 		canvas.UMLCANVAS.css("transform","scale("+value+")");
@@ -71,7 +82,10 @@ function addNode(e,type,canvas){
 	return id;
 }
 /**************************************添加节点的各种成员******************************************/
-/*添加属性*/
+/*
+ * 添加属性
+ * autoBy:指定该属性是否由于连线而自动生成
+ */
 function addProperty(target,type,genericity,autoBy){
 	/*TODO:同步添加缓存数据*/
 	var dmodel = target.data("data"),
@@ -124,15 +138,16 @@ function addEnumItem(target){
 	var enumItem = new EnumItem("enum item");
 }
 
+
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有更新操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*更新名字，需要级联更改自动生成的属性的类型名*/
-function updateNodeName(target,newName,oldName,canvas){
+function updateNodeName(target,newName,canvas){
+	/*该节点的所有连线*/
 	var inAout 	= commonTool.findRelatedLines(target.attr("id"),canvas.LINES);
 	var data	= target.data("data");
 	
 	var ins 	= inAout.inLines;
 	var outs 	= inAout.outLines;
-	
-	data.name 	= newName;
 	
 	var n,m; //node and domainmodel
 	$.each(ins,function(i,line){
@@ -155,7 +170,7 @@ function updateNodeName(target,newName,oldName,canvas){
 			case "implements" : {
 				var list = m.implementsList;
 				for(var i=0 ;i<list.length ;i++){
-					if(list[i] == oldName){
+					if(list[i] == data.name){
 						list[i] = newName;
 						break;
 					}
@@ -189,6 +204,7 @@ function updateNodeName(target,newName,oldName,canvas){
 	for(var i in ins){
 	}
 	
+	data.name 	= newName;
 	target.find(".name").html(newName);
 	target.data("dialog").find(".name").val(newName);
 }
@@ -202,7 +218,6 @@ function updateEntityType(target,type){
 
 /*更新元素作用范围，包括entity、interface、eunm、property*/
 function updateScope(target,scope){
-	console.log(target.html());
 	var data = target.data("data");
 	data.scope = scope;
 }
@@ -212,7 +227,10 @@ function updateDescription(target,val){
 	var data = target.data("data");
 	data.description = val;
 }
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
+
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有删除操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*删除节点*/
 function deleteNode(node,canvas){
 	var id = node.attr("id");
@@ -304,6 +322,9 @@ function deleteAction(){
 function deleteEnumItem(){
 	/*TODO:同步更新缓存数据*/
 }
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有删除操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+
+
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对模型的编辑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
 

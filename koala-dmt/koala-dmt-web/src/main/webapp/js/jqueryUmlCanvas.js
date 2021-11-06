@@ -220,8 +220,8 @@ function umlCanvas(thiz){
 	 * 编辑节点名字 
 	 */
 	THIS.UMLCANVAS.delegate(".name","dblclick",function(e){
-		var node = $(this).parents(".node"),
-			dmodel = node.data("data");
+		var node 	= $(this).parents(".node"),
+			dmodel 	= node.data("data");
 			
 		/*编辑节点名字*/
 		$(this).miniedit({
@@ -232,14 +232,14 @@ function umlCanvas(thiz){
 					input.focus();
 					return false;
 				} else {
-					updateNodeName(node,input.val(),target.html(),THIS);
+					updateNodeName(node,input.val(),THIS);
 					return true;
 				}
 			}
 		});
 	});
 	
-	/* 双击方式编辑属性或行为 */
+	/*双击方式编辑属性或行为 */
 	THIS.UMLCANVAS.delegate(".properties,.actions,.name","dblclick",function(e){
 		e.preventDefault();
 		var thiz = $(this),t=$(e.target);
@@ -338,8 +338,6 @@ function umlCanvas(thiz){
 			from = THIS.NODEDOMS[line.fromShapeId],
 			l	= THIS.LINEDOMS[line.lineId];	
 			
-			
-			
 		l.attr("class",l.attr("class") + " active");
 		from.find("."+line.lineId).addClass("active");
 	}).delegate(".line:not(.templine)","mouseout",function(e){
@@ -405,7 +403,6 @@ function umlCanvas(thiz){
 		editDialog.initDialog($(this),THIS);
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
-		
 };
 
 $.fn.umlCanvas = function(){

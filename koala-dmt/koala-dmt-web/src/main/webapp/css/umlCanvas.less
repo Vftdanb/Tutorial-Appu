@@ -1,4 +1,4 @@
- .canvas{
+.canvas{
      .tools{
         float:left;
         border:#5890C1 1px solid;
@@ -42,16 +42,15 @@
     
     .uml_easel{
         width:100%;
-        height:450px;
+        height:500px;
         overflow:auto;
         background: #e8e8e8;
         
         .uml_canvas{
             float:left;
-            width:1600px;
-            height:1000px;
+            width:100%;
+            height:100%;
             position:relative;
-          
             -webkit-transform-origin:0px 0px;
             
             .svg_canvas{
@@ -69,12 +68,27 @@
                 background: -webkit-gradient(linear, 0 0, 0 100%, from(#CCFFFF), to(#CCFFFF));
                 font-size:13px;
                 
+                /*泛型的展示效果*/
+                .genericity{
+                    min-width:20px;
+                }
+                
+                .genericity:before{
+                    content:"<";
+                    padding-right:1px;
+                }
+                .genericity:after{
+                    content:">";
+                    padding-left:1px;
+                }
+                
+                /*合法操作*/
                 &.legal{
                     background:#CCFFCC!important;
                     border-color:#009933;
                     cursor:crosshair!important;
                 }
-                
+                /*非法操作*/
                 &.illegal{
                     background:#CCFFFF!important;
                     border-color:#FF6666;
@@ -84,6 +98,12 @@
                 .header{
                     cursor:move;
                     text-align:center;
+                    padding:0 6px;
+                    
+                    .node_type{
+                        &:before{content:"«";}
+                        &:after{content:"»";}
+                    }
                 }
                 
                 .actions, .properties, .enumItems{
@@ -99,31 +119,44 @@
                     }
                 }
                 
+                .action, .property{
+                    &.public:before{
+                        padding-left:2px;
+                        content:"+";
+                    }
+                    &.private:before{
+                        padding-left:2px;
+                        content:"-";
+                    }
+                }
+                
                 .property{
                     div{
                         height:18px;
                         line-height:18px;
                         display:inline;
                     }
-                    
+                    .propertyName:after{content:" : ";}
                     .propertyName, .propertyType, .relation{
                         min-width:30px;
                     }
                 }
                 
                 .action {
-                    &:before{
-                        content:"+ ";
-                        vertical-align:middle;
-                    }
-                    
                     div{
                         display : inline;
                     }
-                }
-                
-                .property:before{
-                    content:"+ ";
+                    
+                    .parameters{
+                        &:before{
+                        padding-left:2px;
+                        content:"(";
+                        }
+                        &:after{
+                            padding-left:2px;
+                            content:") : ";
+                        }
+                    }
                 }
             }
         }
@@ -143,8 +176,6 @@
                 stroke-width:3px;
             }
         }
-        
-        
         
         marker {
             path {

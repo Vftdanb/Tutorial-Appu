@@ -57,6 +57,7 @@
   border: #3879d9 1px solid;
 }
 #wrapper #container .left .dialog_container .panels .panel {
+  min-height: 250px;
   padding: 10px;
   display: none;
 }
