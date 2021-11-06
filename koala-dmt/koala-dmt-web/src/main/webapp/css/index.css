@@ -1,0 +1,136 @@
+#wrapper {
+  min-width: 960px;
+}
+#wrapper #header,
+#wrapper #footer {
+  clear: both;
+  margin: 6px 0;
+  text-align: center;
+  height: 60px;
+  border: 1px #3879d9 solid;
+}
+#wrapper #container {
+  overflow: hidden;
+  min-width: 960px;
+}
+#wrapper #container .left,
+#wrapper #container .right {
+  min-height: 600px;
+  position: relative;
+  border: #3879d9 1px solid;
+  margin-bottom: -1000px !important;
+  padding-bottom: 1000px !important;
+  overflow: auto;
+}
+#wrapper #container .left {
+  float: left;
+  width: 344px;
+  margin-right: 5px;
+}
+#wrapper #container .left .project_explorer {
+  padding: 10px;
+  min-height: 300px;
+}
+/*编辑对话框*/
+#wrapper #container .left .dialog_container .panel > div {
+  margin: 10px 0;
+}
+#wrapper #container .left .dialog_container .tabs {
+  border: #3879d9 1px solid;
+  padding: 0 3px;
+  margin: 0 0 -1px 0;
+}
+#wrapper #container .left .dialog_container .tabs .tab {
+  display: inline-block;
+  margin-left: 3px;
+  margin-bottom: -1px;
+  border: 1px #3879d9 solid;
+  border-bottom: none;
+  padding: 1px 8px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+#wrapper #container .left .dialog_container .tabs .tab.active {
+  background: #FFFFFF;
+}
+#wrapper #container .left .dialog_container .panels {
+  border: #3879d9 1px solid;
+}
+#wrapper #container .left .dialog_container .panels .panel {
+  padding: 10px;
+  display: none;
+}
+#wrapper #container .left .dialog_container .panels .panel.active {
+  display: block;
+}
+#wrapper #container .left .dialog_container .dialog {
+  display: none;
+}
+#wrapper #container .left .dialog_container .active_dialog {
+  display: block;
+}
+#wrapper #container .right {
+  overflow: hidden;
+}
+#wrapper #container .right .panel > div {
+  margin: 10px 0;
+}
+#wrapper #container .right .tabs {
+  padding: 0 3px;
+  margin: 0 0 -1px 0;
+}
+#wrapper #container .right .tabs .tab {
+  display: inline-block;
+  margin-left: 3px;
+  border: 1px #3879d9 solid;
+  border-bottom: none;
+  padding: 2px 8px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+#wrapper #container .right .tabs .tab.active {
+  background: #FFFFFF;
+}
+#wrapper #container .right .panels {
+  border-top: #3879d9 1px solid;
+}
+#wrapper #container .right .panels .panel {
+  padding: 10px;
+  display: none;
+}
+#wrapper #container .right .panels .panel.active {
+  display: block;
+}
+#edit_contextmenus .contextmenu {
+  outline: none;
+  border: #bcbcbc 1px solid;
+  background: #f0f0f0;
+  position: absolute;
+  border-radius: 1px;
+  -webkit-box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.4);
+  display: none;
+}
+/*各种右键菜单的样式*/
+#edit_contextmenus .contextmenu .contextmenu_item {
+  height: 20px;
+  line-height: 18px;
+  min-width: 0px;
+  overflow: hidden;
+  margin: 3px;
+  display: table-row;
+  cursor: pointer;
+}
+#edit_contextmenus .contextmenu .contextmenu_item div {
+  margin: 1px 3px;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 18px;
+  height: 20px;
+  padding-right: 5px;
+  background: no-repeat 0 2px;
+}
+#edit_contextmenus .contextmenu .contextmenu_item div:hover {
+  background-color: #c8d7e6;
+}
+/*# sourceMappingURL=index.css.map */

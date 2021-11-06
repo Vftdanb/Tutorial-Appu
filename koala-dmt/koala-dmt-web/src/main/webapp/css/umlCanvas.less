@@ -1,0 +1,173 @@
+ .canvas{
+     .tools{
+        float:left;
+        border:#5890C1 1px solid;
+        position:absolute;
+        z-index:100;
+        background:#fff;
+        
+        div {
+            padding-left:17px;
+            height  : 17px;
+            line-height:15px;
+            margin  : 5px;
+            cursor  : pointer;
+            vertical-align: middle;
+            
+            span {
+                display:block;
+                padding-left:7px;
+                height:17px;
+            }
+        }
+        
+        &.folder div span{
+            display:none!important;
+        }
+        
+        .cursor{background:url("../images/icons/cursor.png") no-repeat 0 1px;}
+        .entity{background:url("../images/icons/class.png") no-repeat 0 1px;}
+        .interface{background:url("../images/icons/interface.gif") no-repeat 0 1px;}
+        .enum{background:url("../images/icons/enum.png") no-repeat 0 1px;}
+        .property{background:url("../images/icons/property.png") no-repeat 0 1px;}
+        .enumItem{background:url("../images/icons/enumItem.png") no-repeat 0 1px;}
+        .action{background:url("../images/icons/action.png") no-repeat 0 1px;}
+        .extends{background:url("../images/icons/generalizatic.gif") no-repeat 0 1px;}
+        .implements{background:url("../images/icons/realization.gif") no-repeat 0 1px;}
+        .aggregate{background:url("../images/icons/aggregate.gif") no-repeat 0 1px;}
+        .compose{background:url("../images/icons/compose.gif") no-repeat 0 1px;}
+        .associate{background:url("../images/icons/associate.gif") no-repeat 0 1px;}
+        .current-tool{box-shadow: 0 0 10px #000000;}
+    }
+    
+    .uml_easel{
+        width:100%;
+        height:450px;
+        overflow:auto;
+        background: #e8e8e8;
+        
+        .uml_canvas{
+            float:left;
+            width:1600px;
+            height:1000px;
+            position:relative;
+          
+            -webkit-transform-origin:0px 0px;
+            
+            .svg_canvas{
+                position:absolute;
+                width:100%;
+                height:100%;
+            }
+            
+            .node {
+                min-width:100px;
+                position:absolute;
+                border-radius:0px;
+                border:1px solid #5890c1;
+                font-size:14px;
+                background: -webkit-gradient(linear, 0 0, 0 100%, from(#CCFFFF), to(#CCFFFF));
+                font-size:13px;
+                
+                &.legal{
+                    background:#CCFFCC!important;
+                    border-color:#009933;
+                    cursor:crosshair!important;
+                }
+                
+                &.illegal{
+                    background:#CCFFFF!important;
+                    border-color:#FF6666;
+                    cursor:not-allowed!important;
+                }
+                
+                .header{
+                    cursor:move;
+                    text-align:center;
+                }
+                
+                .actions, .properties, .enumItems{
+                    border-top:1px #5890c1 solid;
+                    min-height:10px;
+                    transition: 0.3s;
+                    padding:0 3px;
+                    &.active{
+                        -moz-box-shadow: 0px 0px 12px #CCCCCC;
+                        -webkit-box-shadow: 0px 0px 12px #CCCCCC;
+                        box-shadow: 0px 0px 12px #CCCCCC;
+                        background:#F7E1B5;
+                    }
+                }
+                
+                .property{
+                    div{
+                        height:18px;
+                        line-height:18px;
+                        display:inline;
+                    }
+                    
+                    .propertyName, .propertyType, .relation{
+                        min-width:30px;
+                    }
+                }
+                
+                .action {
+                    &:before{
+                        content:"+ ";
+                        vertical-align:middle;
+                    }
+                    
+                    div{
+                        display : inline;
+                    }
+                }
+                
+                .property:before{
+                    content:"+ ";
+                }
+            }
+        }
+    }
+    
+    svg {
+        /*线条的样式*/
+        .uml_lines {
+            cursor:hand;
+            polyline {
+                stroke-width:2px;
+                stroke:#5890c1;
+                cursor:pointer;
+                transition: 0.3s stroke-width;
+            }
+            .active polyline{
+                stroke-width:3px;
+            }
+        }
+        
+        
+        
+        marker {
+            path {
+                fill:#FFF;
+                stroke:#5890c1;
+            }
+        }
+    }
+    #template{
+        display:none;
+    }
+    
+    #edit_contextmenus {
+        /*属性、行为、枚举项、常量的右键菜单的显示控制*/
+        .add_property div{background-image:url("../images/icons/property.png");}
+        .add_action div{background-image:url("../images/icons/action.png");}
+        .add_enumItem div{background-image:url("../images/icons/enumItem.png");}
+        .entity .add_enumItem {display:none;}
+        .interface .add_enumItem, .interface .add_property{display:none;}
+        .enum .add_action,.enum .add_property{display:none;}
+        
+        .add_entity div{background-image:url("../images/icons/class.png");}
+        .add_interface div{background-image:url("../images/icons/interface.gif");}
+        .add_enum div{background-image:url("../images/icons/enum.png");}
+    }
+}

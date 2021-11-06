@@ -3,25 +3,11 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>领域建模工具</title>
-		<link rel="stylesheet" href="css/layout.css" />
+		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/umlCanvas.css" />
+		<link rel="stylesheet" href="css/index.css" />
+		<link rel="stylesheet" href="lib/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
 		<style>
-			.left{
-				width:344px;
-				float:left;
-				height:100%;
-			}
-			.right{
-				margin-left:355px;
-				height:100%;
-			}
-			#projectExplorer{
-				border:#3879d9 1px solid;
-				min-height:300px;
-				margin-bottom:6px;
-				padding:4px;
-			}
-			
 			.label{
 				display:inline-block;
 				width:70px;
@@ -38,61 +24,160 @@
 			.dialog{
 				width:344px;
 			}
-			.panel > div{
-				margin:10px 0;
-			}
-			.tabs{
-				border:#3879d9 1px solid;
-				padding:0 3px;
-				margin:0 0 -1px 0;
-			}
-			.tab{
-				display: inline-block;
-				margin-left:3px;
-				margin-bottom:-2px;
-				border:1px #3879d9 solid;
-				border-bottom: none;
-				padding:1px 4px;
-				margin-top:10px;
-				cursor:pointer;
-			}
-			.tab.active{
-				background:#FFFFFF;
-			}
-			.panels{
-				border:#3879d9 1px solid;
-			}
-			.panel{
-				padding:10px;
-				display:none;
-			}
-			.panel.active{
-				display:block;
-			}
-			#layout > .header ,#layout > .footer{
-				clear:both;
-				margin:6px 0;
-				text-align:center;
-				border:1px #3879d9 solid;
-			}
-			#layout >  .header{
-				height:60px;
-			}
 		</style>
 	</head>
 	<body>
-		<div id="layout">
-			<div class="header"></div>
-			<div>
+		<div id="wrapper">
+			<div id="header"></div>
+			<div id="container">
 				<div class="left">
-					<div class="project_tree" id="projectExplorer">
+					<div class="project_tree project_explorer" id="projectExplorer">
 						<div class="panel-heading">项目列表</div>
-						<div id="projectTree" class="tree tree-unselectable"></div>
+						<ul id="projectTree" class="ztree"></ul>
 					</div>
 					<!-- 编辑对话框 -->
-					<div id="dialog_container"></div>
+					<div class="dialog_container">
+						<div class="dialog entity_dialog">
+							<div class="tabs">
+								<div class="tab active" for="entity_panel">实体</div>
+								<div class="tab" for="property_panel">属性</div>
+								<div class="tab" for="action_panel">行为</div>
+							</div>
+							<div class="panels">
+								<!-- 实体面板 -->
+								<div class="panel entity_panel active">
+									<div>
+										<div class="label">实体名</div>
+										<input class="name" name="name" type="text" onchange="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),null,$(this).parents('.dialog').data('canvas'))"/>
+									</div>
+									<div>
+										<div class="label">实体类型</div>
+										<select class="entityType" name="entityType" style="height:22px;" onchange="updateEntityType($(this).parents('.dialog').data('node'),$(this).val())">
+											<option value="Entity">Entity</option>
+											<option value="AbstractEntity">AbstractEntity</option>
+											<option value="ValueObject">ValueObject</option>
+											<option value="MappedSuperClass">MappedSuperClass</option>
+										</select>
+									</div>
+									<div>
+										<div class="label">实体范围</div>
+										<select class="entityScope" name="entityScope" style="height:22px;" onchange="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
+											<option value="public">public</option>
+											<option value="private">private</option>
+											<option value="protected">protected</option>
+											<option value="package">package</option>
+										</select>
+									</div>
+									<div>
+										<div class="label" style="vertical-align:top;">备注</div>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
+									</div>
+								</div>
+								
+								<!-- 属性面板 -->
+								<div class="panel property_panel">
+									<div>
+										<div class="label">属性名</div>
+										<input type="text" class="propertyName" name="name" onchange=""/>
+									</div>
+									<div>
+										<div class="label">可见性</div>
+										<select style="height:22px;" class="scope" name="scope" onchange="updateScope($(this).parents('.property_panel').data('node') , $(this).val())">
+											<option value="public">public</option>
+											<option value="private">private</option>
+											<option value="protected">protected</option>
+											<option value="package">package</option>
+										</select>
+									</div>
+									<div>
+										<div class="label">类型</div>
+										<input type="text" class="propertyType" name="type" list="type_tip"/>
+									</div>
+									<div>
+										
+									</div>
+									<div>
+										<table style="font-size:14px">
+											<tr>
+												<td><input type="checkbox" name="isUnique"/>isUnique</td>
+												<td><input type="checkbox" name="isStatic"/>isStatic</td>
+												<td><input type="checkbox" name="isOrdered"/>isOrdered<br/></td>
+											</tr>
+											<tr>
+												<td><input type="checkbox" name="isDerived"/>isDerived</td>
+												<td><input type="checkbox" name="isLeaf"/>isLeaf</td>
+												<td><input type="checkbox" name="isReadOnly"/>isReadOnly</td>
+											</tr>
+										</table>
+									</div>
+									<div class="properties_table"></div>
+								</div>
+								
+								<!-- 行为面板 -->
+								<div class="panel action_panel">
+									<div>
+										<div class="label">行为名</div>
+										<input class="actionName" type="text"/>
+									</div>
+									<div>
+										<div class="label">作用范围</div>
+										<select class="actionScope" style="height:22px;">
+											<option value="public">public</option>
+											<option value="private">private</option>
+											<option value="protected">protected</option>
+											<option value="package">package</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- 接口对话框 -->
+						<div class="dialog interface_dialog">
+							<div class="tabs">
+								<div class="tab active" for="me">实体</div>
+								<div class="tab" for="her">属性</div>
+							</div>
+							<div class="panels">
+								<div class="panel interface_panel active">
+									<div>
+										<div class="label">实体名</div>
+										<input name="name" type="text"/> 
+									</div>
+									<div>
+										<div class="label">实体范围</div>
+										<select class="scope" name="entityScope" style="height:22px;">
+											<option value="public">public</option>
+											<option value="private">private</option>
+											<option value="protected">protected</option>
+											<option value="package">package</option>
+										</select>
+									</div>
+									<div>
+										<div class="label" style="vertical-align:top;">备注</div>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;"></textarea>
+									</div>
+								</div>
+								<div class="panel panel_action her">
+									<div>
+										<div class="label">行为名</div>
+										<input class="actionName" type="text"/>
+									</div>
+									<div>
+										<div class="label">作用范围</div>
+										<select class="actionScope" style="height:22px;">
+											<option value="public">public</option>
+											<option value="private">private</option>
+											<option value="protected">protected</option>
+											<option value="package">package</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>	
+					</div>
+					<div class="border_bottom"></div>
 				</div>
-				
 				<div class="right">
 					<div class="main_panel">
 						<div class="tabs">
@@ -106,14 +191,14 @@
 									<a class="gwt-Anchor">feedback area</a>
 									, we gladly help you out. Enjoy collaborative modeling!
 								</p>
-								<img src="images/koala-domain-model-tool-demo.png" alt="示例图">
 							</div>
 						</div>
 					</div>
+				<div class="border_bottom"></div>
 				</div>
 			</div>
 			
-			<div class="footer">Copyright @koala, All rights reserved.</div>
+			<div id="footer">Copyright @koala, All rights reserved.</div>
 		</div>
 
 
@@ -125,7 +210,7 @@
 				<!-- 继承关系连线模板 -->
 				<g class="line extends templine">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1)"></polyline>
-					<text x="20" y="30">说明文字</text>
+					<text>文字</text>
 				</g>
 				<!-- 实现关系连线模板 -->
 				<g class="line implements templine">
@@ -206,11 +291,11 @@
 			<defs>
 				<!-- 空心三角形 -->
 				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
-					<path d="M10,10 L16,13 L10,16 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
+					<path d="M10,10 L16,13 L10,16 z" style="stroke-dasharray:0;stroke-width:1;"></path>
 				</marker>
 			    <!-- 空心菱形 -->
 			  	<marker id="arrow2" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
-			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#CCFFCC;stroke-dasharray:0;stroke-width:1;"></path>
+			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="stroke-dasharray:0;stroke-width:1;"></path>
 			    </marker>
 			    <!-- 实心菱形 -->
 			    <marker id="arrow3" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
@@ -221,7 +306,7 @@
 		<!-- 各种右键编辑菜单 -->
 		<div id="edit_contextmenus">
 			<!-- 添加节点成员的右键菜单 -->
-			<div id="add_members" class="contextmenu">
+			<div id="add_members" class="contextmenu" tabindex="1">
 				<div class="contextmenu_item add_property"><div>添加属性</div></div>
 				<div class="contextmenu_item add_action"><div>添加行为</div></div>
 				<div class="contextmenu_item add_enumItem"><div>添加枚举项</div></div>
@@ -229,168 +314,20 @@
 			</div>
 			
 			<!--  -->
-			<div id="add_nodes" class="contextmenu">
+			<div id="add_nodes" class="contextmenu" tabindex="2">
 				<div class="contextmenu_item add_entity"><div>添加实体</div></div>
 				<div class="contextmenu_item add_interface"><div>添加接口</div></div>
 				<div class="contextmenu_item add_enum"><div>添加枚举</div></div>
 			</div>
 			
 			<!-- 编辑线条的右键菜单  -->
-			<div id="edit_lines" class="contextmenu">
+			<div id="edit_lines" class="contextmenu" tabindex="3">
 				<div class="contextmenu_item delete"><div>直线</div></div>
 				<div class="contextmenu_item delete"><div>折线</div></div>
 				<div class="contextmenu_item delete"><div>删除</div></div>
 			</div>
 		</div>
 		
-		
-		<!-- 编辑对话框的模板 -->
-		<div id="dialog-template">
-			<div class="dialog entity_dialog">
-				<div class="tabs">
-					<div class="tab active" for="entity_panel">实体</div>
-					<div class="tab" for="property_panel">属性</div>
-					<div class="tab" for="action_panel">行为</div>
-				</div>
-				<div class="panels">
-					<!-- 实体面板 -->
-					<div class="panel entity_panel active">
-						<div>
-							<div class="label">实体名</div>
-							<input class="name" name="name" type="text"/>
-						</div>
-						<div>
-							<div class="label">实体类型</div>
-							<select class="entityType" name="entityType" style="height:22px;">
-								<option value="Entity">Entity</option>
-								<option value="AbstractEntity">AbstractEntity</option>
-								<option value="ValueObject">ValueObject</option>
-								<option value="MappedSuperClass">MappedSuperClass</option>
-							</select>
-						</div>
-						<div>
-							<div class="label">实体范围</div>
-							<select class="entityScope" name="entityScope" style="height:22px;">
-								<option value="public">public</option>
-								<option value="private">private</option>
-								<option value="protected">protected</option>
-								<option value="package">package</option>
-							</select>
-						</div>
-						<div>
-							<div class="label" style="vertical-align:top;">备注</div>
-							<textarea class="desc" name="description" style="height:100px;margin-top:2px;"></textarea>
-						</div>
-					</div>
-					
-					<!-- 属性面板 -->
-					<div class="panel panel property_panel">
-						<div>
-							<div class="label">属性名</div>
-							<input type="text" class="propertyName" name="name"/>
-						</div>
-						<div>
-							<div class="label">可见性</div>
-							<select style="height:22px;" class="scope" name="scope">
-								<option value="public">public</option>
-								<option value="private">private</option>
-								<option value="protected">protected</option>
-								<option value="package">package</option>
-							</select>
-						</div>
-						<div>
-							<div class="label">类型</div>
-							<input type="text" class="propertyType" name="type" list="type_tip"/>
-						</div>
-						<div>
-							
-						</div>
-						<div>
-							<table style="font-size:14px">
-								<tr>
-									<td><input type="checkbox" name="isUnique"/>isUnique</td>
-									<td><input type="checkbox" name="isStatic"/>isStatic</td>
-									<td><input type="checkbox" name="isOrdered"/>isOrdered<br/></td>
-								</tr>
-								<tr>
-									<td><input type="checkbox" name="isDerived"/>isDerived</td>
-									<td><input type="checkbox" name="isLeaf"/>isLeaf</td>
-									<td><input type="checkbox" name="isReadOnly"/>isReadOnly</td>
-								</tr>
-							</table>
-						</div>
-						<table class="properties" border="1" width="100%" cellspacing=0 style="font-size:14px">
-							<tr class="property">
-								<th>属性名</th>
-								<th>属性类型</th>
-								<th>初始值</th>
-							</tr>
-						</table>
-					</div>
-					
-					<!-- 行为面板 -->
-					<div class="panel action_panel">
-						<div>
-							<div class="label">行为名</div>
-							<input class="actionName" type="text"/>
-						</div>
-						<div>
-							<div class="label">作用范围</div>
-							<select class="actionScope" style="height:22px;">
-								<option value="public">public</option>
-								<option value="private">private</option>
-								<option value="protected">protected</option>
-								<option value="package">package</option>
-							</select>
-						</div>
-					</div>
-				</div>
-			</div>
-			
-			<!-- 接口对话框 -->
-			<div class="dialog interface_dialog">
-				<div class="tabs">
-					<div class="tab active" for="me">实体</div>
-					<div class="tab" for="her">属性</div>
-				</div>
-				<div class="panels">
-					<div class="panel interface_panel active">
-						<div>
-							<div class="label">实体名</div>
-							<input name="name" type="text"/> 
-						</div>
-						<div>
-							<div class="label">实体范围</div>
-							<select class="scope" name="entityScope" style="height:22px;">
-								<option value="public">public</option>
-								<option value="private">private</option>
-								<option value="protected">protected</option>
-								<option value="package">package</option>
-							</select>
-						</div>
-						<div>
-							<div class="label" style="vertical-align:top;">备注</div>
-							<textarea class="desc" name="description" style="height:100px;margin-top:2px;"></textarea>
-						</div>
-					</div>
-					<div class="panel panel_action her">
-						<div>
-							<div class="label">行为名</div>
-							<input class="actionName" type="text"/>
-						</div>
-						<div>
-							<div class="label">作用范围</div>
-							<select class="actionScope" style="height:22px;">
-								<option value="public">public</option>
-								<option value="private">private</option>
-								<option value="protected">protected</option>
-								<option value="package">package</option>
-							</select>
-						</div>
-					</div>
-				</div>
-			</div>	
-		</div>
 		<datalist id="property_type_tip" style="display: none;">
 			<option value="String"></option>
 			<option value="Set"></option>
@@ -400,15 +337,149 @@
 			<option value="Integer"></option>
 		</datalist>
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
-		<script type="text/javascript" src="lib/bootstrap-3.1.1/js/bootstrap.js" ></script>
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
-		<script type="text/javascript" src="lib/tiny.tree.min.js" ></script>
 		<script type="text/javascript" src="js/editDialog.js"></script>
 		<script type="text/javascript" src="js/tool.js" ></script>
-		<script type="text/javascript" src="plugins/inlineedit/jquery.miniedit.js" ></script>
-		<script src="js/main.js"></script>
+		<script type="text/javascript" src="js/edit.js" ></script>
+		<script type="text/javascript" src="lib/inlineedit/jquery.miniedit.js" ></script>
+		<script type="text/javascript" src="lib/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
 		<script>
+			(function($){
+				/*tab插件*/
+				$.fn.tab = function(){
+					var TAB = $(this),
+						TABS = TAB.find(".tabs"),
+						PANELS = TAB.find(".panels");
+						
+					TABS.delegate(".tab","click",function(){
+						var thiz = $(this);
+						if(!thiz.is(".active")){
+							TABS.find(".active").removeClass("active");
+							thiz.addClass("active");
+							PANELS.find(".active").removeClass("active");						
+							PANELS.find("."+thiz.attr("for")).addClass("active");
+						}
+					});
+					
+					var tab = {};
+					
+					tab.TABS 	= TABS;
+					tab.PANELS 	= PANELS;
+					
+					/**
+					 * 添加一个tab和对应的panel,
+					 * 添加完成后执行fn回调函数,
+					 * 你可以为新加的tab指定一个class，方便以后查找
+					 * 返回值是一个随机的字符串，这个字符串是新加tab的class，你可以通过这个class找到对应的tab
+					 */
+					tab.addTab = function(title,content,fn,selec){
+						var cls = "panel_"+((1 + Math.random())*0x100000000).toString(16).substring(1),
+							tab = $("<div class='tab " + cls + "' for='" + cls +"'>" + title + "</div>"),
+							panel = $("<div class='panel " + cls + "'>" + content + "</div>");
+						
+						TABS.append(tab);
+						PANELS.append(panel);
+						fn ? fn(tab,panel) : "";
+						selec ? tab.addClass(selec) : "";
+						
+						this.active("."+cls);
+						
+						return cls;
+					};
+					/*激活指定索引的tab*/
+					tab.active = function(sel){
+						var tab = TABS.find(sel);
+						
+						TABS.find(".active").removeClass("active");
+						tab.addClass("active");
+						PANELS.find(".active").removeClass("active");
+						PANELS.find("."+tab.attr("for")).addClass("active");
+					}
+					
+					/*关闭*/
+					tab.close = function(index){
+						var tab = TABS.find(".tab").get(index);
+						/*TODO*/
+					};
+					return tab;
+				}
+			})($);
 			
+			$(".dialog").tab();
+			var MAINTAB = $(".main_panel").tab();
+			
+			var data = [{
+					"id" : 1,
+					"name" : "项目一",
+					"children" : [{
+						"id" : 7,
+						"name" : "类1",
+						"type" : "folder",
+						"actionUrl" : "forum",
+						"children" : [{
+							"id" : 7,
+							"name" : "属性1",
+							"type" : "item",
+							"actionUrl" : "forum"
+						}, {
+							"id" : 7,
+							"name" : "属性2",
+							"type" : "item",
+							"actionUrl" : "forum"
+						}]
+					}],
+					'icon-class': 'red',
+					"actionUrl" : ""
+				}, {
+					"id" : 2,
+					"name" : "项目二",
+					'icon-class' : 'orange',
+					"actionUrl" : "",
+					"children" : [{
+						"id" : 4,
+						"name" : "类1",
+						"actionUrl" : "repair",
+						"children" : [{
+							"id" 		: 7,
+							"name" 		: "属性1",
+							"actionUrl" : "forum"
+						}, {
+							"id" : 7,
+							"name" 		: "属性2",
+							"actionUrl" : "forum"
+						}]
+					}, {
+						"id" : 5,
+						"name" : "类2",
+						"actionUrl" 	: "comment",
+						"children" : [{
+							"id" : 7,
+							"name" : "属性1",
+							"actionUrl" : "forum"
+						}, {
+							"id" : 7,
+							"name" : "属性2",
+							"actionUrl" : "forum"
+						}]
+					}]
+				}];
+				
+			var setting = {
+				callback : {
+					onClick : function(event, treeId, treeNode){
+						var title = treeNode.name;
+						MAINTAB.addTab("title","",function(t,p){
+							$.get('pages/template.html').done(function(data) {
+								p.html(data);
+								p.find('#canvas').umlCanvas();
+							});
+							p.umlCanvas();
+						});
+					}
+				}
+			};
+			
+			$.fn.zTree.init($("#projectTree"), setting, data);
 		</script>
 	</body>
 </html>

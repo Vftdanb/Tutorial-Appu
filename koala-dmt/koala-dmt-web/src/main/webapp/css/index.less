@@ -1,0 +1,158 @@
+#wrapper{
+    min-width:960px;
+    
+    #header, #footer{
+        clear:both;
+        margin:6px 0;
+        text-align:center;
+        height:60px;
+        border:1px #3879d9 solid;
+    }
+    #container{
+        overflow: hidden;
+        min-width:960px;
+        
+        .left, .right{
+            min-height:600px;
+            position:relative;
+            border:#3879d9 1px solid;
+            margin-bottom:-1000px!important;
+            padding-bottom:1000px!important;
+            overflow: auto;
+        }
+        
+        .left{
+             float:left;
+             width:344px;
+             margin-right:5px;
+             
+            .project_explorer{
+                padding:10px;
+                min-height:300px;
+            }
+            
+            /*编辑对话框*/
+            .dialog_container {
+                .panel > div{
+                    margin:10px 0;
+                }
+                
+                .tabs{
+                    border:#3879d9 1px solid;
+                    padding:0 3px;
+                    margin:0 0 -1px 0;
+                    
+                    .tab{
+                        display: inline-block;
+                        margin-left:3px;
+                        margin-bottom:-1px;
+                        border:1px #3879d9 solid;
+                        border-bottom: none;
+                        padding:1px 8px;
+                        margin-top:5px;
+                        cursor:pointer;
+                        
+                        &.active{
+                            background:#FFFFFF;
+                        }
+                    }
+                }
+                .panels{
+                    border:#3879d9 1px solid;
+                    .panel{
+                        padding:10px;
+                        display:none;
+                        
+                        &.active{
+                            display:block;
+                        }
+                    }
+                }
+                
+                .dialog{
+                    display:none;
+                }
+                .active_dialog{
+                    display:block;
+                }
+            }
+            .dialog_container {
+            }
+        }
+        
+        .right{
+            overflow: hidden;
+            
+            .panel > div{
+                margin:10px 0;
+            }
+            .tabs{
+                padding:0 3px;
+                margin:0 0 -1px 0;
+                
+                .tab {
+                    display: inline-block;
+                    margin-left:3px;
+                    border:1px #3879d9 solid;
+                    border-bottom: none;
+                    padding:2px 8px;
+                    margin-top:5px;
+                    cursor:pointer;
+                    
+                    &.active{
+                        background:#FFFFFF;
+                    }
+                }
+            }
+            .panels{
+                border-top:#3879d9 1px solid;
+                .panel{
+                    padding:10px;
+                    display:none;
+                    
+                    &.active{
+                        display:block;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#edit_contextmenus{
+    .contextmenu{
+        outline:none;
+        border:#bcbcbc 1px solid;
+        background:#f0f0f0;
+        position:absolute;
+        border-radius:1px;
+        -webkit-box-shadow: 2px 5px 10px rgba(0,0,0,.4);
+        box-shadow: 2px 5px 10px rgba(0,0,0,.4);
+        display:none;
+        
+        /*各种右键菜单的样式*/
+        .contextmenu_item{
+            height:20px;
+            line-height:18px;
+            min-width:0px;
+            overflow:hidden;
+            margin: 3px;
+            display:table-row;
+            cursor:pointer;
+            
+            div{
+                margin:1px 3px;
+                padding-left:20px;
+                font-size:14px;
+                line-height:18px;
+                height:20px;
+                padding-right:5px;
+                background:no-repeat 0 2px;
+            }
+            
+            div:hover{
+                background-color:#c8d7e6;
+            }
+        } 
+    }
+}

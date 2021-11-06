@@ -12,12 +12,12 @@
 			});
 		}
 		return this;
-	}
+	};
 })($);
 
-$("#dialog_container").delegate("input,select,textarea","change",function(e){
+/*$("#dialog_container").delegate("input,select,textarea","change",function(e){
 	var panel 	= $(this).parents(".panel"),
-		model 	= panel.data("model"),
+		data 	= panel.data("data"),
 		node	= panel.data("node"),
 		data 	= panel.data("data"),
 		attr 	= $(this).attr("name"),
@@ -27,12 +27,12 @@ $("#dialog_container").delegate("input,select,textarea","change",function(e){
 	data[attr] = $(this).val();
 	
 	console.log(JSON.stringify(data));
-});
+});*/
 
 
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
 editDialog = {
-	initDialog : function(node){
+	initDialog : function(node ,C){
 		var dialog = null;
 		if(node.is(".node")){
 			dialog = this.initEntityDialog(node);
@@ -40,33 +40,31 @@ editDialog = {
 			
 		}
 		
-		dialog.data("model",node.data("model")).data("node",node);
+		dialog
+			.data("data",node.data("data"))	//被编辑的模型对象
+			.data("node",node)					//被编辑的节点对象
+			.data("canvas",C);					//画布对象
+		
+		node.data("dialog",dialog);	
+		
 		dialog.tab();
 	},
 	
 	initEntityDialog : function(node){
 		var dialog 	= null,
-			model	= node.data("model");
+			data	= node.data("data");
 			
 		if(node.is(".entity")){
-			dialog 	= $("#dialog-template .entity_dialog").clone();
-			this.initClassPanel(dialog.find(".entity_panel") ,model ,node);
+			dialog 	= this.activeDialog("entity_dialog");
+			this.initClassPanel(dialog.find(".entity_panel") ,data ,node);
 			this.initPropertyPanel(dialog.find(".property_panel") , node.find(".property"));
-			//this.initActionPanel(dialog , node.find(".action"));
 		} else if(node.is(".interface")){
-			dialog = $("#dialog-template .interface_dialog").clone();
-			
-			this.initInterfacePanel(dialog.find(".interface_panel") ,model ,node);
-			//this.initActionPanel(dialog , node.find(".action"));
+			dialog = this.activeDialog("interface_dialog");
+			this.initInterfacePanel(dialog.find(".interface_panel") ,data ,node);
 		} else if(node.is(".enum")){
-			dialog = $("#dialog-template .enum_dialog").clone();
-			
-			this.initInterfacePanel(dialog.find(".enum_panel") ,model ,node);
-			//this.initPropertyPanel(dialog.find(".enumItem_panel") , node.find(".property"));
-			//this.initActionPanel(dialog , node.find(".action"));
+			dialog = this.activeDialog("enum_dialog");
+			this.initInterfacePanel(dialog.find(".enum_panel") ,data ,node);
 		}
-		
-		$("#dialog_container").html(dialog);
 		return dialog;
 	},
 	
@@ -75,7 +73,6 @@ editDialog = {
 	 * 同时会初始化该类的属性和行为编辑窗口
 	 */
 	initClassPanel : function(p,m,n){
-		p.data("data",m);
 		p.data("node",n);
 		p.find("input[name='name']").val(m.name);
 		p.find(".entityType").select(m.entityType);
@@ -87,7 +84,6 @@ editDialog = {
 	 * 初始化接口面板
 	 */
 	initInterfacePanel : function(p,m,n){
-		p.data("data",m);
 		p.data("node",n);
 		p.find("input[name='name']").val(m.name);
 		p.find("select[name='scope']").select(m.scope);
@@ -99,6 +95,8 @@ editDialog = {
 		if(ps.length > 0){
 			this.initPropertyForm(p,$(ps[0]));
 			this.initPropertyTable(p,ps);
+		} else {
+			
 		}
 	},
 	
@@ -106,18 +104,22 @@ editDialog = {
 	 * 初始化对话框中的属性表格 
 	 */
 	initPropertyTable : function(p,ps){
-		var table = p.find("table"),
+		var t = p.find(".properties_table"),
 			tr 	= null,
 			data = null;
-			
+		
+		t.html("");
+		var table = $('<table class="properties" border="1" cellspacing="1" cellpadding="0" width="100%" style="font-size:14px"> \
+							<tr class="property"><th>属性名</th><th>属性类型</th><th>初始值</th></tr> \
+						</table>');
+		t.append(table);
 		$.each(ps,function(i,t){
-			data = $(t).data("property");
+			data = $(t).data("data");
 			tr = $("<tr><td>"+data.name+"</td>"+
 					"<td>"+data.type+"</td>"+
 					"<td>"+data.type+"</td></tr>");
 
 			tr.data("node",$(t)); 
-			
 			table.append(tr);
 		});
 		
@@ -129,17 +131,27 @@ editDialog = {
 	
 	initPropertyForm : function(p,pro){
 		var node = pro,
-			data = node.data("property");
+			data = node.data("data");
 			
 		p.data("node",node);
-		p.data("data",data);
-		
 		p.find("input[name='name']").val(data.name);
-		p.find("input[name='scope']").select(data.scope);
+		p.find("select[name='scope']").select(data.scope);
 		p.find("input[name='type']").val(data.type);
 	},
 	
 	initActionPanel : function(dialog,as){
 		
+	},
+	
+	/*激活对话框*/
+	activeDialog : function(name){
+		$("#dialog_container>.active_dialog").removeClass("active_dialog");
+		return $("."+name).addClass("active_dialog");
 	}
 };
+
+dialog = {
+	deleteNode : function(n){
+		deleteNode();
+	}
+}
