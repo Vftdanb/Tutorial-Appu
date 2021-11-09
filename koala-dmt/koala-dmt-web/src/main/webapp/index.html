@@ -47,12 +47,12 @@
 								<!-- 实体面板 -->
 								<div class="panel entity_panel active">
 									<div>
-										<div class="label">实体名</div>
-										<input class="name" name="name" type="text" onchange="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/>
+										<span class="label">实体名</span>
+										<input class="name" name="name" type="text" oninput="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/>
 									</div>
 									<div>
-										<div class="label">实体类型</div>
-										<select class="entityType" name="entityType" style="height:22px;" onchange="updateEntityType($(this).parents('.dialog').data('node'),$(this).val())">
+										<span class="label">实体类型</span>
+										<select class="entityType" name="entityType" style="height:22px;" oninput="updateEntityType($(this).parents('.dialog').data('node'),$(this).val())">
 											<option value="Entity">Entity</option>
 											<option value="AbstractEntity">AbstractEntity</option>
 											<option value="ValueObject">ValueObject</option>
@@ -60,8 +60,8 @@
 										</select>
 									</div>
 									<div>
-										<div class="label">实体范围</div>
-										<select class="entityScope" name="entityScope" style="height:22px;" onchange="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
+										<span class="label">实体范围</span>
+										<select class="entityScope" name="entityScope" style="height:22px;" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
 											<option value="public">public</option>
 											<option value="private">private</option>
 											<option value="protected">protected</option>
@@ -69,58 +69,63 @@
 										</select>
 									</div>
 									<div>
-										<div class="label" style="vertical-align:top;">备注</div>
+										<span class="label" style="vertical-align:top;">备注</span>
 										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
 									</div>
 								</div>
 								
 								<!-- 属性面板 -->
 								<div class="panel property_panel">
-									<div>
-										<div class="label">属性名</div>
-										<input type="text" class="propertyName" name="name" onchange=""/>
-									</div>
-									<div>
-										<div class="label">可见性</div>
-										<select style="height:22px;" class="scope" name="scope" onchange="updateScope($(this).parents('.property_panel').data('node') , $(this).val())">
-											<option value="public">public</option>
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="package">package</option>
-										</select>
-									</div>
-									<div>
-										<div class="label">类型</div>
-										<input type="text" class="propertyType" name="type" list="type_tip"/>
-									</div>
-									<div>
+									<form>
+										<div>
+											<span class="label">属性名</span>
+											<input type="text" class="propertyName" name="name" oninput="updatePropertyName($(this).parent().parent().data('data'),$(this).val());"/>
+										</div>
+										<div>
+											<span class="label">类型</span>
+											<input type="text" class="propertyType" name="type" list="type_tip" oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
+										</div>
+										<div class="genericity_input">
+											<span class="label">泛型</span>
+											<input type="text" class="propertyGenericity" name="genericity" oninput="updatePropertyGenericity($(this).parent().parent().data('data'),$(this).val());"/>
+										</div>
+										<div>
+											<span class="label">可见性</span>
+											<select style="height:22px;" class="scope" name="scope" oninput="updatePropertyScope($(this).parent().parent().data('data'),$(this).val())">
+												<option value="public">public</option>
+												<option value="private">private</option>
+												<option value="protected">protected</option>
+												<option value="package">package</option>
+											</select>
+										</div>
+										<div>
+											<table style="font-size:14px">
+												<tr>
+													<td><input type="checkbox" name="isUnique"/>isUnique</td>
+													<td><input type="checkbox" name="isStatic"/>isStatic</td>
+													<td><input type="checkbox" name="isOrdered"/>isOrdered<br/></td>
+												</tr>
+												<tr>
+													<td><input type="checkbox" name="isDerived"/>isDerived</td>
+													<td><input type="checkbox" name="isLeaf"/>isLeaf</td>
+													<td><input type="checkbox" name="isReadOnly"/>isReadOnly</td>
+												</tr>
+											</table>
+										</div>
 										
-									</div>
-									<div>
-										<table style="font-size:14px">
-											<tr>
-												<td><input type="checkbox" name="isUnique"/>isUnique</td>
-												<td><input type="checkbox" name="isStatic"/>isStatic</td>
-												<td><input type="checkbox" name="isOrdered"/>isOrdered<br/></td>
-											</tr>
-											<tr>
-												<td><input type="checkbox" name="isDerived"/>isDerived</td>
-												<td><input type="checkbox" name="isLeaf"/>isLeaf</td>
-												<td><input type="checkbox" name="isReadOnly"/>isReadOnly</td>
-											</tr>
-										</table>
-									</div>
-									<div class="properties_table"></div>
+									</form>
+									
+									<div class="properties"></div>
 								</div>
 								
 								<!-- 行为面板 -->
 								<div class="panel action_panel">
 									<div>
-										<div class="label">行为名</div>
+										<span class="label">行为名</span>
 										<input class="actionName" type="text"/>
 									</div>
 									<div>
-										<div class="label">作用范围</div>
+										<span class="label">作用范围</span>
 										<select class="actionScope" style="height:22px;">
 											<option value="public">public</option>
 											<option value="private">private</option>
@@ -141,12 +146,12 @@
 							<div class="panels">
 								<div class="panel interface_panel active">
 									<div>
-										<div class="label">实体名</div>
-										<input name="name" type="text" onchange="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
+										<span class="label">实体名</span>
+										<input name="name" type="text" oninput="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
 									</div>
 									<div>
-										<div class="label">实体范围</div>
-										<select class="scope" name="entityScope" style="height:22px;" onchange="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
+										<span class="label">实体范围</span>
+										<select class="scope" name="entityScope" style="height:22px;" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
 											<option value="public">public</option>
 											<option value="private">private</option>
 											<option value="protected">protected</option>
@@ -154,17 +159,17 @@
 										</select>
 									</div>
 									<div>
-										<div class="label" style="vertical-align:top;">备注</div>
-										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
+										<span class="label" style="vertical-align:top;">备注</span>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
 									</div>
 								</div>
 								<div class="panel panel_action">
 									<div>
-										<div class="label">行为名</div>
+										<span class="label">行为名</span>
 										<input class="actionName" type="text"/>
 									</div>
 									<div>
-										<div class="label">作用范围</div>
+										<span class="label">作用范围</span>
 										<select class="actionScope" style="height:22px;">
 											<option value="public">public</option>
 											<option value="private">private</option>
@@ -188,8 +193,7 @@
 								<h1>欢迎使用领域建模工具</h1>
 								<p class="welcome">
 									Here is your dashboard, you can <strong>create</strong> a new project or <strong>clone</strong> the examples. Invite your teammates to work (in real-time) on yours models using the share settings.  For any help, write in the
-									<a class="gwt-Anchor">feedback area</a>
-									, we gladly help you out. Enjoy collaborative modeling!
+									<a class="gwt-Anchor">feedback area</a>, we gladly help you out. Enjoy collaborative modeling!
 								</p>
 							</div>
 						</div>
@@ -206,7 +210,7 @@
 		<!-- 一些共用模板 -->
 		<div id="template" style="display: none;">
 			<!-- 线条模板 -->
-			<svg id="line-template" style="">
+			<svg id="line-template">
 				<!-- 继承关系连线模板 -->
 				<g class="line extends templine">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1)"></polyline>
@@ -259,12 +263,12 @@
 				</div>
 				
 				<!-- 属性模板  -->
-				<div class="property public">
-					<div class="propertyName">property</div>
-					<div class="property_type">
+				<div class="property private">
+					<span class="propertyName">property</span>
+					<span class="property_type">
 						<span class="propertyType"></span>
-						<span class="genericity"></span>
-					</div>
+						<span class="genericity">?</span>
+					</span>
 				</div>
 				
 				<!-- 枚举项模板 -->
@@ -272,29 +276,29 @@
 				
 				<!-- 行为模板 -->
 				<div class="action public">
-					<div class="actionName">action</div>
-					<div class="parameters" style="min-width:10px;">ssss</div>
-					<div class="returnType">void</div>
+					<span class="actionName">action</span>
+					<span class="parameters" style="min-width:10px;">ssss</span>
+					<span class="returnType">void</span>
 				</div>
 				
 				<!-- 行为的参数模板 -->				
 				<div class="parameter" sortNumber="1">
-					<div class="parameterType">Post</div>
-					<div class="parameterName">post</div>
+					<span class="parameterType">Post</span>
+					<span class="parameterName">post</span>
 				</div>
 			</div>
 		</div>
 		<!-- 以下内在多个画板时的情况下可以共用 ，包括图形的模板、右键菜单等元素-->
 		<!-- uml元素模板 -->
-		<svg>
+		<svg style="position:absolute;">
 			<defs>
 				<!-- 空心三角形 -->
 				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
-					<path d="M10,10 L16,13 L10,16 z" style="stroke-dasharray:0;stroke-width:1;"></path>
+					<path d="M10,10 L16,13 L10,16 z" style="fill:#fff;stroke:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
 				</marker>
 			    <!-- 空心菱形 -->
 			  	<marker id="arrow2" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
-			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="stroke-dasharray:0;stroke-width:1;"></path>
+			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#fff;stroke:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
 			    </marker>
 			    <!-- 实心菱形 -->
 			    <marker id="arrow3" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">

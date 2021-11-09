@@ -67,97 +67,6 @@
                 font-size:14px;
                 background: -webkit-gradient(linear, 0 0, 0 100%, from(#CCFFFF), to(#CCFFFF));
                 font-size:13px;
-                
-                /*泛型的展示效果*/
-                .genericity{
-                    min-width:20px;
-                }
-                
-                .genericity:before{
-                    content:"<";
-                    padding-right:1px;
-                }
-                .genericity:after{
-                    content:">";
-                    padding-left:1px;
-                }
-                
-                /*合法操作*/
-                &.legal{
-                    background:#CCFFCC!important;
-                    border-color:#009933;
-                    cursor:crosshair!important;
-                }
-                /*非法操作*/
-                &.illegal{
-                    background:#CCFFFF!important;
-                    border-color:#FF6666;
-                    cursor:not-allowed!important;
-                }
-                
-                .header{
-                    cursor:move;
-                    text-align:center;
-                    padding:0 6px;
-                    
-                    .node_type{
-                        &:before{content:"«";}
-                        &:after{content:"»";}
-                    }
-                }
-                
-                .actions, .properties, .enumItems{
-                    border-top:1px #5890c1 solid;
-                    min-height:10px;
-                    transition: 0.3s;
-                    padding:0 3px;
-                    &.active{
-                        -moz-box-shadow: 0px 0px 12px #CCCCCC;
-                        -webkit-box-shadow: 0px 0px 12px #CCCCCC;
-                        box-shadow: 0px 0px 12px #CCCCCC;
-                        background:#F7E1B5;
-                    }
-                }
-                
-                .action, .property{
-                    &.public:before{
-                        padding-left:2px;
-                        content:"+";
-                    }
-                    &.private:before{
-                        padding-left:2px;
-                        content:"-";
-                    }
-                }
-                
-                .property{
-                    div{
-                        height:18px;
-                        line-height:18px;
-                        display:inline;
-                    }
-                    .propertyName:after{content:" : ";}
-                    .propertyName, .propertyType, .relation{
-                        min-width:30px;
-                    }
-                }
-                
-                .action {
-                    div{
-                        display : inline;
-                    }
-                    
-                    .parameters{
-                        &:before{
-                        padding-left:2px;
-                        content:"(";
-                        }
-                        &:after{
-                            padding-left:2px;
-                            content:") : ";
-                        }
-                    }
-                }
             }
         }
     }
@@ -202,3 +111,129 @@
         .add_enum div{background-image:url("../images/icons/enum.png");}
     }
 }
+
+.node, #dialog_container {
+    /*泛型的展示效果，如果是集合类型则显示泛型*/
+    .collection_type .genericity{
+        display:inline-block;
+    }
+    .genericity{
+        min-width:20px;
+        display:none;
+    }
+    
+    .genericity:before{
+        content:"<";
+        padding-right:1px;
+    }
+    .genericity:after{
+        content:">";
+        padding-left:1px;
+    }
+    
+    /*合法操作*/
+    &.legal{
+        background:#CCFFCC!important;
+        border-color:#009933;
+        cursor:crosshair!important;
+    }
+    /*非法操作*/
+    &.illegal{
+        background:#CCFFFF!important;
+        border-color:#FF6666;
+        cursor:not-allowed!important;
+    }
+    
+    .header{
+        cursor:move;
+        text-align:center;
+        padding:0 6px;
+        
+        .node_type{
+            &:before{content:"«";}
+            &:after{content:"»";}
+        }
+    }
+    
+    .actions, .properties, .enumItems{
+        border-top:1px #5890c1 solid;
+        min-height:10px;
+        transition: 0.3s;
+        padding:0 3px;
+        &.active{
+            -moz-box-shadow: 0px 0px 12px #CCCCCC;
+            -webkit-box-shadow: 0px 0px 12px #CCCCCC;
+            box-shadow: 0px 0px 12px #CCCCCC;
+            background:#F7E1B5;
+        }
+    }
+    
+    .action, .property{
+        &.public:before{
+            padding-left:2px;
+            content:"+";
+        }
+        &.private:before{
+            padding-left:2px;
+            content:"-";
+        }
+        &.protected:before{
+            padding-left:2px;
+            content:"#";
+        }
+        &.package:before{
+            padding-left:2px;
+            content:"~";
+        }
+    }
+    
+    .property{
+        &.active{
+            background:#fefadd;
+        }
+        div{
+            height:18px;
+            line-height:18px;
+            display:inline;
+        }
+        .propertyName:after{content:" : ";}
+        .propertyName, .propertyType, .relation{
+            min-width:30px;
+        }
+    }
+    
+    .action {
+        div{
+            display : inline;
+        }
+        
+        .parameters{
+            &:before{
+            padding-left:2px;
+            content:"(";
+            }
+            &:after{
+                padding-left:2px;
+                content:") : ";
+            }
+        }
+    }
+}
+
+#dialog_container{
+    .properties{
+         border:1px #5890c1 solid;
+         padding:4px;
+        .property{
+            margin:2px;
+            cursor:pointer;
+            
+            &.active{
+                background:#ffb62f;
+            }
+            &:hover{
+                backgrund:#fefadd;
+            }
+        }
+    }
+} 

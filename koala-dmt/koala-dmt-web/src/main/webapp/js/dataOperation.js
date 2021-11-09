@@ -74,7 +74,7 @@ dataOperation = {
 	
 	/**************************************添加节点的各种成员******************************************/
 	/*添加属性*/
-	addProperty : function(target,type,genericity,autoBy){
+	addProperty : function(target, type, genericity, autoBy){
 		/*TODO:同步添加缓存数据*/
 		var dmodel = target.data("model"),
 			name = getName("property",(function(){

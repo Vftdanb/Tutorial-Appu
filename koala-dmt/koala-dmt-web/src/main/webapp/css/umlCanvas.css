@@ -87,91 +87,6 @@
   background: -webkit-gradient(linear, 0 0, 0 100%, from(#CCFFFF), to(#CCFFFF));
   font-size: 13px;
 }
-/*泛型的展示效果*/
-.canvas .uml_easel .uml_canvas .node .genericity {
-  min-width: 20px;
-}
-.canvas .uml_easel .uml_canvas .node .genericity:before {
-  content: "<";
-  padding-right: 1px;
-}
-.canvas .uml_easel .uml_canvas .node .genericity:after {
-  content: ">";
-  padding-left: 1px;
-}
-/*合法操作*/
-.canvas .uml_easel .uml_canvas .node.legal {
-  background: #CCFFCC !important;
-  border-color: #009933;
-  cursor: crosshair !important;
-}
-/*非法操作*/
-.canvas .uml_easel .uml_canvas .node.illegal {
-  background: #CCFFFF !important;
-  border-color: #FF6666;
-  cursor: not-allowed !important;
-}
-.canvas .uml_easel .uml_canvas .node .header {
-  cursor: move;
-  text-align: center;
-  padding: 0 6px;
-}
-.canvas .uml_easel .uml_canvas .node .header .node_type:before {
-  content: "«";
-}
-.canvas .uml_easel .uml_canvas .node .header .node_type:after {
-  content: "»";
-}
-.canvas .uml_easel .uml_canvas .node .actions,
-.canvas .uml_easel .uml_canvas .node .properties,
-.canvas .uml_easel .uml_canvas .node .enumItems {
-  border-top: 1px #5890c1 solid;
-  min-height: 10px;
-  transition: 0.3s;
-  padding: 0 3px;
-}
-.canvas .uml_easel .uml_canvas .node .actions.active,
-.canvas .uml_easel .uml_canvas .node .properties.active,
-.canvas .uml_easel .uml_canvas .node .enumItems.active {
-  -moz-box-shadow: 0px 0px 12px #CCCCCC;
-  -webkit-box-shadow: 0px 0px 12px #CCCCCC;
-  box-shadow: 0px 0px 12px #CCCCCC;
-  background: #F7E1B5;
-}
-.canvas .uml_easel .uml_canvas .node .action.public:before,
-.canvas .uml_easel .uml_canvas .node .property.public:before {
-  padding-left: 2px;
-  content: "+";
-}
-.canvas .uml_easel .uml_canvas .node .action.private:before,
-.canvas .uml_easel .uml_canvas .node .property.private:before {
-  padding-left: 2px;
-  content: "-";
-}
-.canvas .uml_easel .uml_canvas .node .property div {
-  height: 18px;
-  line-height: 18px;
-  display: inline;
-}
-.canvas .uml_easel .uml_canvas .node .property .propertyName:after {
-  content: " : ";
-}
-.canvas .uml_easel .uml_canvas .node .property .propertyName,
-.canvas .uml_easel .uml_canvas .node .property .propertyType,
-.canvas .uml_easel .uml_canvas .node .property .relation {
-  min-width: 30px;
-}
-.canvas .uml_easel .uml_canvas .node .action div {
-  display: inline;
-}
-.canvas .uml_easel .uml_canvas .node .action .parameters:before {
-  padding-left: 2px;
-  content: "(";
-}
-.canvas .uml_easel .uml_canvas .node .action .parameters:after {
-  padding-left: 2px;
-  content: ") : ";
-}
 /*线条的样式*/
 .canvas svg .uml_lines {
   cursor: hand;
@@ -221,5 +136,153 @@
 }
 .canvas #edit_contextmenus .add_enum div {
   background-image: url("../images/icons/enum.png");
+}
+/*泛型的展示效果，如果是集合类型则显示泛型*/
+.node .collection_type .genericity,
+#dialog_container .collection_type .genericity {
+  display: inline-block;
+}
+.node .genericity,
+#dialog_container .genericity {
+  min-width: 20px;
+  display: none;
+}
+.node .genericity:before,
+#dialog_container .genericity:before {
+  content: "<";
+  padding-right: 1px;
+}
+.node .genericity:after,
+#dialog_container .genericity:after {
+  content: ">";
+  padding-left: 1px;
+}
+/*合法操作*/
+.node.legal,
+#dialog_container.legal {
+  background: #CCFFCC !important;
+  border-color: #009933;
+  cursor: crosshair !important;
+}
+/*非法操作*/
+.node.illegal,
+#dialog_container.illegal {
+  background: #CCFFFF !important;
+  border-color: #FF6666;
+  cursor: not-allowed !important;
+}
+.node .header,
+#dialog_container .header {
+  cursor: move;
+  text-align: center;
+  padding: 0 6px;
+}
+.node .header .node_type:before,
+#dialog_container .header .node_type:before {
+  content: "«";
+}
+.node .header .node_type:after,
+#dialog_container .header .node_type:after {
+  content: "»";
+}
+.node .actions,
+#dialog_container .actions,
+.node .properties,
+#dialog_container .properties,
+.node .enumItems,
+#dialog_container .enumItems {
+  border-top: 1px #5890c1 solid;
+  min-height: 10px;
+  transition: 0.3s;
+  padding: 0 3px;
+}
+.node .actions.active,
+#dialog_container .actions.active,
+.node .properties.active,
+#dialog_container .properties.active,
+.node .enumItems.active,
+#dialog_container .enumItems.active {
+  -moz-box-shadow: 0px 0px 12px #CCCCCC;
+  -webkit-box-shadow: 0px 0px 12px #CCCCCC;
+  box-shadow: 0px 0px 12px #CCCCCC;
+  background: #F7E1B5;
+}
+.node .action.public:before,
+#dialog_container .action.public:before,
+.node .property.public:before,
+#dialog_container .property.public:before {
+  padding-left: 2px;
+  content: "+";
+}
+.node .action.private:before,
+#dialog_container .action.private:before,
+.node .property.private:before,
+#dialog_container .property.private:before {
+  padding-left: 2px;
+  content: "-";
+}
+.node .action.protected:before,
+#dialog_container .action.protected:before,
+.node .property.protected:before,
+#dialog_container .property.protected:before {
+  padding-left: 2px;
+  content: "#";
+}
+.node .action.package:before,
+#dialog_container .action.package:before,
+.node .property.package:before,
+#dialog_container .property.package:before {
+  padding-left: 2px;
+  content: "~";
+}
+.node .property.active,
+#dialog_container .property.active {
+  background: #fefadd;
+}
+.node .property div,
+#dialog_container .property div {
+  height: 18px;
+  line-height: 18px;
+  display: inline;
+}
+.node .property .propertyName:after,
+#dialog_container .property .propertyName:after {
+  content: " : ";
+}
+.node .property .propertyName,
+#dialog_container .property .propertyName,
+.node .property .propertyType,
+#dialog_container .property .propertyType,
+.node .property .relation,
+#dialog_container .property .relation {
+  min-width: 30px;
+}
+.node .action div,
+#dialog_container .action div {
+  display: inline;
+}
+.node .action .parameters:before,
+#dialog_container .action .parameters:before {
+  padding-left: 2px;
+  content: "(";
+}
+.node .action .parameters:after,
+#dialog_container .action .parameters:after {
+  padding-left: 2px;
+  content: ") : ";
+}
+#dialog_container .properties {
+  border: 1px #5890c1 solid;
+  padding: 4px;
+}
+#dialog_container .properties .property {
+  margin: 2px;
+  cursor: pointer;
+}
+#dialog_container .properties .property.active {
+  background: #ffb62f;
+}
+#dialog_container .properties .property:hover {
+  backgrund: #fefadd;
 }
 /*# sourceMappingURL=umlCanvas.css.map */

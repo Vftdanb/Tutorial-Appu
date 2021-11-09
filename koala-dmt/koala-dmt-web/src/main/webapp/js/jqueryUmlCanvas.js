@@ -240,6 +240,7 @@ function umlCanvas(thiz){
 	});
 	
 	/*双击方式编辑属性或行为 */
+	/*
 	THIS.UMLCANVAS.delegate(".properties,.actions,.name","dblclick",function(e){
 		e.preventDefault();
 		var thiz = $(this),t=$(e.target);
@@ -319,7 +320,7 @@ function umlCanvas(thiz){
 		//TODO:节点尺寸改变，需要重画连线
 		
 	});
-	
+	*/
 	/*工具栏切换*/
 	THIS.TOOLBAR.find(".swich_tool_view").click(function(){
 		var thiz = $(this);
@@ -408,7 +409,6 @@ function umlCanvas(thiz){
 $.fn.umlCanvas = function(){
 	new umlCanvas($(this));
 }
-
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓全局性事件↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*收起右键菜单*/

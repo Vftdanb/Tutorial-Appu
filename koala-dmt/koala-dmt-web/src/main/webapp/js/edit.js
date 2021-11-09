@@ -59,17 +59,17 @@ function addNode(e,type,canvas){
 	var model = null ,name;
 	if(nodeType == "entity"){
 		
-		name 	= getName("entity",getNodeNameSpace(),canvas.MODELS).firstUpcase();
+		name 	= getName("entity",getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new EntityShape(id,canvas.CHARTID,name,position,"entity","",false,false);
 		
 	} else if(nodeType == "interface"){
 		
-		name 	= getName("interface",getNodeNameSpace(),canvas.MODELS).firstUpcase();
+		name 	= getName("interface",getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new InterfaceShape(id,canvas.CHARTID,name,position,"interface","Interface",false,false);
 		
 	} else if(nodeType == "enum"){
 		
-		name 	= getName("enum",getNodeNameSpace(),canvas.MODELS).firstUpcase();
+		name 	= getName("enum",getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new EnumShape(id,canvas.CHARTID,name,position,"enum","");
 	}
 	
@@ -86,7 +86,7 @@ function addNode(e,type,canvas){
  * 添加属性
  * autoBy:指定该属性是否由于连线而自动生成
  */
-function addProperty(target,type,genericity,autoBy){
+function addProperty(target,type,genericity,autoBy) {
 	/*TODO:同步添加缓存数据*/
 	var dmodel = target.data("data"),
 		name = getName("property",(function(){
@@ -97,28 +97,30 @@ function addProperty(target,type,genericity,autoBy){
 			return namespace;
 		})()),
 		property = new Property(name,type),
-		proDom = $("#node-template .property").clone();
+		propertyDom = $("#node-template .property").clone();
 		
-	proDom.find(".propertyType").html(type);
-	proDom.find(".propertyName").html(name);
+	propertyDom.find(".propertyType").html(type)
+	propertyDom.find(".propertyName").html(name)
 	
 	/*如果属性由连线时自动生成，则记录生成属性对应的线段*/
 	if(autoBy){
-		proDom.addClass(autoBy);
-		proDom.addClass("auto_generated");
-		proDom.attr("generated_by",autoBy);
+		propertyDom.addClass(autoBy)
+					.addClass("auto_generated")
+					.attr("generated_by",autoBy);
 	}
 	
 	if(genericity){
 		property.genericity = genericity;
-		proDom.find(".genericity").css("display","inline-block");
-		proDom.find(".genericity .value").html(genericity);
+		propertyDom.find(".genericity")
+			.css("display","inline-block")
+			.html(genericity);
 	}
 	
 	dmodel.properties.push(property);
-	target.find(".properties").append(proDom);
+	target.find(".properties").append(propertyDom);
 	/*把对应的属性对象缓存到dom节点上，方便查找*/
-	proDom.data("data",property);
+	propertyDom.data("data",property);
+	target.click;
 }
 /*添加行为*/
 function addAction(target){
@@ -129,6 +131,7 @@ function addAction(target){
 	dmodel.actions.push(action);
 	target.find(".actions").append(actDom);
 	actDom.data("data",action);
+	target.click();
 }
 /*添加枚举项*/
 function addEnumItem(target){
@@ -136,12 +139,13 @@ function addEnumItem(target){
 	/*TODO:同步更新缓存数据*/
 	var id = target.attr("id");
 	var enumItem = new EnumItem("enum item");
+	target.click;
 }
 
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有更新操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*更新名字，需要级联更改自动生成的属性的类型名*/
-function updateNodeName(target,newName,canvas){
+function updateNodeName(target, newName, canvas){
 	/*该节点的所有连线*/
 	var inAout 	= commonTool.findRelatedLines(target.attr("id"),canvas.LINES);
 	var data	= target.data("data");
@@ -149,18 +153,18 @@ function updateNodeName(target,newName,canvas){
 	var ins 	= inAout.inLines;
 	var outs 	= inAout.outLines;
 	
-	var n,m; //node and domainmodel
+	var node,model; //node and domainmodel
 	$.each(ins,function(i,line){
 		line = ins[i];
-		n = $("#"+line.fromShapeId);
-		m = n.data("data");
+		node = $("#"+line.fromShapeId);
+		model = node.data("data");
 		
 		switch (line.lineType){
 			/**
 			 * 被继承者更名时，继承者的继承对象要更名 
 			 */
 			case "extends" : {
-				m.extends = newName;
+				model.extends = newName;
 				break;
 			};
 			
@@ -168,7 +172,7 @@ function updateNodeName(target,newName,canvas){
 			 * 被实现者更名时，实现者的实现对象要更名
 			 */
 			case "implements" : {
-				var list = m.implementsList;
+				var list = model.implementsList;
 				for(var i=0 ;i<list.length ;i++){
 					if(list[i] == data.name){
 						list[i] = newName;
@@ -183,9 +187,9 @@ function updateNodeName(target,newName,canvas){
 			 */
 			case "aggregate" : 
 			case "compose"   : {
-				var pnode 	= n.find("." + line.lineId);
-				var property = pnode.data("data");
-				pnode.find(".value").html(newName);
+				var propertyNode 	= node.find("." + line.lineId);
+				var property = propertyNode.data("data");
+				propertyNode.find(".genericity").html(newName);
 				property.name = newName;
 				break;
 			};
@@ -194,7 +198,6 @@ function updateNodeName(target,newName,canvas){
 			 * 联合
 			 */
 			case "associate" : {
-				
 				
 				break;
 			};
@@ -217,15 +220,80 @@ function updateEntityType(target,type){
 }
 
 /*更新元素作用范围，包括entity、interface、eunm、property*/
-function updateScope(target,scope){
+function updateScope(target, scope){
 	var data = target.data("data");
 	data.scope = scope;
 }
 
 /*编辑元素的描述信息*/
-function updateDescription(target,val){
+function updateDescription(target, val){
 	var data = target.data("data");
 	data.description = val;
+}
+
+/*更改属性的名字*/
+function updatePropertyName(propertyDom, val){
+	if(!propertyDom) return;
+	
+	var copy = propertyDom.data("copy"),
+		property = propertyDom.data("data");
+		
+		property.name = val;
+		copy ? copy.find(".propertyName").html(val) : "";
+		propertyDom.find(".propertyName").html(val);
+}
+
+/*更改属性的类型*/
+function updatePropertyType(propertyDom, val, form){
+	if(!propertyDom) return;
+	
+	var copy = propertyDom.data("copy"),
+		property = propertyDom.data("data");
+		
+		/*处理泛型*/
+		if(!($.inArray(val, ["Set", "HashSet", "List", "ArrayList", "Hashtable", "Vector"]) < 0)){
+			propertyDom.addClass("collection_type");
+			copy.addClass("collection_type");
+			copy.find(".genericity").html("?");
+			propertyDom.find(".genericity_input").html("?");
+			property.genericity = "?";
+			form.find(".genericity_input").show();
+		} else {
+			propertyDom.removeClass("collection_type");
+			copy.removeClass("collection_type");
+			form.find(".genericity_input").hide();
+			property.genericity = null;
+		}
+		
+		property.type = val;
+		copy ? copy.find(".propertyType").html(val) : "";
+		propertyDom.find(".propertyType").html(val);
+}
+
+/*更改属性的泛型*/
+function updatePropertyGenericity(propertyDom, val){
+	if(!propertyDom) return;
+	
+	var copy = propertyDom.data("copy"),
+		property = propertyDom.data("data");
+	
+	if(val == "") val = "?";
+	
+	property.genericity = val;
+	propertyDom.find(".genericity").html(val);
+	copy ? copy.find(".genericity").html(val) : "";
+}
+
+/*更改属性的可见性*/
+function updatePropertyScope(propertyDom, val){
+	if(!propertyDom) return;
+	
+	var copy = propertyDom.data("copy"),
+		property = propertyDom.data("data");
+		
+	copy.removeClass("public private package protected").addClass(val);
+	propertyDom.removeClass("public private package protected").addClass(val);
+	property.scope = val;
 }
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
@@ -340,6 +408,7 @@ function deleteEnumItem(){
  */
 function getName(nodeType,nameSpace){
 	var name;
+	
 	for(var i=1 ; ; i++){
 		name = nodeType + i;
 		if($.inArray(name,nameSpace) < 0)  break;
