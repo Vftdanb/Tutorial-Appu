@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.dayatang.domain.AbstractEntity;
 
 @Entity
-@Table(name = "LINE")
+@Table(name = "KD_LINE")
 public class Line extends AbstractEntity {
 
 	private static final long serialVersionUID = -5333830727544685257L;

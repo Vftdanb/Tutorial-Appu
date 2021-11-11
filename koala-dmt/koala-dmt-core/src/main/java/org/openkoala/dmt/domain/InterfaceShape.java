@@ -13,15 +13,15 @@ public class InterfaceShape extends DomainShape {
 
 	private static final long serialVersionUID = 4578638473368397507L;
 
-	private Set<EntityShape> superEntityShapes;
+//	private Set<EntityShape> superEntityShapes;
 
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "implementsInterfaceShapes")
-	public Set<EntityShape> getSuperEntityShapes() {
-		return superEntityShapes;
-	}
+//	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "implementsInterfaceShapes")
+//	public Set<EntityShape> getSuperEntityShapes() {
+//		return superEntityShapes;
+//	}
 
-	public void setSuperEntityShapes(Set<EntityShape> superEntityShapes) {
-		this.superEntityShapes = superEntityShapes;
-	}
+//	public void setSuperEntityShapes(Set<EntityShape> superEntityShapes) {
+//		this.superEntityShapes = superEntityShapes;
+//	}
 	
 }

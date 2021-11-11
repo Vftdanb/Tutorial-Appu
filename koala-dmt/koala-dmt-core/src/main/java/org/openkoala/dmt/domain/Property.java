@@ -33,6 +33,11 @@ public class Property implements ValueObject {
 	 * 属性引用泛型
 	 */
 	private String genericity;
+
+	/**
+	 * 是否业务主键
+	 */
+	private Boolean businessPK = false;
 	
 	/**
 	 * 是否可以为空
@@ -81,6 +86,14 @@ public class Property implements ValueObject {
 
 	public void setGenericity(String genericity) {
 		this.genericity = genericity;
+	}
+
+	public Boolean getBusinessPK() {
+		return businessPK;
+	}
+
+	public void setBusinessPK(Boolean businessPK) {
+		this.businessPK = businessPK;
 	}
 
 	public Boolean getNullable() {
