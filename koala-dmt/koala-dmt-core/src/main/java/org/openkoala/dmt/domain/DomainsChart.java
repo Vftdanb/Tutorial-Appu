@@ -17,7 +17,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.dayatang.domain.AbstractEntity;
 
 @Entity
-@Table(name = "DOMAINS_CHART")
+@Table(name = "KD_DOMAINS_CHART")
 public class DomainsChart extends AbstractEntity {
 
 	private static final long serialVersionUID = 3043999013741427550L;

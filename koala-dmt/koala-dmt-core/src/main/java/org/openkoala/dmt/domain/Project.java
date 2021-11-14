@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.dayatang.domain.AbstractEntity;
 
 @Entity
-@Table(name = "PROJECT")
+@Table(name = "KD_PROJECT")
 public class Project extends AbstractEntity {
 
 	private static final long serialVersionUID = 114734803852429270L;

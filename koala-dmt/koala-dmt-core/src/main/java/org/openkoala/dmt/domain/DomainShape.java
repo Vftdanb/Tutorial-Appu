@@ -28,7 +28,7 @@ import org.dayatang.domain.AbstractEntity;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name="DOMAIN_SHAPE")
+@Table(name="KD_DOMAIN_SHAPE")
 @DiscriminatorColumn(name = "CATEGORY", discriminatorType = DiscriminatorType.STRING)
 public abstract class DomainShape extends AbstractEntity {
 
