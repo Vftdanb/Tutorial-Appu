@@ -15,6 +15,6 @@ public enum ClassCategory {
 //				return MAPPED_SUPER_CLASS;
 //			}
 //		}
-//		return ENTITY;
+//		return ENTITY; 
 //	}
 }

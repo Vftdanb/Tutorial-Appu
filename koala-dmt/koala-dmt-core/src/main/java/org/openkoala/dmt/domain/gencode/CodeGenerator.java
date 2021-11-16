@@ -34,7 +34,7 @@ public class CodeGenerator {
 			if (StringUtils.isBlank(each.getPackageName())) {
 				each.setPackageName(packageName);
 			}
-			// CompilationUnit cu = new EntityClassGenerator(each,
+			// CompilationUnit cu = new EntityClassGenerator(each, 
 			// getLog()).generateCompilationUnit();
 			ClassGenerator classGenerator = new ClassGeneratorFactory().getGenerator(each);
 			String cu = classGenerator.generateCompilationUnit();

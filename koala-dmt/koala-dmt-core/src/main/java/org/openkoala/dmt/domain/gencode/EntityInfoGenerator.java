@@ -176,8 +176,7 @@ public class EntityInfoGenerator {
 //		}
 //		if (propertyType.equals("SortedMap")) {
 //			return new SortedMapPropertyType(CodeGenUtils.getMapKeyType(dataType), CodeGenUtils.getMapValueType(dataType));
-//		}
+//		} 
 		return new SingleValuePropertyType(genericity);
 	}
-	
 }
