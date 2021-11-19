@@ -15,8 +15,18 @@ import org.openkoala.dmt.domain.DomainsChart;
 
 public class CodeGenerator {
 
+	private DomainsChart domainsChart;
+	
 	private boolean allowOveride;
 	
+	public DomainsChart getDomainsChart() {
+		return domainsChart;
+	}
+
+	public void setDomainsChart(DomainsChart domainsChart) {
+		this.domainsChart = domainsChart;
+	}
+
 	public boolean isAllowOveride() {
 		return allowOveride;
 	}
@@ -28,7 +38,11 @@ public class CodeGenerator {
 	/* 包路径分隔符 */
 	private static final String DOT_SYMBOL = ".";
 	
-	public void generateCode(String packageName, String outputDirectory, DomainsChart domainsChart) {
+	public CodeGenerator(DomainsChart domainsChart) {
+		this.domainsChart = domainsChart;
+	}
+	
+	public void generateCode(String packageName, String outputDirectory) {
 		Set<DomainClassInfo> entities = new EntityInfoGenerator(domainsChart.getDomainShapes()).generateEntityInfos();
 		for (DomainClassInfo each : entities) {
 			if (StringUtils.isBlank(each.getPackageName())) {

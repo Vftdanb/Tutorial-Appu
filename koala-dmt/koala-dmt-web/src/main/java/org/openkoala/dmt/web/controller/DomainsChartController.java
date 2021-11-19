@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.openkoala.dmt.application.DomainsChartApplication;
+import org.openkoala.dmt.application.GenerateCodeApplication;
 import org.openkoala.dmt.application.ProjectApplication;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.Project;
@@ -25,6 +26,9 @@ public class DomainsChartController extends BaseController {
 	@Inject
 	private ProjectApplication projectApplication;
 
+	@Inject
+	private GenerateCodeApplication generateCodeApplication;
+	
 	@ResponseBody
 	@RequestMapping("/get")
 	public DomainsChartDto getDomainsChart(Long projectId, String name) {
@@ -52,6 +56,13 @@ public class DomainsChartController extends BaseController {
 			results.add(ProjectDomainsChartDto.getInstance(project, domainsChartApplication.findDomainsChartByProject(project)));
 		}
 		return results;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/gencode")
+	public String gencode(DomainsChartDto domainsChartDTO, String packageName, String destinationPath) {
+		generateCodeApplication.generateCodeFromDomainChart(domainsChartDTO.transformToDomainsChart(), packageName, destinationPath);
+		return "Success";
 	}
 	
 }
