@@ -20,6 +20,11 @@ public class DomainClassInfo {
 
 	/* 表中每个字段的信息 */
 	private List<PropertyInfo> propertyInfos = new ArrayList<PropertyInfo>();
+	
+	private List<ConstantInfo> constantInfos = new ArrayList<ConstantInfo>();
+	
+	/* 枚举类的枚举项 */
+	private List<String> enumItems = new ArrayList<String>();
 
 	public String getPackageName() {
 		return packageName;
@@ -79,6 +84,22 @@ public class DomainClassInfo {
 		}
 	}
 	
+	public List<ConstantInfo> getConstantInfos() {
+		return constantInfos;
+	}
+
+	public void setConstantInfos(List<ConstantInfo> constantInfos) {
+		this.constantInfos = constantInfos;
+	}
+
+	public List<String> getEnumItems() {
+		return enumItems;
+	}
+
+	public void setEnumItems(List<String> enumItems) {
+		this.enumItems = enumItems;
+	}
+
 	public void addPropertyInfo(PropertyInfo propertyInfo) {
 		propertyInfo.setEntityInfo(this);
 		propertyInfos.add(propertyInfo);

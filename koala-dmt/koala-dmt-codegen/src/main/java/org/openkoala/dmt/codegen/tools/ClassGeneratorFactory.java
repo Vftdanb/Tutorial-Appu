@@ -2,6 +2,8 @@ package org.openkoala.dmt.codegen.tools;
 
 import org.openkoala.dmt.codegen.classgen.EmbeddableGenerator;
 import org.openkoala.dmt.codegen.classgen.EntityGenerator;
+import org.openkoala.dmt.codegen.classgen.EnumerateGenerator;
+import org.openkoala.dmt.codegen.classgen.InterfaceGenerator;
 import org.openkoala.dmt.codegen.classgen.MappedSuperClassGenerator;
 import org.openkoala.dmt.codegen.metadata.ClassCategory;
 import org.openkoala.dmt.codegen.metadata.DomainClassInfo;
@@ -19,6 +21,12 @@ public class ClassGeneratorFactory {
 		}
 		if (ClassCategory.EMBEDDABLE == category) {
 			return new EmbeddableGenerator(domainClassInfo);
+		}
+		if (ClassCategory.INTERFACE == category) {
+			return new InterfaceGenerator(domainClassInfo);
+		}
+		if (ClassCategory.ENUM == category) {
+			return new EnumerateGenerator(domainClassInfo);
 		}
 		return new EntityGenerator(domainClassInfo);
 	}

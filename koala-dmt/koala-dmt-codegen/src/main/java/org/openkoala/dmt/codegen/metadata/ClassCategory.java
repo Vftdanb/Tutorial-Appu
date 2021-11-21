@@ -1,7 +1,7 @@
 package org.openkoala.dmt.codegen.metadata;
 
 public enum ClassCategory {
-	ENTITY, MAPPED_SUPER_CLASS, EMBEDDABLE, INTERFACE;
+	ENTITY, MAPPED_SUPER_CLASS, EMBEDDABLE, INTERFACE, ENUM;
 
 //	private static String[] mscs = new String[] { "MappedSuperClass", "MSC",
 //			"mapped-super-class" };
