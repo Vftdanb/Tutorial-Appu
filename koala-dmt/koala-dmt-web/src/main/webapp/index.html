@@ -20,9 +20,9 @@
 			input[type="checkbox"]{
 				vertical-align:text-bottom;
 			}
-			/*tab样式*/
-			.dialog{
-				width:344px;
+			.enumitems .enumItem{
+				margin:2px 0;
+				padding:2px;
 			}
 		</style>
 	</head>
@@ -83,7 +83,7 @@
 										</div>
 										<div>
 											<span class="label">类型</span>
-											<input type="text" class="propertyType" name="type" list="type_tip" oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
+											<input type="text" class="propertyType" name="type" list="property_type_tip" oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
 										</div>
 										<div class="genericity_input">
 											<span class="label">泛型</span>
@@ -112,9 +112,7 @@
 												</tr>
 											</table>
 										</div>
-										
 									</form>
-									
 									<div class="properties"></div>
 								</div>
 								
@@ -141,7 +139,8 @@
 						<div class="dialog interface_dialog">
 							<div class="tabs">
 								<div class="tab active" for="interface_panel">实体</div>
-								<div class="tab" for="panel_action">属性</div>
+								<!--<div class="tab" for="property_panel">属性</div>-->
+								<div class="tab" for="action_panel">行为</div>
 							</div>
 							<div class="panels">
 								<div class="panel interface_panel active">
@@ -163,7 +162,8 @@
 										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
 									</div>
 								</div>
-								<div class="panel panel_action">
+								
+								<div class="panel action_panel">
 									<div>
 										<span class="label">行为名</span>
 										<input class="actionName" type="text"/>
@@ -179,6 +179,38 @@
 									</div>
 								</div>
 							</div>
+						</div>
+						
+						<div class="dialog enum_dialog">
+							<div class="tabs">
+								<div class="tab active" for="enum_panel">枚举</div>
+								<div class="tab" for="enumitem_panel">枚举项</div>
+							</div>
+							<div class="panels">
+								<div class="panel enum_panel active">
+									<div>
+										<span class="label">枚举名</span>
+										<input name="name" type="text" oninput="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
+									</div>
+									<div>
+										<span class="label">枚举范围</span>
+										<select class="scope" name="entityScope" style="height:22px;" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
+											<option value="public">public</option>
+											<option value="private">private</option>
+											<option value="protected">protected</option>
+											<option value="package">package</option>
+										</select>
+									</div>
+									<div>
+										<span class="label" style="vertical-align:top;">备注</span>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
+									</div>
+								</div>
+								
+								<div class="panel enumitem_panel">
+									<div class="enumitems"></div>
+								</div>
+							</div>
 						</div>	
 					</div>
 					<div class="border_bottom"></div>
@@ -192,8 +224,7 @@
 							<div class="panel index active" style="text-align:center;">
 								<h1>欢迎使用领域建模工具</h1>
 								<p class="welcome">
-									Here is your dashboard, you can <strong>create</strong> a new project or <strong>clone</strong> the examples. Invite your teammates to work (in real-time) on yours models using the share settings.  For any help, write in the
-									<a class="gwt-Anchor">feedback area</a>, we gladly help you out. Enjoy collaborative modeling!
+									Here is your dashboard, you can <strong>create</strong> a new project or <strong>clone</strong> the examples. Invite your teammates to work (in real-time) on yours models using the share settings.  For any help, write in the<a class="gwt-Anchor">feedback area</a>, we gladly help you out. Enjoy collaborative modeling!
 								</p>
 							</div>
 						</div>
@@ -201,12 +232,9 @@
 				<div class="border_bottom"></div>
 				</div>
 			</div>
-			
 			<div id="footer">Copyright @koala, All rights reserved.</div>
 		</div>
 
-
-		
 		<!-- 一些共用模板 -->
 		<div id="template" style="display: none;">
 			<!-- 线条模板 -->
@@ -276,15 +304,15 @@
 				
 				<!-- 行为模板 -->
 				<div class="action public">
-					<span class="actionName">action</span>
+					<span class="actionName"></span>
 					<span class="parameters" style="min-width:10px;">ssss</span>
 					<span class="returnType">void</span>
 				</div>
 				
 				<!-- 行为的参数模板 -->				
 				<div class="parameter" sortNumber="1">
-					<span class="parameterType">Post</span>
-					<span class="parameterName">post</span>
+					<span class="parameterType"></span>
+					<span class="parameterName"></span>
 				</div>
 			</div>
 		</div>
@@ -294,11 +322,11 @@
 			<defs>
 				<!-- 空心三角形 -->
 				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
-					<path d="M10,10 L16,13 L10,16 z" style="fill:#fff;stroke:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
+					<path d="M10,10 L16,13 L10,16 z" style="fill:#e8e8e8;stroke:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
 				</marker>
 			    <!-- 空心菱形 -->
 			  	<marker id="arrow2" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
-			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#fff;stroke:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
+			    	<path d="M10,13 L16,10 L22,13 L16,16 L10,13 z" style="fill:#e8e8e8;stroke:#5890c1;stroke-dasharray:0;stroke-width:1;"></path>
 			    </marker>
 			    <!-- 实心菱形 -->
 			    <marker id="arrow3" markerWidth="100" markerHeight="100" refx="10" refy="13" orient="auto">
@@ -331,13 +359,13 @@
 			</div>
 		</div>
 		
-		<datalist id="property_type_tip" style="display: none;">
-			<option value="String"></option>
-			<option value="Set"></option>
-			<option value="List"></option>
-			<option value="Date"></option>
-			<option value="Long"></option>
-			<option value="Integer"></option>
+		<datalist id="property_type_tip">
+			<option value="String">String</option>
+			<option value="Set">Set</option>
+			<option value="List">List</option>
+			<option value="Date">Date</option>
+			<option value="Long">Long</option>
+			<option value="Integer">Integer</option>
 		</datalist>
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
@@ -408,7 +436,9 @@
 				}
 			})($);
 			
-			$(".dialog").tab();
+			$(".dialog").each(function(i, item){
+				$(item).tab()
+			});
 			var MAINTAB = $(".main_panel").tab();
 			
 			var data = [{

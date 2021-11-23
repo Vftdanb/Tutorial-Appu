@@ -86,7 +86,7 @@ function addNode(e,type,canvas){
  * 添加属性
  * autoBy:指定该属性是否由于连线而自动生成
  */
-function addProperty(target,type,genericity,autoBy) {
+function addProperty(target, type, genericity, autoBy) {
 	/*TODO:同步添加缓存数据*/
 	var dmodel = target.data("data"),
 		name = getName("property",(function(){
@@ -98,7 +98,7 @@ function addProperty(target,type,genericity,autoBy) {
 		})()),
 		property = new Property(name,type),
 		propertyDom = $("#node-template .property").clone();
-		
+	
 	propertyDom.find(".propertyType").html(type)
 	propertyDom.find(".propertyName").html(name)
 	
@@ -118,9 +118,19 @@ function addProperty(target,type,genericity,autoBy) {
 	
 	dmodel.properties.push(property);
 	target.find(".properties").append(propertyDom);
+	
 	/*把对应的属性对象缓存到dom节点上，方便查找*/
 	propertyDom.data("data",property);
-	target.click;
+	
+	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
+	var dialog = $("#" + target.attr("dialogId"));
+	if(dialog.length == 1){
+		var copy = propertyDom.clone();
+		propertyDom.data("copy",copy);
+		dialog.find(".properties").append(copy);
+		copy.click(); //设置为当前编辑项
+		copy.data("data",propertyDom).addClass("active");
+	}
 }
 /*添加行为*/
 function addAction(target){
@@ -131,15 +141,33 @@ function addAction(target){
 	dmodel.actions.push(action);
 	target.find(".actions").append(actDom);
 	actDom.data("data",action);
-	target.click();
 }
 /*添加枚举项*/
 function addEnumItem(target){
-	target.find(".enumItems").append($("#node-template .enumItem").clone());
-	/*TODO:同步更新缓存数据*/
-	var id = target.attr("id");
-	var enumItem = new EnumItem("enum item");
-	target.click;
+	var enumDom = $("#node-template .enumItem").clone(),
+		dmodel = target.data("data"),
+		name = getName("ENUMITEM",(function(){
+			var namespace = [];
+			$.each(dmodel.enumItems,function(i,p){
+				namespace.push(p.name);
+			});
+			return namespace;
+		})());
+		
+	target.find(".enumItems").append(enumDom);
+	enumDom.html(name);
+
+	var enumItem = new EnumItem(name);
+	enumDom.data("data",enumItem);
+	dmodel.enumItems.push(enumItem);
+	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
+	var dialog = $("#" + target.attr("dialogId"));
+	if(dialog.length == 1){
+		var copy = enumDom.clone();
+		enumDom.data("copy",copy);
+		dialog.find(".enumitems").append(copy);
+		copy.data("data",enumDom).addClass("active");
+	}
 }
 
 
@@ -209,7 +237,6 @@ function updateNodeName(target, newName, canvas){
 	
 	data.name 	= newName;
 	target.find(".name").html(newName);
-	target.data("dialog").find(".name").val(newName);
 }
 
 /*更新实体类型*/
@@ -294,6 +321,18 @@ function updatePropertyScope(propertyDom, val){
 	copy.removeClass("public private package protected").addClass(val);
 	propertyDom.removeClass("public private package protected").addClass(val);
 	property.scope = val;
+}
+
+/*更改枚举项的名字*/
+function updateEnumName(enumDom, val){
+	if(!enumDom) return;
+	
+	var copy = enumDom.data("copy"),
+		enumItem = enumDom.data("data");
+		
+		enumItem.name = val;
+		copy ? copy.html(val) : "";
+		enumDom.html(val);
 }
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 

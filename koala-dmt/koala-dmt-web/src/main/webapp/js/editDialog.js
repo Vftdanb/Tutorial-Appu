@@ -17,13 +17,26 @@
 
 $("#dialog_container").delegate(".property", "click", function(){
 	var property = $(this),
-		form	= property.parent().parent().find("form");
+		form = property.parent().parent().find("form");
 	
 	/*选中的样式*/
 	$("#dialog_container .properties .active").removeClass("active");
 	property.addClass("active");
-	
 	editDialog.initPropertyForm(form, property.data("data"));
+})
+
+$("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", function(){
+	var enumItem = $(this);
+	if(enumItem.attr("contenteditable") == undefined){
+		enumItem.attr("contenteditable",true);
+		enumItem.attr("spellcheck",false);
+		enumItem.focus();
+	}
+}).delegate(".enumItem", "input", function(){
+	var enumItem = $(this);
+	updateEnumName(enumItem.data("data"), enumItem.text());
+}).delegate(".enumItem", "blur", function(){
+	$(this).removeAttr("contenteditable");
 });
 
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
@@ -36,13 +49,18 @@ editDialog = {
 			
 		}
 		
+		if(dialog == null){ return; }
+		
+		var dialogId = commonTool.guid();
 		/*将在对话框中要用到的数据进行缓存，减少查找成本*/
 		dialog
 			.data("data",node.data("data"))	//被编辑的模型对象
 			.data("node",node)				//被编辑的节点对象
-			.data("canvas",UMLCANVAS);		//画布对象
+			.data("canvas",UMLCANVAS)		//画布对象
+			.attr("id",dialogId)
 		
-		node.data("dialog",dialog);	
+		
+		node.attr("dialogId", dialogId);
 	},
 	
 	initEntityDialog : function(node){
@@ -50,20 +68,19 @@ editDialog = {
 		
 		/*隐藏上一个对话框*/
 		$("#dialog_container>.active_dialog").removeClass("active_dialog");
-		
-		
 		var dialog = $("."+data.shapeType+"_dialog").addClass("active_dialog");
+		if(dialog.attr("id") && dialog.attr("id") == node.attr("dialogid")){
+			return null;
+		}
 		
 		if(node.is(".entity")){
 			this.initClassPanel(dialog ,data, node);
 			this.initPropertyPanel(dialog ,node);
-			
-			
-			
 		} else if(node.is(".interface")){
 			this.initInterfacePanel(dialog ,data ,node);
+			//this.initPropertyPanel(dialog ,node);
 		} else if(node.is(".enum")){
-			this.initInterfacePanel(dialog ,data ,node);
+			this.initEnumPanel(dialog ,data ,node);
 		}
 		
 		return dialog;
@@ -85,13 +102,33 @@ editDialog = {
 	/*
 	 * 初始化接口面板
 	 */
-	initInterfacePanel : function(dialog,m,n){
+	initInterfacePanel : function(dialog, data, node){
 		var panel = dialog.find(".interface_panel");
-		panel.data("node",n);
-		panel.find("input[name='name']").val(m.name);
-		panel.find("select[name='scope']").select(m.scope);
-		panel.find("input[name='description']").val(m.description);
+		panel.data("node",node);
+		panel.find("input[name='name']").val(data.name);
+		panel.find("select[name='scope']").select(data.scope);
+		panel.find("input[name='description']").val(data.description);
 	},
+	
+	/**
+	 * 枚举初始化面板
+	 */
+	initEnumPanel : function(dialog, data, node){
+		var panel = dialog.find(".enum_panel");
+		panel.data("node",node);
+		panel.find("input[name='name']").val(data.name);
+		panel.find("select[name='scope']").select(data.scope);
+		panel.find("input[name='description']").val(data.description);
+		
+		var enumitems = dialog.find(".enumitems").empty();
+		$.each(node.find(".enumItem"), function(i, n){
+			enumitems.append($(n).clone().data("data",$(n)));
+		});
+	},
+	
+	/**
+	 * 
+	 */
 	
 	/*初始化属性编辑窗口*/
 	initPropertyPanel : function(dialog,node){
@@ -125,6 +162,7 @@ editDialog = {
 		var data = property.data("data");
 		
 		form.data("data",property);
+		form[0].reset();
 		form.find("input[name='name']").val(data.name);
 		form.find("input[name='type']").val(data.type);
 		form.find("select[name='scope']").select(data.scope);

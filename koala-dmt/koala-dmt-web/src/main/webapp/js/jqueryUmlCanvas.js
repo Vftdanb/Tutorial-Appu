@@ -224,7 +224,7 @@ function umlCanvas(thiz){
 			dmodel 	= node.data("data");
 			
 		/*编辑节点名字*/
-		$(this).miniedit({
+		/*$(this).miniedit({
 			type:'input',
 			afterEdit:function(target,input){
 				if($.trim(input.val()) == ""){
@@ -236,7 +236,7 @@ function umlCanvas(thiz){
 					return true;
 				}
 			}
-		});
+		});*/
 	});
 	
 	/*双击方式编辑属性或行为 */
