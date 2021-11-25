@@ -23,7 +23,7 @@
 }
 #wrapper #container .left {
   float: left;
-  width: 344px;
+  width: 320px;
   margin-right: 5px;
 }
 #wrapper #container .left .project_explorer {
@@ -31,8 +31,11 @@
   min-height: 300px;
 }
 /*编辑对话框*/
+#wrapper #container .left .dialog_container {
+  padding: 5px;
+}
 #wrapper #container .left .dialog_container .panel > div {
-  margin: 10px 0;
+  margin: 10px 0px;
 }
 #wrapper #container .left .dialog_container .tabs {
   border: #3879d9 1px solid;
