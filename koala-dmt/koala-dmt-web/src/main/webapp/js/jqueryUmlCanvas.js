@@ -35,8 +35,8 @@ function umlCanvas(thiz){
 			if(THIS.CURTOOL.type != "line" || $(this).is(".illegal")) return;
 			offset 		= THIS.UMLCANVAS.offset();
 			drawing 	= true;
-			startP 		= [e.clientX - offset.left,e.clientY-offset.top];
-			line 		= svgGraph.drawLine(startP,[e.clientX - offset.left,e.clientY - offset.top],THIS.CURTOOL.name);
+			startP 		= [e.clientX - offset.left, e.clientY-offset.top];
+			line 		= svgGraph.drawLine(startP, [e.pageX - offset.left, e.pageY - offset.top],THIS.CURTOOL.name);
 			n1 			= $(this);
 			
 			line.attr("id",commonTool.guid());
@@ -99,7 +99,7 @@ function umlCanvas(thiz){
 				if(n2){
 					endpoints = svgGraph.getEndpoints(n1,n2);
 				} else {
-					endpoints = svgGraph.getEndpoints(n1,[e.clientX - offset.left,e.clientY - offset.top]);
+					endpoints = svgGraph.getEndpoints(n1,[e.pageX - offset.left, e.pageY - offset.top]);
 				}
 				svgGraph.moveLine(line, endpoints.start , endpoints.end);
 			}
@@ -194,7 +194,7 @@ function umlCanvas(thiz){
 	THIS.UMLCANVAS.contextmenu(function(e){
 		var target = $(e.target);
 		if(target.is("svg")){
-			showContextmenu(target,e,"add_nodes",null,THIS);
+			showContextmenu(target, e, "add_nodes", null, THIS);
 		}
 	});
 	
@@ -222,105 +222,8 @@ function umlCanvas(thiz){
 	THIS.UMLCANVAS.delegate(".name","dblclick",function(e){
 		var node 	= $(this).parents(".node"),
 			dmodel 	= node.data("data");
-			
-		/*编辑节点名字*/
-		/*$(this).miniedit({
-			type:'input',
-			afterEdit:function(target,input){
-				if($.trim(input.val()) == ""){
-					alert("请输入模型名");
-					input.focus();
-					return false;
-				} else {
-					updateNodeName(node,input.val(),THIS);
-					return true;
-				}
-			}
-		});*/
 	});
 	
-	/*双击方式编辑属性或行为 */
-	/*
-	THIS.UMLCANVAS.delegate(".properties,.actions,.name","dblclick",function(e){
-		e.preventDefault();
-		var thiz = $(this),t=$(e.target);
-		var property,action;
-		
-		var model = t.parents(".node").data("data");
-		
-		if(thiz.is(".properties")){ 
-			property = t.parent().data("data");
-		} else if(thiz.is(".actions")){
-			action = t.parent().data("data");
-		}
-		var css = {"font-size":"12px",width:"50%",height:"20px","margin-top":"-1px"};
-		if(t.is(".propertyName")){ 	//编辑节点名字
-			t.miniedit({			//利用一个行内编辑插件编辑
-				type:'input',
-				css:css,
-				afterEdit:function(target,input){
-					if($.trim(input.val()) == ""){
-						alert("请输入属性名");
-						input.focus();
-						return false;
-					} else {
-						property.name = input.val(); //同步更新
-						return true;
-					}
-				}
-			});
-		} else if(t.is(".propertyType")){ //编辑参数
-			t.miniedit({
-				type:'input',
-				dataList:"property_type_tip",
-				css:css,
-				afterEdit:function(target,input){
-					if($.trim(input.val()) == ""){
-						alert("请输入属性类型");
-						input.focus();
-						return false;
-					} else {
-						property.type = input.val();
-						return true;
-					}
-				}
-			});
-		} else if(t.is(".actionName")){
-			t.miniedit({
-				type:'input',
-				css:css,
-				afterEdit:function(target,input){
-					if($.trim(input.val()) == ""){
-						alert("请输入方法名");
-						input.focus();
-						return false;
-					} else {
-						action.actionName = input.val();
-						return true;
-					}
-				}
-			});
-		} else if(t.is(".returnType")){
-			t.miniedit({
-				type:'input',
-				dataList:"property_type_tip",
-				css:css,
-				afterEdit:function(target,input){
-					if($.trim(input.val()) == ""){
-						alert("请输入方法名");
-						input.focus();
-						return false;
-					} else {
-						action.returnType = input.val();
-						return true;
-					}
-				}
-			});
-		}
-		//TODO:节点尺寸改变，需要重画连线
-		
-	});
-	*/
 	/*工具栏切换*/
 	THIS.TOOLBAR.find(".swich_tool_view").click(function(){
 		var thiz = $(this);
@@ -333,7 +236,8 @@ function umlCanvas(thiz){
 		}
 	});	
 	
-	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓鼠标滑过线条提示，增加体验↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/		
+	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓鼠标滑过线条提示，增加体验↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+	//鼠标滑过，线条变粗
 	THIS.SVGLINES.delegate(".line:not(.templine)","mouseenter",function(e){
 		var line = THIS.LINES[$(this).attr("id")],
 			from = THIS.NODEDOMS[line.fromShapeId],
@@ -349,33 +253,13 @@ function umlCanvas(thiz){
 		l.attr("class",l.attr("class").replace(" active" , ""));
 		from.find("."+line.lineId).removeClass("active");
 	});
-	
-	/*自动生成 */
-	THIS.UMLCANVAS.delegate(".auto_generated","mouseenter",function(e){
-		if(THIS.CURTOOL.type == "common"){
-			var thiz = $(this),
-				line = THIS.LINEDOMS[thiz.attr("generated_by")];
-				
-			thiz.addClass("active");
-			line.attr("class",line.attr("class") + " active");
-		}
-	}).delegate(".auto_generated","mouseleave",function(e){
-		if(THIS.CURTOOL.type == "common"){
-			var thiz = $(this),
-				line = THIS.LINEDOMS[thiz.attr("generated_by")];
-				
-			thiz.removeClass("active");
-			line.attr("class",line.attr("class").replace(" active" , ""));
-		}
-	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑鼠标滑过线条提示，增加体验↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 	
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓右键功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 	/*右键添加属性或行为或枚举项等等*/
 	THIS.UMLCANVAS.delegate(".node","contextmenu",function(e){
-		var thiz = $(this);
-		var selector;
+		var thiz = $(this), selector;
 		
 		if(thiz.is(".entity")){ 			//右键实体，添加属性和行为
 			selector = "entity";
@@ -385,12 +269,12 @@ function umlCanvas(thiz){
 			selector = "enum";
 		}
 		
-		showContextmenu(thiz,e,"add_members",selector,THIS);
+		showContextmenu(thiz, e, "add_members", selector, THIS);
 	});
 	
 	/*编辑线条的右键菜单*/
 	THIS.SVGLINES.delegate(".line","contextmenu",function(e){
-		showContextmenu($(this),e,"edit_lines",null,THIS);
+		showContextmenu($(this), e, "edit_lines", null, THIS);
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑右键功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 	

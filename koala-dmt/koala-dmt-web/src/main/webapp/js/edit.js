@@ -31,7 +31,7 @@ function showContextmenu(target,e,menuName,selector,canvas){
 	var position = commonTool.mousePosition(e);
 	
 	$("#"+menuName)
-	.css({ top : position.top,left : position.left})
+	.css({ top : e.pageY, left : e.pageX})
 	.data("target",target)
 	.data("canvas",canvas)
 	.removeClass(function(index,clazz){return clazz.split(" ")[1];})
@@ -42,12 +42,12 @@ function showContextmenu(target,e,menuName,selector,canvas){
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对模型的编辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/	
 /*页面上添加一个节点，对应业务上的一个类或接口*/
-function addNode(e,type,canvas){
+function addNode(e, type, canvas){
 	var id = commonTool.guid();
 	var offset 	= canvas.UMLCANVAS.offset();
 	var position = {
-			x:e.clientX - offset.left,
-			y:e.clientY - offset.top
+			x:e.pageX - offset.left,
+			y:e.pageY - offset.top
 		};
 	var nodeType = type ? type : canvas.CURTOOL.name;
 	var node = $("#node-template ."+nodeType).clone().css({
@@ -86,8 +86,7 @@ function addNode(e,type,canvas){
  * 添加属性
  * autoBy:指定该属性是否由于连线而自动生成
  */
-function addProperty(target, type, genericity, autoBy) {
-	/*TODO:同步添加缓存数据*/
+function addProperty(target, type, autoBy) {
 	var dmodel = target.data("data"),
 		name = getName("property",(function(){
 			var namespace = [];
@@ -96,42 +95,36 @@ function addProperty(target, type, genericity, autoBy) {
 			});
 			return namespace;
 		})()),
-		property = new Property(name,type),
-		propertyDom = $("#node-template .property").clone();
-	
-	propertyDom.find(".propertyType").html(type)
-	propertyDom.find(".propertyName").html(name)
-	
+		
+		property = new Property(name,type);
+		dmodel.properties.push(property);
+		
 	/*如果属性由连线时自动生成，则记录生成属性对应的线段*/
-	if(autoBy){
-		propertyDom.addClass(autoBy)
-					.addClass("auto_generated")
-					.attr("generated_by",autoBy);
-	}
-	
-	if(genericity){
-		property.genericity = genericity;
-		propertyDom.find(".genericity")
-			.css("display","inline-block")
-			.html(genericity);
-	}
-	
-	dmodel.properties.push(property);
-	target.find(".properties").append(propertyDom);
-	
-	/*把对应的属性对象缓存到dom节点上，方便查找*/
-	propertyDom.data("data",property);
-	
-	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
-	var dialog = $("#" + target.attr("dialogId"));
-	if(dialog.length == 1){
-		var copy = propertyDom.clone();
-		propertyDom.data("copy",copy);
-		dialog.find(".properties").append(copy);
-		copy.click(); //设置为当前编辑项
-		copy.data("data",propertyDom).addClass("active");
+	if(!autoBy){
+		propertyDom = $("#node-template .property").clone();
+		propertyDom.find(".propertyType").html(type)
+		propertyDom.find(".propertyName").html(name)
+		
+		
+		
+		
+		target.find(".properties").append(propertyDom);
+		
+		/*把对应的属性对象缓存到dom节点上，方便查找*/
+		propertyDom.data("data",property);
+		
+		/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
+		var dialog = $("#" + target.attr("dialogId"));
+		if(dialog.length == 1){
+			var copy = propertyDom.clone().data("data", propertyDom);
+			propertyDom.data("copy",copy);
+			dialog.find(".properties").append(copy);
+			copy.click(); //设置为当前编辑项
+			copy.data("data",propertyDom).addClass("active");
+		}
 	}
 }
+
 /*添加行为*/
 function addAction(target){
 	var dmodel = target.data("data");
@@ -142,6 +135,7 @@ function addAction(target){
 	target.find(".actions").append(actDom);
 	actDom.data("data",action);
 }
+
 /*添加枚举项*/
 function addEnumItem(target){
 	var enumDom = $("#node-template .enumItem").clone(),
@@ -344,8 +338,8 @@ function deleteNode(node,canvas){
 	var ls = commonTool.findRelatedLines(id,canvas.LINES);
 	
 	/*删除节点的连线*/
-	deleteLines(ls.inLines,canvas);
-	deleteLines(ls.outLines,canvas);
+	deleteLines(ls.inLines, canvas);
+	deleteLines(ls.outLines, canvas);
 	
 	/*删除节点*/
 	delete canvas.MODELS[id];
@@ -362,11 +356,8 @@ function deleteLines(lines,canvas){
 	$.each(lines,function(i,line){
 		id		= line.lineId;
 		ldom 	= canvas.LINEDOMS[id];
-		console.log(canvas.LINEDOMS);
 		switch(line.lineType){
-			/*
-			 * 如果
-			 */
+			/*如果*/
 			case "extends" : {		//继承线的删除
 				var from = canvas.MODELS[line.fromShapeId];
 				if(from){
@@ -390,11 +381,11 @@ function deleteLines(lines,canvas){
 			};
 			
 			/**
-			 * 
+			 * 当线段是关联关系时，从关联处删除相应的属性
 			 */
 			case "aggregate":
 			case "compose" 	: {
-				var from 	= canvas.MODELS[line.fromShapeId];
+				var from = canvas.MODELS[line.fromShapeId];
 				if(from){
 					var to 			= canvas.MODELS[line.toShapeId],
 						fromNode 	= canvas.NODEDOMS[from.shapeId],

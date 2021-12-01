@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>demo</title>
+        <link href="skins/default/contextmenu.css" rel="stylesheet">
+        <script src="js/jquery-1.8.2.min.js" type="text/javascript"></script>
+        <script src="js/contextmenu.js" type="text/javascript"></script>
+        <style>
+			html{
+				background:#65c294;
+			}
+			ul{
+				width:100%;
+			}
+           .item{
+                width:170px;
+                list-style: none;
+                display:block;
+                margin:3px;
+                background:#5c7a29;
+				height:120px;
+				float:left;
+            }
+        </style>
+        <script type="text/javascript">  
+			$('.item').contextmenu({
+				items : [{
+					text :'复制',
+					icon :'skins/default/icons/copy.png',
+					action: function(target){
+						target.innerHTML = "复制中......";
+					}
+				},{
+					text :'表格',
+					icon :'skins/default/icons/table.png',
+					action: function(target){
+						target.innerHTML = "创建中......";
+					}
+				},{
+                    text :'保存',
+                    icon :'skins/default/icons/save.png',
+                    action: function(target){
+                        target.innerHTML = "保存中......";
+                    }
+                },{
+                    text :'设置',
+                    icon :'skins/default/icons/pinion.png',
+                    action: function(target){
+                        target.innerHTML = "设置中......";
+                    }
+                },{
+                    text :'新建',
+                    icon :'skins/default/icons/new.png',
+                    action: function(target){
+                        setTimeout("alert('新建中......')",1000);
+                    }
+                }]
+			});	
+        </script>
+    </head>
+    <body>
+        <ul id="sortable">
+            <li class="item">item1</li>
+            <li class="item">item2</li>
+            <li class="item">item3</li>
+            <li class="item">item4</li>
+            <li class="item">item5</li>
+            <li class="item">item6</li>
+            <li class="item">item7</li>
+            <li class="item">item8</li>
+            <li class="item">item9</li>
+            <li class="item">item10</li>
+            <li class="item">item11</li>
+        </ul>
+    </body>
+</html>

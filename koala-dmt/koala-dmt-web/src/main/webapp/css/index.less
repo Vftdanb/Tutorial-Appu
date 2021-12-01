@@ -1,6 +1,12 @@
+/*颜色、圆角、边框的定义*/
+@import "theme.less";
+
+body{
+    background:@background;
+}
 #wrapper{
     min-width:960px;
-    
+
     #header, #footer{
         clear:both;
         margin:6px 0;
@@ -51,9 +57,9 @@
                         padding:1px 8px;
                         margin-top:5px;
                         cursor:pointer;
-                        
+
                         &.active{
-                            background:#FFFFFF;
+                            background:#FFF;
                         }
                     }
                 }
@@ -99,7 +105,6 @@
                     padding:2px 8px;
                     margin-top:5px;
                     cursor:pointer;
-                    
                     &.active{
                         background:#FFFFFF;
                     }
