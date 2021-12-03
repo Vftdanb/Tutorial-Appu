@@ -3,9 +3,6 @@
 	var dialogs = $(".dialog_container");
 	
 	dialogs.find(".entity_panel").delegate("input");
-	
-	
-	
 })();
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑，编辑结果实时同步↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 

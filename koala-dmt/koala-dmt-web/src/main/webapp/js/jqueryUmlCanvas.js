@@ -42,8 +42,6 @@ function umlCanvas(thiz){
 			line.attr("id",commonTool.guid());
 			THIS.SVGLINES.append(line);
 		})
-		
-		
 		.delegate(".node","mouseenter",function(e){ 	//结束节点的获取
 			if(THIS.CURTOOL.type != "line") return;
 			
@@ -171,8 +169,8 @@ function umlCanvas(thiz){
 			if(moving){
 				THIS.UMLCANVAS.unbind("mousemove",drag);
 				var model  = THIS.MODELS[target.attr("id")];
-				model.leftTopPoint.x = target.position().left;
-				model.leftTopPoint.y = target.position().top;
+				model.position.x = target.position().left;
+				model.position.y = target.position().top;
 				
 				moving = false;
 			}
@@ -278,9 +276,18 @@ function umlCanvas(thiz){
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑右键功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 	
-	thiz.find("#print").click(function(){
-		console.log("LINES:"+JSON.stringify(THIS.LINES));
-		console.log("MODELS:"+JSON.stringify(THIS.MODELS));
+	thiz.find(".print").click(function(){
+		var temp, lines = [], models = [];
+		for(temp in THIS.LINES){
+			lines.push(THIS.LINES[temp]);
+		}
+		
+		for(temp in THIS.MODELS){
+			models.push(THIS.MODELS[temp]);
+		}
+		
+		console.log("LINES:"+JSON.stringify(lines));
+		console.log("MODELS:"+JSON.stringify(models));
 	});
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/

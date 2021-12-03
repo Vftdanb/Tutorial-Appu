@@ -227,7 +227,7 @@ function Line(chartId,id,type,from,to,desc){
 /*节点数据结构*/
 function DomainShape(id,charid,name,point,type,desc){
 	this.shapeId			= id;
-	this.leftTopPoint 		= point;
+	this.position 		= point;
 	this.shapeType			= type;
 	this.name				= name;
 	this.description		= desc;

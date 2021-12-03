@@ -58,7 +58,7 @@
   background: url("../images/icons/associate.gif") no-repeat 0 1px;
 }
 .canvas .tools .current-tool {
-  outline: #000000 solid 1px;
+  outline: #644aa3 solid 3px;
 }
 .canvas .uml_easel {
   width: 100%;
