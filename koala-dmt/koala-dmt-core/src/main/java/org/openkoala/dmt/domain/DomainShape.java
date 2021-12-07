@@ -36,7 +36,7 @@ public abstract class DomainShape extends AbstractEntity {
 
 	private String shapeId;
 	
-	private LeftTopPoint leftTopPoint;
+	private Position position;
 	
 	private Integer width;
 	
@@ -62,12 +62,12 @@ public abstract class DomainShape extends AbstractEntity {
 	}
 
 	@Embedded
-	public LeftTopPoint getLeftTopPoint() {
-		return leftTopPoint;
+	public Position getPosition() {
+		return position;
 	}
 
-	public void setLeftTopPoint(LeftTopPoint leftTopPoint) {
-		this.leftTopPoint = leftTopPoint;
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 	public Integer getWidth() {

@@ -14,7 +14,7 @@ import org.openkoala.dmt.domain.EntityShape;
 import org.openkoala.dmt.domain.EntityType;
 import org.openkoala.dmt.domain.EnumShape;
 import org.openkoala.dmt.domain.InterfaceShape;
-import org.openkoala.dmt.domain.LeftTopPoint;
+import org.openkoala.dmt.domain.Position;
 import org.openkoala.dmt.domain.Property;
 
 public class DomainShapeDto implements Dto {
@@ -35,7 +35,7 @@ public class DomainShapeDto implements Dto {
 
 	private String shapeId;
 	
-	private LeftTopPoint leftTopPoint;
+	private Position position;
 	
 	private Integer width;
 	
@@ -91,12 +91,12 @@ public class DomainShapeDto implements Dto {
 		this.shapeId = shapeId;
 	}
 
-	public LeftTopPoint getLeftTopPoint() {
-		return leftTopPoint;
+	public Position getPosition() {
+		return position;
 	}
 
-	public void setLeftTopPoint(LeftTopPoint leftTopPoint) {
-		this.leftTopPoint = leftTopPoint;
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 	public Integer getWidth() {
@@ -230,7 +230,7 @@ public class DomainShapeDto implements Dto {
 		domainShape.setVersion(version);
 		domainShape.setShapeId(shapeId);
 		domainShape.setName(name);
-		domainShape.setLeftTopPoint(leftTopPoint);
+		domainShape.setPosition(position);
 		domainShape.setHeight(height);
 		domainShape.setWidth(width);
 		domainShape.setConstants(constants);
@@ -267,7 +267,7 @@ public class DomainShapeDto implements Dto {
 		result.setVersion(domainShape.getVersion());
 		result.setName(domainShape.getName());
 		result.setShapeId(domainShape.getShapeId());
-		result.setLeftTopPoint(domainShape.getLeftTopPoint());
+		result.setPosition(domainShape.getPosition());
 		result.setHeight(domainShape.getHeight());
 		result.setWidth(domainShape.getWidth());
 		result.setDescription(domainShape.getDescription());

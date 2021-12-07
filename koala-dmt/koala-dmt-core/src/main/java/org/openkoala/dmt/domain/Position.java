@@ -7,12 +7,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.dayatang.domain.ValueObject;
 
 /**
- * 图形左上角的点
+ * 图形位置，以左上角的点确定位置
  * @author xmfang
  *
  */
 @Embeddable
-public class LeftTopPoint implements ValueObject {
+public class Position implements ValueObject {
 
 	private static final long serialVersionUID = 125685375013186476L;
 
@@ -36,10 +36,10 @@ public class LeftTopPoint implements ValueObject {
 		this.y = y;
 	}
 	
-	public LeftTopPoint() {
+	public Position() {
 	}
 
-	public LeftTopPoint(Integer x, Integer y) {
+	public Position(Integer x, Integer y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -48,9 +48,9 @@ public class LeftTopPoint implements ValueObject {
 	public boolean equals(final Object other) {
 		if (this == other)
 			return true;
-		if (!(other instanceof LeftTopPoint))
+		if (!(other instanceof Position))
 			return false;
-		LeftTopPoint castOther = (LeftTopPoint) other;
+		Position castOther = (Position) other;
 		return new EqualsBuilder().append(x, castOther.x).append(y, castOther.y).isEquals();
 	}
 
