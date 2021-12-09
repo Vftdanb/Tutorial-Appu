@@ -1,11 +1,7 @@
 package org.openkoala.dmt.domain;
 
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 
 @Entity
 @DiscriminatorValue("InterfaceShape")

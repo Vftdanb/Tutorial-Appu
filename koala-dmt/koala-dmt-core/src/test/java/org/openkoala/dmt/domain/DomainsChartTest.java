@@ -76,20 +76,13 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		domainShapes.add(enumShape);
 		domainShapes.add(interfaceShap);
 		
-		Set<Line> lines = new HashSet<Line>();
-		Line line = new Line();
-		line.setFromShape(entityShape);
-		line.setToShape(enumShape);
-		line.setLineType(LineType.ASSOCIATE);
-		lines.add(line);
-		
 		project.setName("projectname");
 		project.save();
 		result.setProject(project);
 		
 		result.setName(chartName);
 		result.setDomainShapes(domainShapes);
-		result.setLines(lines);
+		result.setLineInfo("line-info");
 		
 		return result;
 	}

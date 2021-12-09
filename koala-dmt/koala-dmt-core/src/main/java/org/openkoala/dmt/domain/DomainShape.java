@@ -1,16 +1,10 @@
 package org.openkoala.dmt.domain;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -44,8 +38,6 @@ public abstract class DomainShape extends AbstractEntity {
 	
 	private String name;
 
-	private Set<Constant> constants = new HashSet<Constant>();
-	
 	private String description;
 	
 	private DomainShape parent;
@@ -92,16 +84,6 @@ public abstract class DomainShape extends AbstractEntity {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	@CollectionTable(name = "CONSTANTS", joinColumns = @JoinColumn(name = "DOMAIN_ID"))
-	public Set<Constant> getConstants() {
-		return constants;
-	}
-
-	public void setConstants(Set<Constant> constants) {
-		this.constants = constants;
 	}
 
 	public String getDescription() {

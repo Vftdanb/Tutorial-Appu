@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.openkoala.dmt.domain.Constant;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.EntityShape;
@@ -44,8 +43,6 @@ public class DomainShapeDto implements Dto {
 	private String name;
 	
 	private EntityType entityType;
-	
-	private Set<Constant> constants = new HashSet<Constant>();
 	
 	private Set<Property> properties = new HashSet<Property>();
 
@@ -129,14 +126,6 @@ public class DomainShapeDto implements Dto {
 
 	public void setEntityType(EntityType entityType) {
 		this.entityType = entityType;
-	}
-
-	public Set<Constant> getConstants() {
-		return constants;
-	}
-
-	public void setConstants(Set<Constant> constants) {
-		this.constants = constants;
 	}
 
 	public Set<Property> getProperties() {
@@ -233,7 +222,6 @@ public class DomainShapeDto implements Dto {
 		domainShape.setPosition(position);
 		domainShape.setHeight(height);
 		domainShape.setWidth(width);
-		domainShape.setConstants(constants);
 		domainShape.setDescription(description);
 		domainShape.setParent(domainsChartDto.getDomainShapeByShapeId(parentShapeId));
 //		result.setDomainsChart(generateDomainsChart());
@@ -271,7 +259,6 @@ public class DomainShapeDto implements Dto {
 		result.setHeight(domainShape.getHeight());
 		result.setWidth(domainShape.getWidth());
 		result.setDescription(domainShape.getDescription());
-		result.setConstants(domainShape.getConstants());
 		result.setDomainsChartId(domainShape.getDomainsChart().getId());
 		
 		if (domainShape instanceof EntityShape) {
