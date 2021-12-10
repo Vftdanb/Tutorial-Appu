@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
-import org.openkoala.dmt.domain.Line;
 import org.openkoala.dmt.domain.Project;
 
 public class DomainsChartDto implements Dto {
@@ -27,7 +26,9 @@ public class DomainsChartDto implements Dto {
 	
 	private Set<DomainShapeDto> domainShapeDtos = new HashSet<DomainShapeDto>();
 	
-	private Set<LineDto> lineDtos = new HashSet<LineDto>();
+	private String lineInfo;
+	
+//	private Set<LineDto> lineDtos = new HashSet<LineDto>();
 
 	public Long getId() {
 		return id;
@@ -69,20 +70,29 @@ public class DomainsChartDto implements Dto {
 		this.domainShapeDtos = domainShapeDtos;
 	}
 
-	public Set<LineDto> getLineDtos() {
-		return lineDtos;
+//	public Set<LineDto> getLineDtos() {
+//		return lineDtos;
+//	}
+//
+//	public void setLineDtos(Set<LineDto> lineDtos) {
+//		this.lineDtos = lineDtos;
+//	}
+	
+	public String getLineInfo() {
+		return lineInfo;
 	}
 
-	public void setLineDtos(Set<LineDto> lineDtos) {
-		this.lineDtos = lineDtos;
+	public void setLineInfo(String lineInfo) {
+		this.lineInfo = lineInfo;
 	}
-	
+
 	public DomainsChart transformToDomainsChart() {
 		DomainsChart result = new DomainsChart();
 		result.setId(id);
 		result.setVersion(version);
 		result.setName(name);
 		result.setProject(project);
+		result.setLineInfo(lineInfo);
 		
 		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
 			result.getDomainShapes().add(domainShapeDto.transformToDomainShape(this));
@@ -106,14 +116,15 @@ public class DomainsChartDto implements Dto {
 		result.setVersion(domainsChart.getVersion());
 		result.setProject(domainsChart.getProject());
 		result.setName(domainsChart.getName());
+		result.setLineInfo(domainsChart.getLineInfo());
 		
 		for (DomainShape domainShape : domainsChart.getDomainShapes()) {
 			result.getDomainShapeDtos().add(DomainShapeDto.getInstance(domainShape));
 		}
 		
-		for (Line line : domainsChart.getLines()) {
-			result.getLineDtos().add(LineDto.getInstance(line));
-		}
+//		for (Line line : domainsChart.getLines()) {
+//			result.getLineDtos().add(LineDto.getInstance(line));
+//		}
 		
 		return result;
 	}

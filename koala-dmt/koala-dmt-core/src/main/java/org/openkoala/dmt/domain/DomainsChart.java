@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -28,7 +29,9 @@ public class DomainsChart extends AbstractEntity {
 	
 	private Set<DomainShape> domainShapes = new HashSet<DomainShape>();
 
-	private Set<Line> lines = new HashSet<Line>();
+//	private Set<Line> lines = new HashSet<Line>();
+	
+	private String lineInfo;
 	
 	@ManyToOne
 	@JoinColumn(name = "PROJECT_ID")
@@ -57,13 +60,22 @@ public class DomainsChart extends AbstractEntity {
 		this.domainShapes = domainShapes;
 	}
 
-	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	public Set<Line> getLines() {
-		return lines;
+//	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//	public Set<Line> getLines() {
+//		return lines;
+//	}
+//
+//	public void setLines(Set<Line> lines) {
+//		this.lines = lines;
+//	}
+
+	@Column(name = "LINE_INFO")
+	public String getLineInfo() {
+		return lineInfo;
 	}
 
-	public void setLines(Set<Line> lines) {
-		this.lines = lines;
+	public void setLineInfo(String lineInfo) {
+		this.lineInfo = lineInfo;
 	}
 
 	@Override

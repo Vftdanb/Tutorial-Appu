@@ -52,7 +52,7 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		entityShape.setName("Entity");
 		entityShape.setHeight(20);
 		entityShape.setWidth(20);
-		entityShape.setLeftTopPoint(new LeftTopPoint(100, 100));
+		entityShape.setPosition(new Position(100, 100));
 		entityShape.setShapeId("entityshapeid");
 		entityShape.setProperties(properties);
 		
@@ -61,7 +61,7 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		interfaceShap.setName("Interface");
 		interfaceShap.setHeight(20);
 		interfaceShap.setWidth(20);
-		interfaceShap.setLeftTopPoint(new LeftTopPoint(200, 100));
+		interfaceShap.setPosition(new Position(200, 100));
 		interfaceShap.setShapeId("interfaceshapeid");
 		
 		EnumShape enumShape = new EnumShape();
@@ -69,19 +69,12 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		enumShape.setName("Enum");
 		enumShape.setHeight(20);
 		enumShape.setWidth(20);
-		enumShape.setLeftTopPoint(new LeftTopPoint(300, 100));
+		enumShape.setPosition(new Position(300, 100));
 		enumShape.setShapeId("enumshapeid");
 		
 		domainShapes.add(entityShape);
 		domainShapes.add(enumShape);
 		domainShapes.add(interfaceShap);
-		
-		Set<Line> lines = new HashSet<Line>();
-		Line line = new Line();
-		line.setFromShape(entityShape);
-		line.setToShape(enumShape);
-		line.setLineType(LineType.ASSOCIATE);
-		lines.add(line);
 		
 		project.setName("projectname");
 		project.save();
@@ -89,7 +82,7 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		
 		result.setName(chartName);
 		result.setDomainShapes(domainShapes);
-		result.setLines(lines);
+		result.setLineInfo("line-info");
 		
 		return result;
 	}

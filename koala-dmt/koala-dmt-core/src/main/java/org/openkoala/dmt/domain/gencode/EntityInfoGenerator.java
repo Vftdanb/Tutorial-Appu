@@ -15,7 +15,6 @@ import org.openkoala.dmt.codegen.metadata.proptype.ListPropertyType;
 import org.openkoala.dmt.codegen.metadata.proptype.SetPropertyType;
 import org.openkoala.dmt.codegen.metadata.proptype.SingleValuePropertyType;
 import org.openkoala.dmt.codegen.metadata.proptype.SortedSetPropertyType;
-import org.openkoala.dmt.domain.Constant;
 import org.openkoala.dmt.domain.DomainPropertyRelation;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.EntityShape;
@@ -109,9 +108,6 @@ public class EntityInfoGenerator {
 
 	private List<PropertyInfo> createPropertyInfos(DomainShape domainShape) {
 		List<PropertyInfo> results = new ArrayList<PropertyInfo>();
-		for (Constant constant : domainShape.getConstants()) {
-			results.add(createPropertyInfoByConstant(constant));
-		}
 		
 		if (!(domainShape instanceof EntityShape)) {
 			return results;
@@ -144,26 +140,6 @@ public class EntityInfoGenerator {
 		return result;
 	}
 
-	private PropertyInfo createPropertyInfoByConstant(Constant constant) {
-		PropertyInfo result = new PropertyInfo();
-//		result.setName(property.getName());
-//		
-//		UpperUnderscoreConvertor upperUnderscoreConvertor = new UpperUnderscoreConvertor(property.getName());
-//		result.setColumnName(upperUnderscoreConvertor.convert());
-//		result.setComment(property.getDescription());
-//		result.setType(getPropertyType(property.getType(), property.getGenericity()));
-//		result.setTypeExt(getTypeExt(property));
-//		result.setBusinessPK(property.getBusinessPK());
-//		
-//		//如果是OneToMany的关联关系，默认mappedby使用类名，首字母小写。
-//		if (property.getRelation() == DomainPropertyRelation.OneToMany) {
-//			result.setMappedBy(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, property.getName()));
-//		}
-//		
-//		result.setNullable(property.getNullable());
-		return result;
-	}
-	
 	private PropertyExt getTypeExt(Property property) {
 		if (property.getType().equals("Date")) {
 			return PropertyExt.TIMESTAMP;

@@ -7,14 +7,13 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.openkoala.dmt.domain.Constant;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.EntityShape;
 import org.openkoala.dmt.domain.EntityType;
 import org.openkoala.dmt.domain.EnumShape;
 import org.openkoala.dmt.domain.InterfaceShape;
-import org.openkoala.dmt.domain.LeftTopPoint;
+import org.openkoala.dmt.domain.Position;
 import org.openkoala.dmt.domain.Property;
 
 public class DomainShapeDto implements Dto {
@@ -35,7 +34,7 @@ public class DomainShapeDto implements Dto {
 
 	private String shapeId;
 	
-	private LeftTopPoint leftTopPoint;
+	private Position position;
 	
 	private Integer width;
 	
@@ -44,8 +43,6 @@ public class DomainShapeDto implements Dto {
 	private String name;
 	
 	private EntityType entityType;
-	
-	private Set<Constant> constants = new HashSet<Constant>();
 	
 	private Set<Property> properties = new HashSet<Property>();
 
@@ -91,12 +88,12 @@ public class DomainShapeDto implements Dto {
 		this.shapeId = shapeId;
 	}
 
-	public LeftTopPoint getLeftTopPoint() {
-		return leftTopPoint;
+	public Position getPosition() {
+		return position;
 	}
 
-	public void setLeftTopPoint(LeftTopPoint leftTopPoint) {
-		this.leftTopPoint = leftTopPoint;
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 	public Integer getWidth() {
@@ -129,14 +126,6 @@ public class DomainShapeDto implements Dto {
 
 	public void setEntityType(EntityType entityType) {
 		this.entityType = entityType;
-	}
-
-	public Set<Constant> getConstants() {
-		return constants;
-	}
-
-	public void setConstants(Set<Constant> constants) {
-		this.constants = constants;
 	}
 
 	public Set<Property> getProperties() {
@@ -230,10 +219,9 @@ public class DomainShapeDto implements Dto {
 		domainShape.setVersion(version);
 		domainShape.setShapeId(shapeId);
 		domainShape.setName(name);
-		domainShape.setLeftTopPoint(leftTopPoint);
+		domainShape.setPosition(position);
 		domainShape.setHeight(height);
 		domainShape.setWidth(width);
-		domainShape.setConstants(constants);
 		domainShape.setDescription(description);
 		domainShape.setParent(domainsChartDto.getDomainShapeByShapeId(parentShapeId));
 //		result.setDomainsChart(generateDomainsChart());
@@ -267,11 +255,10 @@ public class DomainShapeDto implements Dto {
 		result.setVersion(domainShape.getVersion());
 		result.setName(domainShape.getName());
 		result.setShapeId(domainShape.getShapeId());
-		result.setLeftTopPoint(domainShape.getLeftTopPoint());
+		result.setPosition(domainShape.getPosition());
 		result.setHeight(domainShape.getHeight());
 		result.setWidth(domainShape.getWidth());
 		result.setDescription(domainShape.getDescription());
-		result.setConstants(domainShape.getConstants());
 		result.setDomainsChartId(domainShape.getDomainsChart().getId());
 		
 		if (domainShape instanceof EntityShape) {
