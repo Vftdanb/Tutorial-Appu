@@ -241,7 +241,7 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	
 	this.extends			= null;			//父类(连线时级联产生)
 	this.parentShapeId		= "";
-	this.implementsList 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
+	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	this.constants			= [];			//常量数组（常量对象数组）
 	
 	

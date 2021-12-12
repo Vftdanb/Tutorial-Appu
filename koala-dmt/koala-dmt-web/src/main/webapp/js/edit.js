@@ -1,7 +1,6 @@
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑，编辑结果实时同步↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 (function(){
 	var dialogs = $(".dialog_container");
-	
 	dialogs.find(".entity_panel").delegate("input");
 })();
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑，编辑结果实时同步↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
@@ -191,10 +190,10 @@ function updateNodeName(target, newName, canvas){
 			 * 被实现者更名时，实现者的实现对象要更名
 			 */
 			case "implements" : {
-				var list = model.implementsList;
-				for(var i=0 ;i<list.length ;i++){
-					if(list[i] == data.name){
-						list[i] = newName;
+				var set = model.implementsNameSet;
+				for(var i=0 ;i<set.length ;i++){
+					if(set[i] == data.name){
+						set[i] = newName;
 						break;
 					}
 				}
@@ -231,7 +230,7 @@ function updateNodeName(target, newName, canvas){
 }
 
 /*更新实体类型*/
-function updateEntityType(target,type){
+function updateEntityType(target, type){
 	var data = target.data("data");
 	target.find(".entityType").html(type);
 	data.entityType = type;
@@ -371,8 +370,8 @@ function deleteLines(lines,canvas){
 			case "implements" : {
 				var from = canvas.MODELS[line.fromShapeId], to	= canvas.MODELS[line.toShapeId];
 				if(from){
-					var list = from.implementsList;
-					list.remove($.inArray(list,to.name));
+					var set = from.implementsNameSet;
+					set.remove($.inArray(set,to.name));
 				}
 				break;
 			};
@@ -421,12 +420,6 @@ function deleteEnumItem(){
 
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对模型的编辑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
-
-
-
-
-
-
 
 
 /**

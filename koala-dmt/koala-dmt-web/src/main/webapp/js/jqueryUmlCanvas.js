@@ -75,7 +75,7 @@ function umlCanvas(thiz){
 					(nodeT == "entity") ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
 				} else if(tname == "implements"){
-					((nodeT == "interface") && ($.inArray(m2.name, m1.implementsList) < 0)) ? 
+					((nodeT == "interface") && ($.inArray(m2.name, m1.implementsNameSet) < 0)) ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
 				} else if(tname == "aggregate" || tname == "compose"){
 					thiz.addClass("legal");
@@ -109,7 +109,7 @@ function umlCanvas(thiz){
 				if(line.is(".extends")){
 					m1.extends = m2.name;
 				} else if(line.is(".implements")){
-					m1.implementsList.push(m2.name);
+					m1.implementsNameSet.push(m2.name);
 				} else if(line.is(".aggregate,.compose")){
 					addProperty(n1,"List",m2.name,line.attr("id"));
 				} else if(line.is(".")){
@@ -286,8 +286,29 @@ function umlCanvas(thiz){
 			models.push(THIS.MODELS[temp]);
 		}
 		
-		console.log("LINES:"+JSON.stringify(lines));
-		console.log("MODELS:"+JSON.stringify(models));
+		var domainsChart = {};
+		
+		domainsChart.id 		= "";
+		domainsChart.version 	= "";
+		domainsChart.name		= "";
+		domainsChart.lineInfo	= JSON.stringify(lines);
+		domainsChart.domainShapeDtos = models;
+		
+		console.log(JSON.stringify(domainsChart));
+		
+		
+		$.ajax({
+			url 	: "/domains-chart/create",
+			data 	: JSON.stringify(domainsChart),
+			type	: "post",
+			dataType : "json",
+			success : function(data){
+				
+			},
+			error :function(){
+				
+			}
+		});
 	});
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
