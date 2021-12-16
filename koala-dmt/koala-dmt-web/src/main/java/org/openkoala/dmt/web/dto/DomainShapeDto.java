@@ -50,9 +50,9 @@ public class DomainShapeDto implements Dto {
 	
 	private String description;
 	
-	private String parentShapeId;
+	private String parentName;
 	
-	private Set<String> implementsInterfaceShapeIds = new HashSet<String>();
+	private Set<String> implementsNameSet = new HashSet<String>();
 	
 	private Long domainsChartId;
 	
@@ -152,21 +152,21 @@ public class DomainShapeDto implements Dto {
 		this.description = description;
 	}
 
-	public String getParentShapeId() {
-		return parentShapeId;
+	public String getParentName() {
+		return parentName;
 	}
 
-	public void setParentShapeId(String parentShapeId) {
-		this.parentShapeId = parentShapeId;
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
 	}
 
 	public Set<String> getImplementsInterfaceShapeIds() {
-		return implementsInterfaceShapeIds;
+		return implementsNameSet;
 	}
 
 	public void setImplementsInterfaceShapeIds(
-			Set<String> implementsInterfaceShapeIds) {
-		this.implementsInterfaceShapeIds = implementsInterfaceShapeIds;
+			Set<String> implementsNameSet) {
+		this.implementsNameSet = implementsNameSet;
 	}
 
 	public Long getDomainsChartId() {
@@ -205,8 +205,8 @@ public class DomainShapeDto implements Dto {
 	
 	private Set<InterfaceShape> obtainImplementsInterfaceShapes(DomainsChartDto domainsChartDto) {
 		Set<InterfaceShape> results = new HashSet<InterfaceShape>();
-		for (String shapeId : implementsInterfaceShapeIds) {
-			DomainShape domainShape = domainsChartDto.getDomainShapeByShapeId(shapeId);
+		for (String shapeName : implementsNameSet) {
+			DomainShape domainShape = domainsChartDto.getDomainShapeByShapeName(shapeName);
 			if (domainShape != null) {
 				results.add((InterfaceShape) domainShape);
 			}
@@ -223,7 +223,7 @@ public class DomainShapeDto implements Dto {
 		domainShape.setHeight(height);
 		domainShape.setWidth(width);
 		domainShape.setDescription(description);
-		domainShape.setParent(domainsChartDto.getDomainShapeByShapeId(parentShapeId));
+		domainShape.setParent(domainsChartDto.getDomainShapeByShapeName(parentName));
 //		result.setDomainsChart(generateDomainsChart());
 		return domainShape;
 	}

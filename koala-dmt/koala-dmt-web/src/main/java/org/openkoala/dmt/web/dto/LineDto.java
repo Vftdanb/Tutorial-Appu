@@ -86,8 +86,8 @@ public class LineDto implements Dto {
 	public Line generateLine(DomainsChartDto domainsChartDto) {
 		Line result = new Line();
 		result.setLineType(lineType);
-		result.setFromShape(domainsChartDto.getDomainShapeByShapeId(fromShapeId));
-		result.setToShape(domainsChartDto.getDomainShapeByShapeId(toShapeId));
+		result.setFromShape(domainsChartDto.getDomainShapeByShapeName(fromShapeId));
+		result.setToShape(domainsChartDto.getDomainShapeByShapeName(toShapeId));
 		result.setDescription(description);
 		
 		DomainsChart domainsChart = new DomainsChart();
