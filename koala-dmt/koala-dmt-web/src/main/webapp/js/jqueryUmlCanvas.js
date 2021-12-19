@@ -303,7 +303,7 @@ function umlCanvas(thiz){
 			type	: "post",
 			dataType : "json",
 			success : function(data){
-				
+				console.log(data);
 			},
 			error :function(){
 				
