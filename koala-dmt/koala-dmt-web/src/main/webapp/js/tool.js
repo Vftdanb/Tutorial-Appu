@@ -240,7 +240,7 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	DomainShape.call(this, id,charid,name,point,type,desc); 		//继承DomainShap
 	
 	this.extends			= null;			//父类(连线时级联产生)
-	this.parentShapeId		= "";
+	this.parentName			= "";
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	this.constants			= [];			//常量数组（常量对象数组）
 	
@@ -249,7 +249,7 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	this.actions			= []; 			//行为数组（行为对象数组）
 	this.isAbstractEntity 	= isAbstract;
 	this.isMappedSuperClass = isMapped;
-	this.entityType 		= "Entity";
+	this.entityType 		= "ENTITY";
 	this.scope				= "public";
 }
 
@@ -276,7 +276,7 @@ function EnumShape(id,charid,name,point,type,desc){
 
 /****************************二级数据结构****************************/
 /*属性类*/
-function Property(name,type){
+function Property(name, type){
 	this.name 			= name;
 	this.type 			= type;
 	this.genericity		= null;
