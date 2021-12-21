@@ -235,6 +235,7 @@ function DomainShape(id,charid,name,point,type,desc){
 }
 
 /****************************顶级数据结构****************************/
+
 /*实体类*/
 function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	DomainShape.call(this, id,charid,name,point,type,desc); 		//继承DomainShap
