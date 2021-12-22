@@ -40,8 +40,6 @@ function addNode(e, type, canvas){
 			top  : position.y
 		});
 		
-	console.log(canvas.CURTOOL);
-	
 	/*判断要生成那种领域模型*/
 	var model = null ,name;
 	if(nodeType == "ENTITY"){
