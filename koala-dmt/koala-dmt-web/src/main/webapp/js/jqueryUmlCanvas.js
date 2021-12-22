@@ -1,3 +1,14 @@
+/*切换工具的方法*/
+function swichTool(name, canvas){
+	var tool 	= canvas.TOOLBAR.find("."+name);
+	
+	canvas.CURTOOL.type = tool.attr("type");
+	canvas.CURTOOL.name = tool.attr("name");
+	
+	canvas.TOOLBAR.find(".current-tool").removeClass("current-tool");
+	tool.addClass("current-tool");
+}
+
 function umlCanvas(thiz){
 	/*全局变量*/
 	var THIS			= this;
@@ -180,7 +191,7 @@ function umlCanvas(thiz){
 	/*点击鼠标添加节点*/
 	THIS.UMLCANVAS.delegate("svg","click",function(e){
 		if(THIS.CURTOOL.type == "node"){
-			addNode(e,null,THIS);
+			addNode(e, null, THIS);
 		}
 		
 		/*当画布被点击一次时，如果当前不是线条工具，将工具切换回鼠标工具*/
@@ -294,7 +305,7 @@ function umlCanvas(thiz){
 		domainsChart.lineInfo	= JSON.stringify(lines);
 		domainsChart.domainShapeDtos = models;
 		
-		console.log(JSON.stringify(domainsChart));
+		console.log(JSON.stringify(models));
 		
 		
 		$.ajax({
@@ -333,11 +344,11 @@ $("#add_nodes").delegate(".contextmenu_item","click",function(e){
 		canvas	= thiz.parent().data("canvas");
 		
 	if(thiz.is(".add_entity")){
-		addNode(e,"entity",canvas);
+		addNode(e,"ENTITY",canvas);
 	} else if(thiz.is(".add_interface")){
-		addNode(e,"interface",canvas);
+		addNode(e,"INTERFACE",canvas);
 	} else if(thiz.is(".add_enum")){
-		addNode(e,"enum",canvas);
+		addNode(e,"ENUM",canvas);
 	}
 	
 	thiz.parent(".contextmenu").blur();

@@ -9,17 +9,6 @@ function ZOOM(t,canvas){
 		var value = $(t).val();
 		canvas.UMLCANVAS.css("transform","scale("+value+")");
 }
-/*切换工具的方法*/
-function swichTool(name,canvas){
-	var tool 	= canvas.TOOLBAR.find("."+name);
-	var curtool  = tool.attr("class").split(" ");
-	
-	canvas.CURTOOL.type = curtool[0];
-	canvas.CURTOOL.name = curtool[1];
-	
-	canvas.TOOLBAR.find(".current-tool").removeClass("current-tool");
-	tool.addClass("current-tool");
-}
 
 /*显示右键菜单*/
 function showContextmenu(target,e,menuName,selector,canvas){
@@ -46,34 +35,36 @@ function addNode(e, type, canvas){
 			y:e.pageY - offset.top
 		};
 	var nodeType = type ? type : canvas.CURTOOL.name;
-	var node = $("#node-template ."+nodeType).clone().css({
+	var node = $("#node-template ."+nodeType.toLowerCase()).clone().css({
 			left : position.x,
 			top  : position.y
 		});
 		
+	console.log(canvas.CURTOOL);
+	
 	/*判断要生成那种领域模型*/
 	var model = null ,name;
-	if(nodeType == "entity"){
+	if(nodeType == "ENTITY"){
 		
 		name 	= getName("entity",getNodeNameSpace(canvas.MODELS)).firstUpcase();
-		model 	= new EntityShape(id,canvas.CHARTID,name,position,"entity","",false,false);
+		model 	= new EntityShape(id,canvas.CHARTID,name,position,nodeType,"",false,false);
 		
-	} else if(nodeType == "interface"){
+	} else if(nodeType == "INTERFACE"){
 		
 		name 	= getName("interface",getNodeNameSpace(canvas.MODELS)).firstUpcase();
-		model 	= new InterfaceShape(id,canvas.CHARTID,name,position,"interface","Interface",false,false);
+		model 	= new InterfaceShape(id,canvas.CHARTID,name,position,nodeType,"Interface",false,false);
 		
-	} else if(nodeType == "enum"){
+	} else if(nodeType == "ENUM"){
 		
 		name 	= getName("enum",getNodeNameSpace(canvas.MODELS)).firstUpcase();
-		model 	= new EnumShape(id,canvas.CHARTID,name,position,"enum","");
+		model 	= new EnumShape(id ,canvas.CHARTID ,name ,position ,nodeType ,"");
 	}
 	
 	node.find(".name").html(name);
 	node.attr("id",id).data("data",model); //把对应领域模型缓存在dom节点上，方便查找
 	canvas.UMLCANVAS.append(node);
 	
-	canvas.MODELS[id] = model;						//节点的控制数据（前端用）
+	canvas.MODELS[id] 	= model;						//节点的控制数据（前端用）
 	canvas.NODEDOMS[id] = node;
 	return id;
 }
@@ -100,9 +91,6 @@ function addProperty(target, type, autoBy) {
 		propertyDom = $("#node-template .property").clone();
 		propertyDom.find(".propertyType").html(type)
 		propertyDom.find(".propertyName").html(name)
-		
-		
-		
 		
 		target.find(".properties").append(propertyDom);
 		

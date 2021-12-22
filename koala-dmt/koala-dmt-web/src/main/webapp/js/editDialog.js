@@ -68,19 +68,18 @@ editDialog = {
 		
 		/*隐藏上一个对话框*/
 		$("#dialog_container>.active_dialog").removeClass("active_dialog");
-		var dialog = $("."+data.shapeType+"_dialog").addClass("active_dialog");
-		if(dialog.attr("id") && dialog.attr("id") == node.attr("dialogid")){
+		var dialog = $("."+data.shapeType.toLowerCase()+"_dialog").addClass("active_dialog");
+		if(dialog.attr("id") && (dialog.attr("id") == node.attr("dialogid"))){
 			return null;
 		}
 		
 		if(node.is(".entity")){
-			this.initClassPanel(dialog ,data, node);
-			this.initPropertyPanel(dialog ,node);
+			this.initClassPanel(dialog, data, node);
+			//this.initPropertyPanel(dialog, node);
 		} else if(node.is(".interface")){
 			this.initInterfacePanel(dialog ,data ,node);
-			//this.initPropertyPanel(dialog ,node);
 		} else if(node.is(".enum")){
-			this.initEnumPanel(dialog ,data ,node);
+			this.initEnumPanel(dialog, data, node);
 		}
 		
 		return dialog;

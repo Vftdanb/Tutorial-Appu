@@ -226,12 +226,12 @@ function Line(chartId,id,type,from,to,desc){
 
 /*节点数据结构*/
 function DomainShape(id,charid,name,point,type,desc){
-	this.shapeId			= id;
+	this.shapeId		= id;
 	this.position 		= point;
-	this.shapeType			= type;
-	this.name				= name;
-	this.description		= desc;
-	this.domainsChartId		= charid;
+	this.shapeType		= type;
+	this.name			= name;
+	this.description	= desc;
+	this.domainsChartId	= charid;
 }
 
 /****************************顶级数据结构****************************/
@@ -240,8 +240,7 @@ function DomainShape(id,charid,name,point,type,desc){
 function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	DomainShape.call(this, id,charid,name,point,type,desc); 		//继承DomainShap
 	
-	this.extends			= null;			//父类(连线时级联产生)
-	this.parentName			= "";
+	this.parentName			= "";			//父类
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	this.constants			= [];			//常量数组（常量对象数组）
 	
