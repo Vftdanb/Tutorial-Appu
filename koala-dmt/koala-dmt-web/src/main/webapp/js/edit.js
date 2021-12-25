@@ -168,7 +168,7 @@ function updateNodeName(target, newName, canvas){
 			 * 被继承者更名时，继承者的继承对象要更名 
 			 */
 			case "extends" : {
-				model.extends = newName;
+				model.parentName = newName;
 				break;
 			};
 			
@@ -220,12 +220,6 @@ function updateEntityType(target, type){
 	var data = target.data("data");
 	target.find(".entityType").html(type);
 	data.entityType = type;
-}
-
-/*更新元素作用范围，包括entity、interface、eunm、property*/
-function updateScope(target, scope){
-	var data = target.data("data");
-	data.scope = scope;
 }
 
 /*编辑元素的描述信息*/
@@ -285,18 +279,6 @@ function updatePropertyGenericity(propertyDom, val){
 	property.genericity = val;
 	propertyDom.find(".genericity").html(val);
 	copy ? copy.find(".genericity").html(val) : "";
-}
-
-/*更改属性的可见性*/
-function updatePropertyScope(propertyDom, val){
-	if(!propertyDom) return;
-	
-	var copy = propertyDom.data("copy"),
-		property = propertyDom.data("data");
-		
-	copy.removeClass("public private package protected").addClass(val);
-	propertyDom.removeClass("public private package protected").addClass(val);
-	property.scope = val;
 }
 
 /*更改枚举项的名字*/

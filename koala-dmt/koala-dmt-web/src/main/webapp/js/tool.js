@@ -242,22 +242,17 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	
 	this.parentName			= "";			//父类
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
-	this.constants			= [];			//常量数组（常量对象数组）
-	
 	
 	this.properties 		= []; 			//属性数组（属性对象数组）
 	this.actions			= []; 			//行为数组（行为对象数组）
-	this.isAbstractEntity 	= isAbstract;
-	this.isMappedSuperClass = isMapped;
 	this.entityType 		= "ENTITY";
-	this.scope				= "public";
 }
 
 /*值对象*/
 function ValueObject(id,charid,name,point,type,desc){
 	DomainShape.call(this, id,charid,name,point,type,desc);
 	
-	this.name 			=  name;
+	this.name =  name;
 }
 /*接口类*/
 function InterfaceShape(id,charid,name,point,type,desc){
@@ -280,7 +275,6 @@ function Property(name, type){
 	this.name 			= name;
 	this.type 			= type;
 	this.genericity		= null;
-	this.scope			= "private";
 	this.relation		= null;
 	this.nullable		= true;
 	this.isUnique		= false;

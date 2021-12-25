@@ -121,7 +121,7 @@ function umlCanvas(thiz){
 			} else if(n2 != null && drawing){
 				/*连线的相关逻辑.根据连线生成或更改某些属性*/
 				if(line.is(".extends")){
-					m1.extends = m2.name;
+					m1.parentName = m2.name;
 				} else if(line.is(".implements")){
 					m1.implementsNameSet.push(m2.name);
 				} else if(line.is(".aggregate,.compose")){
@@ -326,8 +326,10 @@ function umlCanvas(thiz){
 	});
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
-	THIS.UMLCANVAS.delegate(".node,.line","click",function(){
-		editDialog.initDialog($(this),THIS);
+	THIS.UMLCANVAS.delegate(".node,.line","mousedown",function(){
+		if(THIS.CURTOOL.type == "cursor"){
+			editDialog.initDialog($(this),THIS);
+		}
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 };
