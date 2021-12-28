@@ -125,10 +125,6 @@ editDialog = {
 		});
 	},
 	
-	/**
-	 * 
-	 */
-	
 	/*初始化属性编辑窗口*/
 	initPropertyPanel : function(dialog,node){
 		var properties = node.find(".property");

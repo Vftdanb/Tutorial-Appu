@@ -48,7 +48,9 @@
 								<div class="panel entity_panel active">
 									<div>
 										<span class="label">实体名</span>
-										<input class="name" name="name" type="text" oninput="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/>
+										<input class="name" name="name" type="text" 
+											oninput="updateNodeName($(this).parents('.dialog').data('node'), $(this).val(), $(this).parents('.dialog').data('canvas'))"
+											onchange="var thiz=$(this),parent=thiz.parents('.dialog'); checkNodeName(thiz, parent.data('node'), parent.data('canvas'));"/><!-- 检查节点名是否出现过 -->
 									</div>
 									<div>
 										<span class="label">实体类型</span>
@@ -70,15 +72,19 @@
 									<form>
 										<div>
 											<span class="label">属性名</span>
-											<input type="text" class="propertyName" name="name" oninput="updatePropertyName($(this).parent().parent().data('data'),$(this).val());"/>
+											<input type="text" class="propertyName" name="name" 
+												oninput="updatePropertyName($(this).parent().parent().data('data'),$(this).val());"
+												onchange=""/><!-- 检查属性名 @TODO -->
 										</div>
 										<div>
 											<span class="label">类型</span>
-											<input type="text" class="propertyType" name="type" list="property_type_tip" oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
+											<input type="text" class="propertyType" name="type" list="property_type_tip" 
+												oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
 										</div>
 										<div class="genericity_input">
 											<span class="label">泛型</span>
-											<input type="text" class="propertyGenericity" name="genericity" oninput="updatePropertyGenericity($(this).parent().parent().data('data'),$(this).val());"/>
+											<input type="text" class="propertyGenericity" name="genericity" 
+												oninput="updatePropertyGenericity($(this).parent().parent().data('data'),$(this).val());"/>
 										</div>
 										<div>
 											<table style="font-size:14px">

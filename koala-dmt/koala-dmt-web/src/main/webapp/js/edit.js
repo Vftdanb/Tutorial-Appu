@@ -44,17 +44,17 @@ function addNode(e, type, canvas){
 	var model = null ,name;
 	if(nodeType == "ENTITY"){
 		
-		name 	= getName("entity",getNodeNameSpace(canvas.MODELS)).firstUpcase();
+		name 	= getName("entity", getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new EntityShape(id,canvas.CHARTID,name,position,nodeType,"",false,false);
 		
 	} else if(nodeType == "INTERFACE"){
 		
-		name 	= getName("interface",getNodeNameSpace(canvas.MODELS)).firstUpcase();
+		name 	= getName("interface", getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new InterfaceShape(id,canvas.CHARTID,name,position,nodeType,"Interface",false,false);
 		
 	} else if(nodeType == "ENUM"){
 		
-		name 	= getName("enum",getNodeNameSpace(canvas.MODELS)).firstUpcase();
+		name 	= getName("enum", getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new EnumShape(id ,canvas.CHARTID ,name ,position ,nodeType ,"");
 	}
 	
@@ -158,7 +158,7 @@ function updateNodeName(target, newName, canvas){
 	var outs 	= inAout.outLines;
 	
 	var node,model; //node and domainmodel
-	$.each(ins,function(i,line){
+	$.each(ins,function(i, line){
 		line = ins[i];
 		node = $("#"+line.fromShapeId);
 		model = node.data("data");
@@ -294,10 +294,25 @@ function updateEnumName(enumDom, val){
 }
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有检查操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+function checkNodeName(name, node, canvas){
+	var models 	= canvas.MODELS,
+		val 	= name.val();
+		
+	for(var i in models){
+		if(val == models[i].name){
+			name.addClass("duplication_name"); /*重名*/
+			return;
+		}
+	}
+	console.log(2232323);
+	name.removeClass("duplication_name");/*不重名*/
+}
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有检查操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有删除操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*删除节点*/
-function deleteNode(node,canvas){
+function deleteNode(node, canvas){
 	var id = node.attr("id");
 	var ls = commonTool.findRelatedLines(id,canvas.LINES);
 	
