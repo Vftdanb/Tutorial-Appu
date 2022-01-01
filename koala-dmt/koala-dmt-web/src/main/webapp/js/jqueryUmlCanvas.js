@@ -298,8 +298,12 @@ function umlCanvas(thiz){
 		
 		
 		$.ajax({
-			url 	: "/domains-chart/create",
-			data 	: JSON.stringify(domainsChart),
+			headers: { 
+		        'Accept': 'application/json',
+		        'Content-Type': 'application/json' 
+		    },
+			url 	: "domains-chart/create",
+			data 	:  JSON.stringify(domainsChart),
 			type	: "post",
 			dataType : "json",
 			success : function(data){
