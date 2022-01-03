@@ -21,9 +21,9 @@ public class DomainShapeDto implements Dto {
 	private static final long serialVersionUID = -1551254242524216902L;
 
 	private enum ShapeType {
-		EntityShape,
-		InterfaceShape,
-		EnumShape
+		ENTITY,
+		INTERFACE,
+		ENUM
 	}
 
 	private Long id;
@@ -160,11 +160,11 @@ public class DomainShapeDto implements Dto {
 		this.parentName = parentName;
 	}
 
-	public Set<String> getImplementsInterfaceShapeIds() {
+	public Set<String> getImplementsNameSet() {
 		return implementsNameSet;
 	}
 
-	public void setImplementsInterfaceShapeIds(
+	public void setImplementsNameSet(
 			Set<String> implementsNameSet) {
 		this.implementsNameSet = implementsNameSet;
 	}
@@ -178,15 +178,15 @@ public class DomainShapeDto implements Dto {
 	}
 
 	public DomainShape transformToDomainShape(DomainsChartDto domainsChartDto) {
-		if (ShapeType.EntityShape.equals(shapeType)) {
+		if (ShapeType.ENTITY.equals(shapeType)) {
 			return generateEntityShape(domainsChartDto);
 		}
 		
-		if (ShapeType.InterfaceShape.equals(shapeType)) {
+		if (ShapeType.INTERFACE.equals(shapeType)) {
 			return generateInterfaceShape(domainsChartDto);
 		}
 		
-		if (ShapeType.EnumShape.equals(shapeType)) {
+		if (ShapeType.ENUM.equals(shapeType)) {
 			return generateEnumShape(domainsChartDto);
 		}
 		
@@ -263,22 +263,22 @@ public class DomainShapeDto implements Dto {
 		
 		if (domainShape instanceof EntityShape) {
 			EntityShape entityShape = (EntityShape) domainShape;
-			result.setShapeType(ShapeType.EntityShape);
+			result.setShapeType(ShapeType.ENTITY);
 			result.setEntityType(entityShape.getEntityType());
 			result.setProperties(entityShape.getProperties());
 			
 			for (InterfaceShape interfaceShape : entityShape.getImplementsInterfaceShapes()) {
-				result.getImplementsInterfaceShapeIds().add(interfaceShape.getShapeId());
+				result.getImplementsNameSet().add(interfaceShape.getName());
 			}
 		}
 		
 		if (domainShape instanceof InterfaceShape) {
-			result.setShapeType(ShapeType.InterfaceShape);
+			result.setShapeType(ShapeType.INTERFACE);
 		}
 		
 		if (domainShape instanceof EnumShape) {
 			EnumShape enumShape = (EnumShape) domainShape;
-			result.setShapeType(ShapeType.EnumShape);
+			result.setShapeType(ShapeType.ENUM);
 			result.setEnumItems(enumShape.getEnumItems());
 		}
 		

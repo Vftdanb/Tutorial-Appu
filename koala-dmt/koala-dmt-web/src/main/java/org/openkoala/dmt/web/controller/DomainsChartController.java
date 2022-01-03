@@ -13,7 +13,9 @@ import org.openkoala.dmt.domain.Project;
 import org.openkoala.dmt.web.dto.DomainsChartDto;
 import org.openkoala.dmt.web.dto.ProjectDomainsChartDto;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -39,8 +41,8 @@ public class DomainsChartController extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/create")
-	public void createDomainsChart(DomainsChartDto domainsChartDTO) {
+	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json")
+	public void createDomainsChart(@RequestBody DomainsChartDto domainsChartDTO) {
 		domainsChartApplication.saveDomainsChart(domainsChartDTO.transformToDomainsChart());
 	}
 	
