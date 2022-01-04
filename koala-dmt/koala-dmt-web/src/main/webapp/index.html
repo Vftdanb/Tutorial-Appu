@@ -60,15 +60,6 @@
 										</select>
 									</div>
 									<div>
-										<span class="label">实体范围</span>
-										<select class="entityScope" name="entityScope" style="height:22px;" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
-											<option value="public">public</option>
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="package">package</option>
-										</select>
-									</div>
-									<div>
 										<span class="label" style="vertical-align:top;">备注</span>
 										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
 									</div>
@@ -88,15 +79,6 @@
 										<div class="genericity_input">
 											<span class="label">泛型</span>
 											<input type="text" class="propertyGenericity" name="genericity" oninput="updatePropertyGenericity($(this).parent().parent().data('data'),$(this).val());"/>
-										</div>
-										<div>
-											<span class="label">可见性</span>
-											<select style="height:22px;" class="scope" name="scope" oninput="updatePropertyScope($(this).parent().parent().data('data'),$(this).val())">
-												<option value="public">public</option>
-												<option value="private">private</option>
-												<option value="protected">protected</option>
-												<option value="package">package</option>
-											</select>
 										</div>
 										<div>
 											<table style="font-size:14px">

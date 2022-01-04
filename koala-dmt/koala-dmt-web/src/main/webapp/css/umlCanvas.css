@@ -164,11 +164,18 @@
   border-color: #009933;
   cursor: crosshair !important;
 }
+.node.legal .header,
+#dialog_container.legal .header {
+  cursor: crosshair !important;
+}
 /*非法操作*/
 .node.illegal,
 #dialog_container.illegal {
-  background: #CCFFFF !important;
-  border-color: #FF6666;
+  border-color: red !important;
+  cursor: not-allowed !important;
+}
+.node.illegal .header,
+#dialog_container.illegal .header {
   cursor: not-allowed !important;
 }
 .node .header,

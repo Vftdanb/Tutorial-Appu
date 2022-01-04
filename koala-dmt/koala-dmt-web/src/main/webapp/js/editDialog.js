@@ -75,7 +75,7 @@ editDialog = {
 		
 		if(node.is(".entity")){
 			this.initClassPanel(dialog, data, node);
-			//this.initPropertyPanel(dialog, node);
+			this.initPropertyPanel(dialog, node);
 		} else if(node.is(".interface")){
 			this.initInterfacePanel(dialog ,data ,node);
 		} else if(node.is(".enum")){

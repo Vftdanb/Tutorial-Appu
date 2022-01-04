@@ -29,22 +29,51 @@
 		<mina.version>2.0.7</mina.version>
 		<tomcat.version>6.0.35</tomcat.version>
 		<aether.connector.version>1.13.1</aether.connector.version>
-		<koala.version>3.0.0-SNAPSHOT</koala.version>
+		<koala.version>4.0.0-SNAPSHOT</koala.version>
+		
+		<jdbc.groupId>mysql</jdbc.groupId>
+		<jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+		<jdbc.version>5.1.22</jdbc.version>
 
-		<jdbc.groupId>com.h2database</jdbc.groupId>
-		<jdbc.artifactId>h2</jdbc.artifactId>
-		<jdbc.version>1.3.175</jdbc.version>
+		<db.groupId>mysql</db.groupId>
+		<db.artifactId>mysql-connector-java</db.artifactId>
+		<db.version>5.1.22</db.version>
 
 		<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
 		<hibernate.show_sql>true</hibernate.show_sql>
-		<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
-		<db.jdbcDriver>org.h2.Driver</db.jdbcDriver>
-		<db.connectionURL>jdbc:h2:mem:testdb</db.connectionURL>
-		<db.username>sa</db.username>
-		<db.password />
-		<db.Type>H2</db.Type>
+		<hibernate.dialect>org.hibernate.dialect.MySQL5Dialect</hibernate.dialect>
+		<db.jdbcDriver>com.mysql.jdbc.Driver</db.jdbcDriver>
+		<db.connectionURL>jdbc:mysql://localhost:3306/koala?useUnicode=true&amp;characterEncoding=UTF-8</db.connectionURL>
+		<db.username>root</db.username>
+		<db.password>xmfang</db.password>
+		<db.Type>MYSQL</db.Type>
 		<db.generate.ddl>true</db.generate.ddl>
 	</properties>
+	
+	<profiles>
+		<profile>
+			<id>h2</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<db.jdbcDriver>org.h2.Driver</db.jdbcDriver>
+				<db.connectionURL>jdbc:h2:mem:testdb</db.connectionURL>
+				<db.username>sa</db.username>
+				<db.password />
+				<db.Type>H2</db.Type>
+				<db.generate.ddl>true</db.generate.ddl>
+
+				<hibernate.hbm2ddl.auto>update</hibernate.hbm2ddl.auto>
+				<hibernate.show_sql>true</hibernate.show_sql>
+				<hibernate.dialect>org.hibernate.dialect.H2Dialect</hibernate.dialect>
+
+				<jdbc.groupId>com.h2database</jdbc.groupId>
+				<jdbc.artifactId>h2</jdbc.artifactId>
+				<jdbc.version>1.3.175</jdbc.version>
+			</properties>
+		</profile>
+	</profiles>
 	<modules>
 		<module>koala-dmt-codegen</module>
 		<module>koala-dmt-core</module>

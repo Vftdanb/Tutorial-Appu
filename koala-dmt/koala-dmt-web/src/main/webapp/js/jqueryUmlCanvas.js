@@ -33,7 +33,7 @@ function umlCanvas(thiz){
 	
 	/*拖动鼠标画连线*/
 	(function(){
-		var drawing = false; 				//标志当前状态是否划线状态
+		var drawing = false; 	//标志当前状态是否划线状态
 		var n1 = n2 = null;		//划线的开始结束节点
 		var m1 = m2 = null;		//起点和终点分别对应领域模型
 		var startP 	= null;
@@ -42,13 +42,14 @@ function umlCanvas(thiz){
 		var offset;
 		
 		/*拖动划线*/
-		THIS.UMLCANVAS.delegate(".node","mousedown",function(e){
+		THIS.UMLCANVAS.delegate(".node", "mousedown", function(e){
 			if(THIS.CURTOOL.type != "line" || $(this).is(".illegal")) return;
-			offset 		= THIS.UMLCANVAS.offset();
-			drawing 	= true;
-			startP 		= [e.clientX - offset.left, e.clientY-offset.top];
-			line 		= svgGraph.drawLine(startP, [e.pageX - offset.left, e.pageY - offset.top],THIS.CURTOOL.name);
-			n1 			= $(this);
+			
+			offset 	= THIS.UMLCANVAS.offset();
+			drawing = true;
+			startP 	= [e.clientX - offset.left, e.clientY-offset.top];
+			line 	= svgGraph.drawLine(startP, [e.pageX - offset.left, e.pageY - offset.top],THIS.CURTOOL.name);
+			n1 		= $(this);
 			
 			line.attr("id",commonTool.guid());
 			THIS.SVGLINES.append(line);
@@ -57,20 +58,22 @@ function umlCanvas(thiz){
 			if(THIS.CURTOOL.type != "line") return;
 			
 			var thiz  = $(this),
-				tname = THIS.CURTOOL.name, 						//toolname
-				nodeT = thiz.attr("class").split(" ")[1];	//nodeType
+				toolName = THIS.CURTOOL.name, 						//toolname
+				nodeType = thiz.attr("class").split(" ")[1];	//nodeType
+			
+			console.log(nodeType);
 			
 			/*连线起点的合法性检查*/
 			if(!drawing){
 				m1 = thiz.data("data");
-				if(tname == "extends") {
-					((nodeT == "entity") && (m1.extends == null)) ? //只能继承类，并且只能单继承
+				if(toolName == "extends") {
+					((nodeType == "entity") && (m1.extends == null)) ? //只能继承类，并且只能单继承
 						thiz.addClass("legal") : thiz.addClass("illegal");
-				} else if(tname == "implements"){
-					((nodeT == "entity")) ? //只能有类实现接口
+				} else if(toolName == "implements"){
+					((nodeType == "entity")) ? //只能有类实现接口
 						thiz.addClass("legal") : thiz.addClass("illegal");
-				} else if(tname == "aggregate" || tname == "compose") {
-					((nodeT != "interface")) ? 
+				} else if(toolName == "aggregate" || toolName == "compose") {
+					((nodeType != "interface")) ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
 				} else {
 					thiz.addClass("illegal");
@@ -82,13 +85,13 @@ function umlCanvas(thiz){
 				n2 = $(this);
 				m2 = n2.data("data");
 				
-				if(tname == "extends"){
-					(nodeT == "entity") ? 
+				if(toolName == "extends"){
+					(nodeType == "entity") ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
-				} else if(tname == "implements"){
-					((nodeT == "interface") && ($.inArray(m2.name, m1.implementsNameSet) < 0)) ? 
+				} else if(toolName == "implements"){
+					((nodeType == "interface") && ($.inArray(m2.name, m1.implementsNameSet) < 0)) ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
-				} else if(tname == "aggregate" || tname == "compose"){
+				} else if(toolName == "aggregate" || toolName == "compose"){
 					thiz.addClass("legal");
 				} else {
 					thiz.addClass("illegal");
@@ -118,7 +121,7 @@ function umlCanvas(thiz){
 			} else if(n2 != null && drawing){
 				/*连线的相关逻辑.根据连线生成或更改某些属性*/
 				if(line.is(".extends")){
-					m1.extends = m2.name;
+					m1.parentName = m2.name;
 				} else if(line.is(".implements")){
 					m1.implementsNameSet.push(m2.name);
 				} else if(line.is(".aggregate,.compose")){
@@ -327,8 +330,10 @@ function umlCanvas(thiz){
 	});
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
-	THIS.UMLCANVAS.delegate(".node,.line","click",function(){
-		editDialog.initDialog($(this),THIS);
+	THIS.UMLCANVAS.delegate(".node,.line","mousedown",function(){
+		if(THIS.CURTOOL.type == "cursor"){
+			editDialog.initDialog($(this),THIS);
+		}
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 };
