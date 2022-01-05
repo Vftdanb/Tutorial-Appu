@@ -244,7 +244,6 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	
 	this.properties 		= []; 			//属性数组（属性对象数组）
-	this.actions			= []; 			//行为数组（行为对象数组）
 	this.entityType 		= "ENTITY";
 }
 
