@@ -36,7 +36,7 @@
 			<div id="container">
 				<div class="left">
 					<div class="project_tree project_explorer" id="projectExplorer">
-						<div class="panel-heading">项目列表</div>
+						<div class="panel-heading">项目列表<button id="add_project">添加项目</button></div>
 						<ul id="projectTree" class="ztree"></ul>
 					</div>
 					<!-- 编辑对话框 -->
@@ -478,7 +478,9 @@
 				}
 			};
 			
-			$.fn.zTree.init($("#projectTree"), setting, data);
+			var projectTree = $.fn.zTree.init($("#projectTree"), setting, data);
+			
+			
 		</script>
 	</body>
 </html>
