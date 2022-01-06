@@ -7,7 +7,7 @@ textarea {
   resize: none;
   border: 1px solid #ccc;
   outline: none;
-  padding: 2px;
+  padding: 4px;
 }
 select:focus,
 input[type="text"]:focus,

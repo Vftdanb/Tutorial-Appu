@@ -22,6 +22,33 @@
 				box-shadow: 1px 1px 15px rgba(255,167,155,0.8)!important;
 				border-color: rgba(255,167,155,0.8)!important;
 			}
+			
+			/*弹窗内表单的样式*/
+			form label{
+				padding-right:10px;
+			}
+			
+			form input{
+				width:250px;
+			}
+			.dialog_buttons{
+				text-align:right;
+				padding:5px 0px;
+			}
+			.dialog_buttons button{
+				outline:none;
+				padding:5px 10px;
+				font-size:14px;
+				border:0;
+				cursor:pointer;
+			}
+			
+			.dialog_buttons button:hover{
+				background:#A0C1FF;
+			}
+			.dialog_buttons button:active{
+				background:#5A94FF;
+			}
 		</style>
 	</head>
 	<body>
@@ -34,7 +61,11 @@
 			<div id="container">
 				<div class="left">
 					<div class="project_tree project_explorer" id="projectExplorer">
-						<div class="panel-heading">项目列表<button id="add_project">添加项目</button></div>
+						<div class="panel-heading">
+							<span>项目列表</span>
+							<button id="add_project">添加项目</button>
+							<button id="add_chart">添加图</button>
+						</div>
 						<ul id="projectTree" class="ztree"></ul>
 					</div>
 					<!-- 编辑对话框 -->
@@ -216,7 +247,6 @@
 							</div>
 						</div>
 					</div>
-				<div class="border_bottom"></div>
 				</div>
 			</div>
 			<div id="footer">Copyright @koala, All rights reserved.</div>
@@ -413,6 +443,10 @@
 							PANELS.find(".active").removeClass("active");
 							PANELS.find("."+tab.attr("for")).addClass("active");
 						},
+						/*判断某个tab是否存在*/
+						isHastTab : function(cls){
+							return TABS.find(".tab_"+cls).length > 0;
+						},
 						
 						/*关闭*/
 						close : function(index){
@@ -431,10 +465,11 @@
 			var data = [{
 					"id" : 1,
 					"name" : "项目一",
+					"type" : "project",
 					"children" : [{
 						"id" : 7,
 						"name" : "图1",
-						"type" : "folder",
+						"type" : "chart",
 						"actionUrl" : "forum",
 						"children" : [{
 							"id" : 7,
@@ -442,18 +477,16 @@
 							"type" : "item",
 							"actionUrl" : "forum"
 						}]
-					}],
-					'icon-class': 'red',
-					"actionUrl" : ""
+					}]
 				}, {
 					"id" : 2,
 					"name" : "项目二",
-					'icon-class' : 'orange',
 					"actionUrl" : "",
+					"type" : "project",
 					"children" : [{
 						"id" : 4,
 						"name" : "图1",
-						"actionUrl" : "repair",
+						"type" : "chart",
 						"children" : [{
 							"id" 		: 7,
 							"name" 		: "实体1",
@@ -464,15 +497,19 @@
 				
 			var setting = {
 				callback : {
-					onClick : function(event, treeId, treeNode){
-						var title = treeNode.name;
-						mainTab.addTab("title","",function(t,p){
-							$.get('pages/template.html').done(function(data) {
-								p.html(data);
-								p.find('#canvas').umlCanvas();
+					onClick : function(event, treeId, treeData){
+						console.log(mainTab.isHastTab(treeData.id));
+						if(treeData.type == "chart" && !mainTab.isHastTab(treeData.id)){
+							var title = treeData.name;
+							mainTab.addTab("title","",function(tab, panel){
+								tab.addClass("tab_"+treeData.id);
+								$.get('pages/template.html').done(function(data) {
+									panel.html(data);
+									panel.find('#canvas').umlCanvas();
+								});
+								panel.umlCanvas();
 							});
-							p.umlCanvas();
-						});
+						}
 					}
 				}
 			};
@@ -482,22 +519,72 @@
 			var mainTab = $(".main_panel").tab(); //右边tab
 			var dialog = $().dialog({});		  //页面对话框
 			
+			/*创建工程对话框*/
+			$("#add_project").click(function(){
+				dialog.
+					show().
+					setTitle("创建项目").
+					setBody('<form>\
+								<label>工程名</label>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
+								<div class="dialog_buttons">\
+									<button type="button" onclick="createProject($(this));">确定</button>\
+									<button type="button" onclick="dialog.close();">取消</button>\
+								</div>\
+							</form>');
+					
+			});
+			
+			/*添加建图*/
+			$("#add_chart").click(function(){
+				var project = projectTree.getSelectedNodes();
+				if(project.length == 0){
+					alert("请选择工程");
+					return;
+				} else if(project.type != "project"){
+					/*alert("请正确选择工程");
+					return;*/
+				}
+				
+				dialog.
+					show().
+					setTitle("添加UML图").
+					setBody('<form>\
+								<label>UML图名</label>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
+								<div class="dialog_buttons">\
+									<button type="button" onclick="addChart($(this));">确定</button>\
+									<button type="button" onclick="dialog.close();">取消</button>\
+								</div>\
+							<form>');
+			});
+			
+			/*生成代码*/
+			mainTab.PANELS.delegate(".generateCode", "click", function(){
+				var canvas = $(this).parents("tools_bar:first").data("canvas");
+
+				dialog.
+					show().
+					setTitle("生成代码").
+					setBody('<form>\
+								<label>代码文件包名</label><input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
+								<div class="dialog_buttons">\
+									<button type="button" onclick="generateCode($(this));">确定</button>\
+									<button type="button" onclick="dialog.close();">取消</button>\
+								</div>\
+							</form>');
+			});
+			
+			
+			
 			/*创建工程*/
 			function createProject(btn){
-				var input = btn.prev();
+				var input = btn.parent().prev();
 				if(input.val()){
 					projectTree.addNodes(null, [{name:input.val(), isParent:true}]);
 					dialog.close();
 					
-					/*$.ajax({
-						url : "",
-						type : "",
-						data : "",
-						dataType : "json",
-						success : function(data){
-							dialog.close();
-						}
-					});*/
+					$.post(url,data,function(){
+						
+					},"json");
 					
 					return;
 				}
@@ -505,18 +592,42 @@
 				input.addClass("not_null");
 			};
 			
-			/*创建工程对话框*/
-			$("#add_project").click(function(){
-				dialog.
-					show().
-					setTitle("创建项目").
-					setBody('<form>\
-								<span>工程名</span>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
-								<button type="button" onclick="createProject($(this));">确定</button>\
-								<button type="button" onclick="dialog.close();">取消</button>\
-							</form>');
+			/*添加建图*/
+			function addChart(btn){
+				var input = btn.parent().prev();
+				if(input.val()){
+					projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), "icon-class":true, iconClass:"chart"}]);
+					dialog.close();
 					
-			});
+					/*$.post(url,data,function(){
+						
+					},"json");*/
+					
+					return;
+				}
+				
+				input.addClass("not_null");
+			};
+			
+			/*生成代码的按钮*/
+			function generateCode(btn){
+				/*$.ajax({
+					headers: { 
+				        'Accept': 'application/json',
+				        'Content-Type': 'application/json' 
+				    },
+					url 	: "domains-chart/create",
+					data 	:  JSON.stringify(domainsChart),
+					type	: "post",
+					dataType : "json",
+					success : function(data){
+						console.log(data);
+					},
+					error :function(){
+						
+					}
+				});*/
+			}
 		</script>
 	</body>
 </html>

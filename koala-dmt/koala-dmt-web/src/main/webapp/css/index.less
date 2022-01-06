@@ -69,12 +69,30 @@ body, html{
         }
         
         .right{
-            overflow: hidden;
+            .main_panel{
+                height:100%;
+                position:relative;
+                .tabs{
+                    position:relative;
+                    z-index:20;
+                }
+                .panels{
+                    padding-top:32px;
+                    height:100%;
+                    width:100%;
+                    top:0;
+                    left:0;
+                    position:absolute;
+                    box-sizing: border-box;
+                    .panel{
+                        height:100%;
+                    }
+                }
+            }
         }
         
         .tabs{
             padding:0 3px;
-            margin:0 0 -1px 0;
             border-bottom:1px solid @dottingColor;
             
             .tab{
@@ -95,7 +113,6 @@ body, html{
         }
         .panels{
             .panel{
-                min-height:250px;
                 display:none;
                 
                 &.active{

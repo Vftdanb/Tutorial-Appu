@@ -58,12 +58,28 @@ html {
 #wrapper #container .left .dialog_container .active_dialog {
   display: block;
 }
-#wrapper #container .right {
-  overflow: hidden;
+#wrapper #container .right .main_panel {
+  height: 100%;
+  position: relative;
+}
+#wrapper #container .right .main_panel .tabs {
+  position: relative;
+  z-index: 20;
+}
+#wrapper #container .right .main_panel .panels {
+  padding-top: 32px;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  box-sizing: border-box;
+}
+#wrapper #container .right .main_panel .panels .panel {
+  height: 100%;
 }
 #wrapper #container .tabs {
   padding: 0 3px;
-  margin: 0 0 -1px 0;
   border-bottom: 1px solid #15a4fa;
 }
 #wrapper #container .tabs .tab {
@@ -81,7 +97,6 @@ html {
   background: #FFF;
 }
 #wrapper #container .panels .panel {
-  min-height: 250px;
   display: none;
 }
 #wrapper #container .panels .panel.active {
