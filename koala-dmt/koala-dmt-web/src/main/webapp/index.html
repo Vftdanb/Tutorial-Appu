@@ -7,22 +7,20 @@
 		<link rel="stylesheet" href="css/umlCanvas.css" />
 		<link rel="stylesheet" href="css/index.css" />
 		<link rel="stylesheet" href="lib/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+		<link rel="stylesheet" href="lib/dialog/style.css" type="text/css">
 		<style>
 			.label{
 				display:inline-block;
 				width:70px;
 			}
-			select,input[type="text"],textarea{
-				display:inline-block;
-				resize:none;
-				width:200px;
-			}
-			input[type="checkbox"]{
-				vertical-align:text-bottom;
-			}
 			.enumitems .enumItem{
 				margin:2px 0;
 				padding:2px;
+			}
+			.not_null{
+				background-position: right -688px!important;
+				box-shadow: 1px 1px 15px rgba(255,167,155,0.8)!important;
+				border-color: rgba(255,167,155,0.8)!important;
 			}
 		</style>
 	</head>
@@ -307,7 +305,7 @@
 		</div>
 		<!-- 以下内在多个画板时的情况下可以共用 ，包括图形的模板、右键菜单等元素-->
 		<!-- uml元素模板 -->
-		<svg style="height:0;">
+		<svg style="height:0;position:absolute;">
 			<defs>
 				<!-- 空心三角形 -->
 				<marker id="arrow1" markerWidth="100" markerHeight="100" refx="16" refy="13" orient="auto">
@@ -356,12 +354,14 @@
 			<option value="Long">Long</option>
 			<option value="Integer">Integer</option>
 		</datalist>
+		
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
 		<script type="text/javascript" src="js/editDialog.js"></script>
 		<script type="text/javascript" src="js/tool.js" ></script>
 		<script type="text/javascript" src="js/edit.js" ></script>
 		<script type="text/javascript" src="lib/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+		<script type="text/javascript" src="lib/dialog/dialog.js"></script>
 		<script>
 			(function($){
 				/*tab插件*/
@@ -380,54 +380,53 @@
 						}
 					});
 					
-					var tab = {};
-					
-					tab.TABS 	= TABS;
-					tab.PANELS 	= PANELS;
-					
-					/**
-					 * 添加一个tab和对应的panel,
-					 * 添加完成后执行fn回调函数,
-					 * 你可以为新加的tab指定一个class，方便以后查找
-					 * 返回值是一个随机的字符串，这个字符串是新加tab的class，你可以通过这个class找到对应的tab
-					 */
-					tab.addTab = function(title,content,fn,selec){
-						var cls = "panel_"+((1 + Math.random())*0x100000000).toString(16).substring(1),
-							tab = $("<div class='tab " + cls + "' for='" + cls +"'>" + title + "</div>"),
-							panel = $("<div class='panel " + cls + "'>" + content + "</div>");
+					return {
+						TABS : TABS,
+						PANELS : PANELS,
 						
-						TABS.append(tab);
-						PANELS.append(panel);
-						fn ? fn(tab,panel) : "";
-						selec ? tab.addClass(selec) : "";
+						/**
+						 * 添加一个tab和对应的panel,
+						 * 添加完成后执行fn回调函数,
+						 * 你可以为新加的tab指定一个class，方便以后查找
+						 * 返回值是一个随机的字符串，这个字符串是新加tab的class，你可以通过这个class找到对应的tab
+						 */
+						addTab : function(title,content,fn,selec){
+							var cls = "panel_"+((1 + Math.random())*0x100000000).toString(16).substring(1),
+								tab = $("<div class='tab " + cls + "' for='" + cls +"'>" + title + "</div>"),
+								panel = $("<div class='panel " + cls + "'>" + content + "</div>");
+							
+							TABS.append(tab);
+							PANELS.append(panel);
+							fn ? fn(tab,panel) : "";
+							selec ? tab.addClass(selec) : "";
+							
+							this.active("."+cls);
+							
+							return cls;
+						},
+						/*激活指定索引的tab*/
+						active : function(sel){
+							var tab = TABS.find(sel);
+							
+							TABS.find(".active").removeClass("active");
+							tab.addClass("active");
+							PANELS.find(".active").removeClass("active");
+							PANELS.find("."+tab.attr("for")).addClass("active");
+						},
 						
-						this.active("."+cls);
-						
-						return cls;
-					};
-					/*激活指定索引的tab*/
-					tab.active = function(sel){
-						var tab = TABS.find(sel);
-						
-						TABS.find(".active").removeClass("active");
-						tab.addClass("active");
-						PANELS.find(".active").removeClass("active");
-						PANELS.find("."+tab.attr("for")).addClass("active");
+						/*关闭*/
+						close : function(index){
+							var tab = TABS.find(".tab").get(index);
+							/*@TODO*/
+						}
 					}
-					
-					/*关闭*/
-					tab.close = function(index){
-						var tab = TABS.find(".tab").get(index);
-						/*TODO*/
-					};
-					return tab;
 				}
 			})($);
+			
 			
 			$(".dialog").each(function(i, item){
 				$(item).tab()
 			});
-			var MAINTAB = $(".main_panel").tab();
 			
 			var data = [{
 					"id" : 1,
@@ -467,7 +466,7 @@
 				callback : {
 					onClick : function(event, treeId, treeNode){
 						var title = treeNode.name;
-						MAINTAB.addTab("title","",function(t,p){
+						mainTab.addTab("title","",function(t,p){
 							$.get('pages/template.html').done(function(data) {
 								p.html(data);
 								p.find('#canvas').umlCanvas();
@@ -478,9 +477,46 @@
 				}
 			};
 			
-			var projectTree = $.fn.zTree.init($("#projectTree"), setting, data);
+			/*常用的三个变量*/
+			var projectTree = $.fn.zTree.init($("#projectTree"), setting, data); //工程树
+			var mainTab = $(".main_panel").tab(); //右边tab
+			var dialog = $().dialog({});		  //页面对话框
 			
+			/*创建工程*/
+			function createProject(btn){
+				var input = btn.prev();
+				if(input.val()){
+					projectTree.addNodes(null, [{name:input.val(), isParent:true}]);
+					dialog.close();
+					
+					/*$.ajax({
+						url : "",
+						type : "",
+						data : "",
+						dataType : "json",
+						success : function(data){
+							dialog.close();
+						}
+					});*/
+					
+					return;
+				}
+				
+				input.addClass("not_null");
+			};
 			
+			/*创建工程对话框*/
+			$("#add_project").click(function(){
+				dialog.
+					show().
+					setTitle("创建项目").
+					setBody('<form>\
+								<span>工程名</span>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
+								<button type="button" onclick="createProject($(this));">确定</button>\
+								<button type="button" onclick="dialog.close();">取消</button>\
+							</form>');
+					
+			});
 		</script>
 	</body>
 </html>

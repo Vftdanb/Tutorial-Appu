@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="style.css"/>
+	</head>
+	<body>
+		<button id="open">打开</button>
+		<button id="close">关闭</button>
+	</body>
+	<script src="jquery-2.1.0.min.js"></script>
+	<script src="dialog.js"></script>
+	<script>
+		var dialog = $().dialog({
+			title:"创建工程",
+			content:"<span>asdasfsdf</span>",
+			beforeClose:function(){
+				console.log("nihao");
+				return true;
+			}
+		}).show();
+		
+		$("#open").click(function(){
+			dialog.show();
+		});
+		
+		$("#close").click(function(){
+			dialog.close();
+		});
+	</script>
+</html>
