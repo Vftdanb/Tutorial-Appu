@@ -38,21 +38,31 @@ body, html{
         
         .left, .right{
            height:100%;
-           overflow: auto;
+           overflow:hidden;
         }
         
         .left{
              float:left;
-             width:320px;
-             border-right:10px solid #ededed;
-             
+             width:340px;
+
             .project_explorer{
-                padding:10px;
                 min-height:300px;
+                margin:5px;
+                border:1px solid @assistantColor2;   //辅色调2
+                >div{
+                    padding:4px;
+                    background:@assistantColor1;
+                }
             }
             
             /*编辑对话框*/
             .dialog_container {
+                margin:5px;
+                border:solid 1px @assistantColor1;       
+                .tabs{
+                     background:@assistantColor1;
+                }
+                
                 .panel > div{
                     margin:10px;
                 }
