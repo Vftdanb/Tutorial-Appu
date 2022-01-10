@@ -129,7 +129,7 @@ $("#add_project").click(function(){
 	dialog.
 		show().
 		setTitle("创建项目").
-		setBody('<form>\
+		setBody('<form class="dialog_form">\
 					<label>工程名</label>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
 					<div class="dialog_buttons">\
 						<button type="button" onclick="createProject($(this));">确定</button>\
@@ -153,7 +153,7 @@ $("#add_chart").click(function(){
 	dialog.
 		show().
 		setTitle("添加UML图").
-		setBody('<form>\
+		setBody('<form class="dialog_form">\
 					<label>UML图名</label>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
 					<div class="dialog_buttons">\
 						<button type="button" onclick="addChart($(this));">确定</button>\
@@ -169,7 +169,7 @@ mainTab.PANELS.delegate(".generateCode", "click", function(){
 	dialog.
 		show().
 		setTitle("生成代码").
-		setBody('<form>\
+		setBody('<form class="dialog_form">\
 					<label>代码文件包名</label><input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
 					<div class="dialog_buttons">\
 						<button type="button" onclick="generateCode($(this));">确定</button>\
@@ -184,11 +184,9 @@ mainTab.PANELS.delegate(".generateCode", "click", function(){
 function createProject(btn){
 	var input = btn.parent().prev();
 	if(input.val()){
-		projectTree.addNodes(null, [{name:input.val(), isParent:true}]);
-		dialog.close();
-		
-		$.post(url,data,function(){
-			
+		$.post('project/create', {"project.name":input.val()}, function(data){
+			projectTree.addNodes(null, [{name:input.val(), isParent:true}]);
+			dialog.close();
 		},"json");
 		
 		return;
@@ -201,12 +199,29 @@ function createProject(btn){
 function addChart(btn){
 	var input = btn.parent().prev();
 	if(input.val()){
-		projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), "icon-class":true, iconClass:"chart"}]);
-		dialog.close();
+		$.ajax({
+			headers: { 
+		        'Accept': 'application/json',
+		        'Content-Type': 'application/json' 
+		    },
+			url : "domain-chart/create",
+			dataType:"json",
+			data:JSON.stringify({
+				"name" : input.val(),
+				"project.id" : 1
+			}),
+			success : function(data){
+				dialog.close();
+			},
+			error:function(){
+				alert("添加失败");
+			}
+		});
 		
-		/*$.post(url,data,function(){
-			
-		},"json");*/
+		$.post("domain-chart/create", {projectId:1,name:"3434"},function(data){
+			projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true,"icon-class":true, iconClass:"chart"}]);
+			dialog.close();
+		},"json");
 		
 		return;
 	}
@@ -216,7 +231,7 @@ function addChart(btn){
 
 /*生成代码的按钮*/
 function generateCode(btn){
-	/*$.ajax({
+	$.ajax({
 		headers: { 
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json' 
@@ -231,5 +246,5 @@ function generateCode(btn){
 		error :function(){
 			
 		}
-	});*/
+	});
 }

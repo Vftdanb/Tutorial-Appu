@@ -29,5 +29,4 @@ public class ProjectController extends BaseController {
 		projectApplication.createProject(project);
 		return SUCCESS;
 	}
-
 }
