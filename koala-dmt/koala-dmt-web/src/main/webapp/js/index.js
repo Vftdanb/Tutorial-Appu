@@ -58,9 +58,22 @@ var setting = {
 };
 
 /*常用的三个变量*/
-var projectTree = $.fn.zTree.init($("#projectTree"), setting, data); //工程树
+var projectTree = $.fn.zTree.init($("#projectTree"), setting); //工程树
 var mainTab = $(".main_panel").tab(); //右边tab
 var dialog = $().dialog({});		  //页面对话框
+
+$.ajax({
+	url : "project/find-all-projects",
+	data : "",
+	type : "get",
+	dataType : "json",
+	success : function(data){
+		projectTree.addNodes(null, data);
+	},
+	error : function(){
+		alert("获取工程出错");
+	}
+});
 
 /*创建工程对话框*/
 $("#add_project").click(function(){
