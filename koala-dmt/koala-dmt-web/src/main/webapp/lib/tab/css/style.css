@@ -1,0 +1,51 @@
+.mint_tab .tabs {
+  padding-top: 6px;
+  font-size: 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mint_tab .tabs .tab {
+  white-space: normal;
+  height: 100%;
+  font-size: 14px;
+  display: inline-block;
+  border: 1px #3879d9 solid;
+  padding: 3px 8px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.mint_tab .tabs .tab.active {
+  border-bottom: 1px #fff solid;
+  background: #FFFFFF;
+}
+.mint_tab .tabs .tab .title {
+  height: 20px;
+  display: inline-block;
+}
+.mint_tab .tabs .tab.closeable {
+  padding-right: 3px;
+}
+.mint_tab .tabs .tab .close_btn {
+  float: right;
+  width: 20px;
+  height: 20px;
+  background: url("close_btn.png");
+  background-color: blue;
+  margin-left: 6px;
+}
+.mint_tab .tabs .tab .close_btn:hover {
+  background-position: -20px 0;
+}
+.mint_tab .panels {
+  white-space: normal;
+  border-top: #3879d9 1px solid;
+  margin-top: -1px;
+}
+.mint_tab .panels .panel {
+  display: none;
+}
+.mint_tab .panels .panel.active {
+  display: block;
+}
+/*# sourceMappingURL=style.css.map */

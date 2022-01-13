@@ -66,5 +66,4 @@ public class DomainsChartController extends BaseController {
 		generateCodeApplication.generateCodeFromDomainChart(domainsChartDTO.transformToDomainsChart(), packageName, destinationPath);
 		return "Success";
 	}
-	
 }

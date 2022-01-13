@@ -1,70 +1,5 @@
-(function($){
-	/*tab插件*/
-	$.fn.tab = function(){
-		var TAB = $(this),
-			TABS = TAB.find(".tabs"),
-			PANELS = TAB.find(".panels");
-			
-		TABS.delegate(".tab","click",function(){
-			var thiz = $(this);
-			if(!thiz.is(".active")){
-				TABS.find(".active").removeClass("active");
-				thiz.addClass("active");
-				PANELS.find(".active").removeClass("active");						
-				PANELS.find("."+thiz.attr("for")).addClass("active");
-			}
-		});
-		
-		return {
-			TABS : TABS,
-			PANELS : PANELS,
-			
-			/**
-			 * 添加一个tab和对应的panel,
-			 * 添加完成后执行fn回调函数,
-			 * 你可以为新加的tab指定一个class，方便以后查找
-			 * 返回值是一个随机的字符串，这个字符串是新加tab的class，你可以通过这个class找到对应的tab
-			 */
-			addTab : function(title, content, fn, selec, closeAble){
-				var cls = "panel_"+((1 + Math.random())*0x100000000).toString(16).substring(1),
-					tab = $("<div class='tab " + cls + "' for='" + cls +"'>" + title + "</div>"),
-					panel = $("<div class='panel " + cls + "'>" + content + "</div>");
-				
-				TABS.append(tab);
-				PANELS.append(panel);
-				fn ? fn(tab,panel) : "";
-				selec ? tab.addClass(selec) : "";
-				
-				this.active("."+cls);
-				
-				return cls;
-			},
-			/*激活指定索引的tab*/
-			active : function(sel){
-				var tab = TABS.find(sel);
-				
-				TABS.find(".active").removeClass("active");
-				tab.addClass("active");
-				PANELS.find(".active").removeClass("active");
-				PANELS.find("."+tab.attr("for")).addClass("active");
-			},
-			/*判断某个tab是否存在*/
-			isHastTab : function(cls){
-				return TABS.find(".tab_"+cls).length > 0;
-			},
-			
-			/*关闭*/
-			close : function(index){
-				var tab = TABS.find(".tab").get(index);
-				/*@TODO*/
-			}
-		}
-	}
-})($);
-
-
 $(".dialog").each(function(i, item){
-	$(item).tab()
+	$(item).tab();
 });
 
 var data = [{
@@ -103,16 +38,19 @@ var data = [{
 var setting = {
 	callback : {
 		onClick : function(event, treeId, treeData){
-			console.log(mainTab.isHastTab(treeData.id));
-			if(treeData.type == "chart" && !mainTab.isHastTab(treeData.id)){
-				var title = treeData.name;
-				mainTab.addTab("title","",function(tab, panel){
-					tab.addClass("tab_"+treeData.id);
-					$.get('pages/template.html').done(function(data) {
-						panel.html(data);
-						panel.find('#canvas').umlCanvas();
-					});
-					panel.umlCanvas();
+			console.log(mainTab.isExistTab(treeData.id));
+			if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
+				mainTab.addTab({
+					title : "title",
+					afterAdd : function(tab, panel){
+						tab.addClass("tab_"+treeData.id);
+						$.get('pages/template.html').done(function(data) {
+							panel.html(data);
+							panel.find('#canvas').umlCanvas();
+						});
+						panel.umlCanvas();
+					},
+					closeable : true
 				});
 			}
 		}
@@ -204,7 +142,8 @@ function addChart(btn){
 		        'Accept': 'application/json',
 		        'Content-Type': 'application/json' 
 		    },
-			url : "domain-chart/create",
+		    type:"post",
+			url : "domains-chart/create",
 			dataType:"json",
 			data:JSON.stringify({
 				"name" : input.val(),
@@ -217,11 +156,6 @@ function addChart(btn){
 				alert("添加失败");
 			}
 		});
-		
-		$.post("domain-chart/create", {projectId:1,name:"3434"},function(data){
-			projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true,"icon-class":true, iconClass:"chart"}]);
-			dialog.close();
-		},"json");
 		
 		return;
 	}

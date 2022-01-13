@@ -1,0 +1,60 @@
+.mint_tab{
+    .tabs{
+        padding-top:6px;
+        font-size:0;
+        white-space: nowrap;
+        overflow:hidden;
+        
+        .tab{
+            white-space: normal;
+            height:100%;
+            font-size:14px;
+            display: inline-block;
+            border:1px #3879d9 solid;
+            padding:3px 8px;
+            text-align:center;
+            cursor:pointer;
+            margin-right:10px;
+            
+            &.active{
+                border-bottom:1px #fff solid;
+                background:#FFFFFF;
+            }
+            
+            .title{
+                height:20px;
+                display:inline-block;
+            }
+            
+            &.closeable{
+                padding-right:3px;
+            }
+            
+            .close_btn{
+                float:right;
+                width:20px;
+                height:20px;
+                background:url("close_btn.png");
+                background-color:blue;
+                margin-left:6px;
+                
+                &:hover{
+                    background-position:-20px 0;
+                }
+            }
+        }
+    }
+    
+    .panels{
+        white-space: normal;
+        border-top:#3879d9 1px solid;
+        margin-top:-1px;
+        .panel{
+            display:none;
+            
+            &.active{
+                display:block;  
+            }
+        }
+    }
+}

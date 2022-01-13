@@ -9,7 +9,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<dddlib.version>4.1.2-SNAPSHOT</dddlib.version>
+		<dddlib.version>4.1.2</dddlib.version>
 		<slf4j.version>1.7.2</slf4j.version>
 		<hibernate.version>4.1.7.Final</hibernate.version>
 		<spring.version>3.2.6.RELEASE</spring.version>
@@ -45,7 +45,7 @@
 		<db.jdbcDriver>com.mysql.jdbc.Driver</db.jdbcDriver>
 		<db.connectionURL>jdbc:mysql://localhost:3306/koala?useUnicode=true&amp;characterEncoding=UTF-8</db.connectionURL>
 		<db.username>root</db.username>
-		<db.password>xmfang</db.password>
+		<db.password>root</db.password>
 		<db.Type>MYSQL</db.Type>
 		<db.generate.ddl>true</db.generate.ddl>
 	</properties>
@@ -632,10 +632,6 @@
 			</plugins>
 		</pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>

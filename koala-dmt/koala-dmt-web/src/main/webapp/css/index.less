@@ -86,48 +86,6 @@ body, html{
                     position:relative;
                     z-index:20;
                 }
-                .panels{
-                    padding-top:32px;
-                    height:100%;
-                    width:100%;
-                    top:0;
-                    left:0;
-                    position:absolute;
-                    box-sizing: border-box;
-                    .panel{
-                        height:100%;
-                    }
-                }
-            }
-        }
-        
-        .tabs{
-            padding:0 3px;
-            border-bottom:1px solid @dottingColor;
-            
-            .tab{
-                background:@assistantColor1;
-                cursor:pointer;
-                margin-left:3px;
-                margin-bottom:-1px;
-                margin-top:5px;
-                padding:2px 15px;
-                border:1px solid @dottingColor;
-                display: inline-block;
-
-                &.active{
-                    border-bottom-color:@mainColor;
-                    background:#FFF;
-                }
-            }
-        }
-        .panels{
-            .panel{
-                display:none;
-                
-                &.active{
-                    display:block;
-                }
             }
         }
     }

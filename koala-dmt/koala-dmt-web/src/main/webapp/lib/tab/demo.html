@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<meta charset="UTF-8"/>
+	<link rel="stylesheet" href="css/style.css"/>
+	<style>
+		*{
+			font-family: "微软雅黑";
+		}
+	</style>
+	<div id="tab">
+		<div class="tabs"></div>
+		<div class="panels"></div>
+	</div>
+	<button>添加tab</button>
+	<script type="text/javascript" src="../../lib/require.js"></script>
+	<script type="text/javascript" src="tab.js"></script>
+	<script>
+		require.config({
+			paths: {
+				tab 	: 'tab',
+				jquery 	: '../../lib/jquery-1.9.1.min'
+			}
+		});
+		
+		require(["tab", "jquery"], function(){
+			var tab = $("#tab").tab({
+				onClose : function(){
+					return true;
+				}
+			});
+			
+			tab.addTab({
+				title:"新增",
+				content:"dadafsdfasdfs",
+				afterAdd:function(tab,panel){},
+				closeable:false
+			});
+			
+			tab.addTab({
+				title:"新增1",
+				content:"asdfasdfasfasfs",
+				afterAdd:function(tab, panel){
+					tab.dblclick(function(e){});
+				},
+				closeable:true
+			});
+			
+			tab.addTab({
+				title:"新增1",
+				content:"asdfasdfs",
+				afterAdd:function(tab,panel){},
+				closeable:true
+			});
+			
+			$("button").click(function(){
+				tab.addTab({
+					title:"新增1"+new Date(),
+					content:"",
+					afterAdd:function(tab,panel){
+						tab.dblclick(function(e){
+							$(this).find(".tab_title").inlineeditor({
+								type:"input",
+								css:{border:"none"},
+								afterEdit:function(){
+									return true;
+								}
+							});
+						});
+					},
+					closeable:true
+				});
+			});
+		});
+	</script>
+</html>

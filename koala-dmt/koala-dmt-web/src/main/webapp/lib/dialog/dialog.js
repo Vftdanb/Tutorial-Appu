@@ -54,7 +54,7 @@
 			distroy : function(){
 				dialog.romve();
 			}
-		}
+		};
 		
 		dialog.find(".close_btn").click(function(){
 			out.close();

@@ -64,6 +64,7 @@ function addNode(e, type, canvas){
 	
 	canvas.MODELS[id] 	= model;						//节点的控制数据（前端用）
 	canvas.NODEDOMS[id] = node;
+	
 	return id;
 }
 /**************************************添加节点的各种成员******************************************/
