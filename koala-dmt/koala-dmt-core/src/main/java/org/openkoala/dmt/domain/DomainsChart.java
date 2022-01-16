@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -70,6 +71,7 @@ public class DomainsChart extends AbstractEntity {
 //	}
 
 	@Column(name = "LINE_INFO")
+	@Lob
 	public String getLineInfo() {
 		return lineInfo;
 	}

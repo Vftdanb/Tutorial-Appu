@@ -32,10 +32,6 @@ public abstract class DomainShape extends AbstractEntity {
 	
 	private Position position;
 	
-	private Integer width;
-	
-	private Integer height;
-	
 	private String name;
 
 	private String description;
@@ -60,22 +56,6 @@ public abstract class DomainShape extends AbstractEntity {
 
 	public void setPosition(Position position) {
 		this.position = position;
-	}
-
-	public Integer getWidth() {
-		return width;
-	}
-
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
-
-	public Integer getHeight() {
-		return height;
-	}
-
-	public void setHeight(Integer height) {
-		this.height = height;
 	}
 
 	public String getName() {

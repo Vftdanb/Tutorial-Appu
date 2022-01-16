@@ -220,10 +220,11 @@ public class DomainShapeDto implements Dto {
 		domainShape.setShapeId(shapeId);
 		domainShape.setName(name);
 		domainShape.setPosition(position);
-		domainShape.setHeight(height);
-		domainShape.setWidth(width);
 		domainShape.setDescription(description);
-		domainShape.setParent(domainsChartDto.getDomainShapeByShapeName(parentName));
+		
+		if (parentName != null) {
+			domainShape.setParent(domainsChartDto.getDomainShapeByShapeName(parentName));
+		}
 //		result.setDomainsChart(generateDomainsChart());
 		return domainShape;
 	}
@@ -256,8 +257,6 @@ public class DomainShapeDto implements Dto {
 		result.setName(domainShape.getName());
 		result.setShapeId(domainShape.getShapeId());
 		result.setPosition(domainShape.getPosition());
-		result.setHeight(domainShape.getHeight());
-		result.setWidth(domainShape.getWidth());
 		result.setDescription(domainShape.getDescription());
 		result.setDomainsChartId(domainShape.getDomainsChart().getId());
 		
