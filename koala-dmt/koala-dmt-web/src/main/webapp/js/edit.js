@@ -44,17 +44,17 @@ function addNode(e, type, canvas){
 	var model = null ,name;
 	if(nodeType == "ENTITY"){
 		
-		name 	= getName("entity",getNodeNameSpace(canvas.MODELS)).firstUpcase();
+		name 	= getName("entity", getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new EntityShape(id,canvas.CHARTID,name,position,nodeType,"",false,false);
 		
 	} else if(nodeType == "INTERFACE"){
 		
-		name 	= getName("interface",getNodeNameSpace(canvas.MODELS)).firstUpcase();
+		name 	= getName("interface", getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new InterfaceShape(id,canvas.CHARTID,name,position,nodeType,"Interface",false,false);
 		
 	} else if(nodeType == "ENUM"){
 		
-		name 	= getName("enum",getNodeNameSpace(canvas.MODELS)).firstUpcase();
+		name 	= getName("enum", getNodeNameSpace(canvas.MODELS)).firstUpcase();
 		model 	= new EnumShape(id ,canvas.CHARTID ,name ,position ,nodeType ,"");
 	}
 	
@@ -149,16 +149,18 @@ function addEnumItem(target){
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有更新操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*更新名字，需要级联更改自动生成的属性的类型名*/
-function updateNodeName(target, newName, canvas){
-	/*该节点的所有连线*/
-	var inAout 	= commonTool.findRelatedLines(target.attr("id"),canvas.LINES);
-	var data	= target.data("data");
+function updateNodeName(node, input, canvas){
+	checkNodeName(node, input, canvas);
 	
-	var ins 	= inAout.inLines;
-	var outs 	= inAout.outLines;
+	/*该节点的所有连线*/
+	var inAout 	= commonTool.findRelatedLines(node.attr("id"),canvas.LINES),
+		newName = input.val(),
+		data	= node.data("data"),
+		ins 	= inAout.inLines,
+		outs 	= inAout.outLines;
 	
 	var node,model; //node and domainmodel
-	$.each(ins,function(i,line){
+	$.each(ins,function(i, line){
 		line = ins[i];
 		node = $("#"+line.fromShapeId);
 		model = node.data("data");
@@ -212,7 +214,7 @@ function updateNodeName(target, newName, canvas){
 	}
 	
 	data.name 	= newName;
-	target.find(".name").html(newName);
+	node.find(".name").html(newName);
 }
 
 /*更新实体类型*/
@@ -294,10 +296,26 @@ function updateEnumName(enumDom, val){
 }
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有检查操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+function checkNodeName(node, name, canvas){
+	var models 	= canvas.MODELS,
+		val 	= name.val(),
+		model	= node.data("data");
+		
+	for(var i in models){
+		if(val == models[i].name && models[i].shapeId != model.shapeId){
+			name.addClass("duplication_name"); /*重名*/
+			return;
+		}
+	}
+	name.removeClass("duplication_name");/*不重名*/
+}
+/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有检查操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有删除操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*删除节点*/
-function deleteNode(node,canvas){
+function deleteNode(node, canvas){
 	var id = node.attr("id");
 	var ls = commonTool.findRelatedLines(id,canvas.LINES);
 	

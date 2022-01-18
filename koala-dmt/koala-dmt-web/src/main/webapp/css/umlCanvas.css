@@ -1,16 +1,19 @@
+.canvas {
+  height: 500px;
+}
 .canvas .tools {
   float: left;
-  border: #5890C1 1px solid;
-  position: absolute;
   z-index: 100;
   background: #fff;
+  position: absolute;
+  border: #5890C1 1px solid;
 }
 .canvas .tools div {
-  padding-left: 17px;
-  height: 17px;
-  line-height: 15px;
   margin: 5px;
+  height: 17px;
   cursor: pointer;
+  line-height: 15px;
+  padding-left: 17px;
   vertical-align: middle;
 }
 .canvas .tools div span {
@@ -58,20 +61,20 @@
   background: url("../images/icons/associate.gif") no-repeat 0 1px;
 }
 .canvas .tools .current-tool {
-  outline: #644aa3 solid 3px;
+  outline: #15a4fa solid 3px;
 }
 .canvas .uml_easel {
   width: 100%;
-  height: 500px;
+  height: 100%;
   overflow: auto;
-  background: #e8e8e8;
+  border: 1px solid red;
 }
 .canvas .uml_easel .uml_canvas {
   float: left;
   width: 100%;
   height: 100%;
   position: relative;
-  -webkit-transform-origin: 0px 0px;
+  background: url("../images/canvas_bg.gif");
 }
 .canvas .uml_easel .uml_canvas .svg_canvas {
   position: absolute;
@@ -277,6 +280,9 @@
 #dialog_container .action .parameters:after {
   padding-left: 2px;
   content: ") : ";
+}
+#dialog_container .duplication_name {
+  outline: red 2px solid;
 }
 #dialog_container .enumitems {
   border: 1px #5890c1 solid;

@@ -240,7 +240,7 @@ function DomainShape(id,charid,name,point,type,desc){
 function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	DomainShape.call(this, id,charid,name,point,type,desc); 		//继承DomainShap
 	
-	this.parentName			= "";			//父类
+	this.parentName			= null;			//父类
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	
 	this.properties 		= []; 			//属性数组（属性对象数组）

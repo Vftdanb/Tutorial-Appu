@@ -1,73 +1,56 @@
-body {
-  background: #aad7ee;
+body,
+html {
+  margin: 0;
+  height: 100%;
 }
 #wrapper {
   min-width: 960px;
+  position: relative;
+  height: 100%;
 }
 #wrapper #header,
 #wrapper #footer {
   clear: both;
-  margin: 6px 0;
+  width: 100%;
+  position: absolute;
   text-align: center;
+}
+#wrapper #header {
   height: 60px;
-  border: 1px #3879d9 solid;
+  background: #15a4fa;
+}
+#wrapper #footer {
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  background: #ededed;
 }
 #wrapper #container {
   overflow: hidden;
   min-width: 960px;
+  height: 100%;
+  padding-top: 60px;
+  padding-bottom: 40px;
+  box-sizing: border-box;
 }
 #wrapper #container .left,
 #wrapper #container .right {
-  min-height: 600px;
-  border: #3879d9 1px solid;
-  margin-bottom: -1000px !important;
-  padding-bottom: 1000px !important;
+  height: 100%;
   overflow: auto;
 }
 #wrapper #container .left {
   float: left;
   width: 320px;
-  margin-right: 5px;
+  border-right: 10px solid #ededed;
 }
 #wrapper #container .left .project_explorer {
   padding: 10px;
   min-height: 300px;
 }
 /*编辑对话框*/
-#wrapper #container .left .dialog_container {
-  padding: 5px;
-}
 #wrapper #container .left .dialog_container .panel > div {
-  margin: 10px 0px;
-}
-#wrapper #container .left .dialog_container .tabs {
-  border: #3879d9 1px solid;
-  padding: 0 3px;
-  margin: 0 0 -1px 0;
-}
-#wrapper #container .left .dialog_container .tabs .tab {
-  display: inline-block;
-  margin-left: 3px;
-  margin-bottom: -1px;
-  border: 1px #3879d9 solid;
-  border-bottom: none;
-  padding: 1px 8px;
-  margin-top: 5px;
-  cursor: pointer;
-}
-#wrapper #container .left .dialog_container .tabs .tab.active {
-  background: #FFF;
-}
-#wrapper #container .left .dialog_container .panels {
-  border: #3879d9 1px solid;
-}
-#wrapper #container .left .dialog_container .panels .panel {
-  min-height: 250px;
-  padding: 10px;
-  display: none;
-}
-#wrapper #container .left .dialog_container .panels .panel.active {
-  display: block;
+  margin: 10px;
 }
 #wrapper #container .left .dialog_container .dialog {
   display: none;
@@ -78,33 +61,30 @@ body {
 #wrapper #container .right {
   overflow: hidden;
 }
-#wrapper #container .right .panel > div {
-  margin: 10px 0;
-}
-#wrapper #container .right .tabs {
+#wrapper #container .tabs {
   padding: 0 3px;
   margin: 0 0 -1px 0;
+  border-bottom: 1px solid #15a4fa;
 }
-#wrapper #container .right .tabs .tab {
-  display: inline-block;
-  margin-left: 3px;
-  border: 1px #3879d9 solid;
-  border-bottom: none;
-  padding: 2px 8px;
-  margin-top: 5px;
+#wrapper #container .tabs .tab {
+  background: #ededed;
   cursor: pointer;
+  margin-left: 3px;
+  margin-bottom: -1px;
+  margin-top: 5px;
+  padding: 2px 15px;
+  border: 1px solid #15a4fa;
+  display: inline-block;
 }
-#wrapper #container .right .tabs .tab.active {
-  background: #FFFFFF;
+#wrapper #container .tabs .tab.active {
+  border-bottom-color: #ffffff;
+  background: #FFF;
 }
-#wrapper #container .right .panels {
-  border-top: #3879d9 1px solid;
-}
-#wrapper #container .right .panels .panel {
-  padding: 10px;
+#wrapper #container .panels .panel {
+  min-height: 250px;
   display: none;
 }
-#wrapper #container .right .panels .panel.active {
+#wrapper #container .panels .panel.active {
   display: block;
 }
 #edit_contextmenus .contextmenu {

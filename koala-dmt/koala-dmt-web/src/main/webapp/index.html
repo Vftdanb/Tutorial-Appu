@@ -28,7 +28,11 @@
 	</head>
 	<body>
 		<div id="wrapper">
-			<div id="header"></div>
+			<div id="header">
+				<div class="logo">
+					<img src="" />
+				</div>
+			</div>
 			<div id="container">
 				<div class="left">
 					<div class="project_tree project_explorer" id="projectExplorer">
@@ -48,7 +52,8 @@
 								<div class="panel entity_panel active">
 									<div>
 										<span class="label">实体名</span>
-										<input class="name" name="name" type="text" oninput="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/>
+										<input class="name" name="name" type="text" 
+											oninput="var thiz=$(this),dialog=thiz.parents('.dialog'); updateNodeName(dialog.data('node'), thiz, dialog.data('canvas'))"/>
 									</div>
 									<div>
 										<span class="label">实体类型</span>
@@ -70,15 +75,19 @@
 									<form>
 										<div>
 											<span class="label">属性名</span>
-											<input type="text" class="propertyName" name="name" oninput="updatePropertyName($(this).parent().parent().data('data'),$(this).val());"/>
+											<input type="text" class="propertyName" name="name" 
+												oninput="updatePropertyName($(this).parent().parent().data('data'),$(this).val());"
+												onchange=""/><!-- 检查属性名 @TODO -->
 										</div>
 										<div>
 											<span class="label">类型</span>
-											<input type="text" class="propertyType" name="type" list="property_type_tip" oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
+											<input type="text" class="propertyType" name="type" list="property_type_tip" 
+												oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
 										</div>
 										<div class="genericity_input">
 											<span class="label">泛型</span>
-											<input type="text" class="propertyGenericity" name="genericity" oninput="updatePropertyGenericity($(this).parent().parent().data('data'),$(this).val());"/>
+											<input type="text" class="propertyGenericity" name="genericity" 
+												oninput="updatePropertyGenericity($(this).parent().parent().data('data'),$(this).val());"/>
 										</div>
 										<div>
 											<table style="font-size:14px">
@@ -144,7 +153,6 @@
 										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
 									</div>
 								</div>
-								
 								<div class="panel action_panel">
 									<div>
 										<span class="label">行为名</span>
@@ -162,7 +170,6 @@
 								</div>
 							</div>
 						</div>
-						
 						<div class="dialog enum_dialog">
 							<div class="tabs">
 								<div class="tab active" for="enum_panel">枚举</div>
@@ -427,17 +434,12 @@
 					"name" : "项目一",
 					"children" : [{
 						"id" : 7,
-						"name" : "类1",
+						"name" : "图1",
 						"type" : "folder",
 						"actionUrl" : "forum",
 						"children" : [{
 							"id" : 7,
-							"name" : "属性1",
-							"type" : "item",
-							"actionUrl" : "forum"
-						}, {
-							"id" : 7,
-							"name" : "属性2",
+							"name" : "实体1",
 							"type" : "item",
 							"actionUrl" : "forum"
 						}]
@@ -451,28 +453,11 @@
 					"actionUrl" : "",
 					"children" : [{
 						"id" : 4,
-						"name" : "类1",
+						"name" : "图1",
 						"actionUrl" : "repair",
 						"children" : [{
 							"id" 		: 7,
-							"name" 		: "属性1",
-							"actionUrl" : "forum"
-						}, {
-							"id" : 7,
-							"name" 		: "属性2",
-							"actionUrl" : "forum"
-						}]
-					}, {
-						"id" : 5,
-						"name" : "类2",
-						"actionUrl" 	: "comment",
-						"children" : [{
-							"id" : 7,
-							"name" : "属性1",
-							"actionUrl" : "forum"
-						}, {
-							"id" : 7,
-							"name" : "属性2",
+							"name" 		: "实体1",
 							"actionUrl" : "forum"
 						}]
 					}]

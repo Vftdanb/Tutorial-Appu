@@ -44,34 +44,32 @@ editDialog = {
 	initDialog : function(node, UMLCANVAS){
 		var dialog = null;
 		if(node.is(".node")){
-			dialog = this.initEntityDialog(node);
+			dialog = this.initEntityDialog(node, UMLCANVAS);
 		} else if(node.is(".line")) {
 			
 		}
+	},
+	
+	initEntityDialog : function(node, UMLCANVAS){
+		var data	= node.data("data");
 		
-		if(dialog == null){ return; }
+		/*隐藏上一个对话框*/
+		$("#dialog_container>.active_dialog").removeClass("active_dialog");
+		var dialog = $("."+data.shapeType.toLowerCase()+"_dialog").addClass("active_dialog");
+		
+		if(dialog.attr("id") && (dialog.attr("id") == node.attr("dialogid"))){
+			return null;
+		}
 		
 		var dialogId = commonTool.guid();
 		/*将在对话框中要用到的数据进行缓存，减少查找成本*/
 		dialog
 			.data("data",node.data("data"))	//被编辑的模型对象
 			.data("node",node)				//被编辑的节点对象
-			.data("canvas",UMLCANVAS)		//画布对象
+			.data("canvas", UMLCANVAS)		//画布对象
 			.attr("id",dialogId)
 		
-		
 		node.attr("dialogId", dialogId);
-	},
-	
-	initEntityDialog : function(node){
-		var data	= node.data("data");
-		
-		/*隐藏上一个对话框*/
-		$("#dialog_container>.active_dialog").removeClass("active_dialog");
-		var dialog = $("."+data.shapeType.toLowerCase()+"_dialog").addClass("active_dialog");
-		if(dialog.attr("id") && (dialog.attr("id") == node.attr("dialogid"))){
-			return null;
-		}
 		
 		if(node.is(".entity")){
 			this.initClassPanel(dialog, data, node);
@@ -92,7 +90,7 @@ editDialog = {
 	initClassPanel : function(dialog, data, node){
 		var panel = dialog.find(".entity_panel");
 		panel.data("node",node);
-		panel.find("input[name='name']").val(data.name);
+		panel.find("input[name='name']").val(data.name).change();
 		panel.find(".entityType").select(data.entityType);
 		panel.find(".entityScope").select(data.entityScope);
 		panel.find(".desc").val(data.description);
@@ -124,10 +122,6 @@ editDialog = {
 			enumitems.append($(n).clone().data("data",$(n)));
 		});
 	},
-	
-	/**
-	 * 
-	 */
 	
 	/*初始化属性编辑窗口*/
 	initPropertyPanel : function(dialog,node){
