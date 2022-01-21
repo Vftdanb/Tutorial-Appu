@@ -1,0 +1,20 @@
+/*颜色、圆角、边框的定义*/
+@import "theme.less";
+
+body{
+    font-family: "微软雅黑";
+}
+
+select,input[type="text"],textarea{
+    resize:none;
+    border:1px solid #ccc;
+    outline:none;
+    padding:2px;
+    
+    &:focus{
+        border-color:@dottingColor;
+    }
+}
+input[type="checkbox"]{
+    vertical-align:text-bottom;
+}

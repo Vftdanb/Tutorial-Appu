@@ -7,6 +7,7 @@ html {
   min-width: 960px;
   position: relative;
   height: 100%;
+  min-height: 600px;
 }
 #wrapper #header,
 #wrapper #footer {
@@ -27,7 +28,6 @@ html {
   background: #ededed;
 }
 #wrapper #container {
-  overflow: hidden;
   min-width: 960px;
   height: 100%;
   padding-top: 60px;
