@@ -30,8 +30,6 @@ public class DomainsChart extends AbstractEntity {
 	
 	private Set<DomainShape> domainShapes = new HashSet<DomainShape>();
 
-//	private Set<Line> lines = new HashSet<Line>();
-	
 	private String lineInfo;
 	
 	@ManyToOne
@@ -60,15 +58,6 @@ public class DomainsChart extends AbstractEntity {
 	public void setDomainShapes(Set<DomainShape> domainShapes) {
 		this.domainShapes = domainShapes;
 	}
-
-//	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//	public Set<Line> getLines() {
-//		return lines;
-//	}
-//
-//	public void setLines(Set<Line> lines) {
-//		this.lines = lines;
-//	}
 
 	@Column(name = "LINE_INFO")
 	@Lob

@@ -304,11 +304,14 @@ function umlCanvas(thiz){
 			models.push(THIS.MODELS[temp]);
 		}
 		
-		var domainsChart = {};
+		var domainsChart = {
+				project:{}
+		};
 		
 		domainsChart.id 		= "";
 		domainsChart.version 	= "";
-		domainsChart.name		= "";
+		domainsChart.name		= "test";
+		domainsChart.project.name = "test-project";
 		domainsChart.lineInfo	= JSON.stringify(lines);
 		domainsChart.domainShapeDtos = models;
 		
@@ -320,7 +323,7 @@ function umlCanvas(thiz){
 		        'Accept': 'application/json',
 		        'Content-Type': 'application/json' 
 		    },
-			url 	: "domains-chart/create",
+			url 	: "domains-chart/gencode",
 			data 	:  JSON.stringify(domainsChart),
 			type	: "post",
 			dataType : "json",
