@@ -22,6 +22,33 @@
 				box-shadow: 1px 1px 15px rgba(255,167,155,0.8)!important;
 				border-color: rgba(255,167,155,0.8)!important;
 			}
+			
+			/*弹窗内表单的样式*/
+			form label{
+				padding-right:10px;
+			}
+			
+			form input{
+				width:250px;
+			}
+			.dialog_buttons{
+				text-align:right;
+				padding:5px 0px;
+			}
+			.dialog_buttons button{
+				outline:none;
+				padding:5px 10px;
+				font-size:14px;
+				border:0;
+				cursor:pointer;
+			}
+			
+			.dialog_buttons button:hover{
+				background:#A0C1FF;
+			}
+			.dialog_buttons button:active{
+				background:#5A94FF;
+			}
 		</style>
 	</head>
 	<body>
@@ -34,7 +61,11 @@
 			<div id="container">
 				<div class="left">
 					<div class="project_tree project_explorer" id="projectExplorer">
-						<div class="panel-heading">项目列表<button id="add_project">添加项目</button></div>
+						<div class="panel-heading">
+							<span>项目列表</span>
+							<button id="add_project">添加项目</button>
+							<button id="add_chart">添加图</button>
+						</div>
 						<ul id="projectTree" class="ztree"></ul>
 					</div>
 					<!-- 编辑对话框 -->
@@ -216,7 +247,6 @@
 							</div>
 						</div>
 					</div>
-				<div class="border_bottom"></div>
 				</div>
 			</div>
 			<div id="footer">Copyright @koala, All rights reserved.</div>
@@ -354,169 +384,15 @@
 			<option value="Long">Long</option>
 			<option value="Integer">Integer</option>
 		</datalist>
-		
+		<!-- 插件js -->
 		<script type="text/javascript" src="lib/jquery-2.1.0.min.js" ></script>
+		<script type="text/javascript" src="lib/dialog/dialog.js"></script>
+		<script type="text/javascript" src="lib/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+		<!-- 项目js -->
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
 		<script type="text/javascript" src="js/editDialog.js"></script>
 		<script type="text/javascript" src="js/tool.js" ></script>
 		<script type="text/javascript" src="js/edit.js" ></script>
-		<script type="text/javascript" src="lib/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
-		<script type="text/javascript" src="lib/dialog/dialog.js"></script>
-		<script>
-			(function($){
-				/*tab插件*/
-				$.fn.tab = function(){
-					var TAB = $(this),
-						TABS = TAB.find(".tabs"),
-						PANELS = TAB.find(".panels");
-						
-					TABS.delegate(".tab","click",function(){
-						var thiz = $(this);
-						if(!thiz.is(".active")){
-							TABS.find(".active").removeClass("active");
-							thiz.addClass("active");
-							PANELS.find(".active").removeClass("active");						
-							PANELS.find("."+thiz.attr("for")).addClass("active");
-						}
-					});
-					
-					return {
-						TABS : TABS,
-						PANELS : PANELS,
-						
-						/**
-						 * 添加一个tab和对应的panel,
-						 * 添加完成后执行fn回调函数,
-						 * 你可以为新加的tab指定一个class，方便以后查找
-						 * 返回值是一个随机的字符串，这个字符串是新加tab的class，你可以通过这个class找到对应的tab
-						 */
-						addTab : function(title,content,fn,selec){
-							var cls = "panel_"+((1 + Math.random())*0x100000000).toString(16).substring(1),
-								tab = $("<div class='tab " + cls + "' for='" + cls +"'>" + title + "</div>"),
-								panel = $("<div class='panel " + cls + "'>" + content + "</div>");
-							
-							TABS.append(tab);
-							PANELS.append(panel);
-							fn ? fn(tab,panel) : "";
-							selec ? tab.addClass(selec) : "";
-							
-							this.active("."+cls);
-							
-							return cls;
-						},
-						/*激活指定索引的tab*/
-						active : function(sel){
-							var tab = TABS.find(sel);
-							
-							TABS.find(".active").removeClass("active");
-							tab.addClass("active");
-							PANELS.find(".active").removeClass("active");
-							PANELS.find("."+tab.attr("for")).addClass("active");
-						},
-						
-						/*关闭*/
-						close : function(index){
-							var tab = TABS.find(".tab").get(index);
-							/*@TODO*/
-						}
-					}
-				}
-			})($);
-			
-			
-			$(".dialog").each(function(i, item){
-				$(item).tab()
-			});
-			
-			var data = [{
-					"id" : 1,
-					"name" : "项目一",
-					"children" : [{
-						"id" : 7,
-						"name" : "图1",
-						"type" : "folder",
-						"actionUrl" : "forum",
-						"children" : [{
-							"id" : 7,
-							"name" : "实体1",
-							"type" : "item",
-							"actionUrl" : "forum"
-						}]
-					}],
-					'icon-class': 'red',
-					"actionUrl" : ""
-				}, {
-					"id" : 2,
-					"name" : "项目二",
-					'icon-class' : 'orange',
-					"actionUrl" : "",
-					"children" : [{
-						"id" : 4,
-						"name" : "图1",
-						"actionUrl" : "repair",
-						"children" : [{
-							"id" 		: 7,
-							"name" 		: "实体1",
-							"actionUrl" : "forum"
-						}]
-					}]
-				}];
-				
-			var setting = {
-				callback : {
-					onClick : function(event, treeId, treeNode){
-						var title = treeNode.name;
-						mainTab.addTab("title","",function(t,p){
-							$.get('pages/template.html').done(function(data) {
-								p.html(data);
-								p.find('#canvas').umlCanvas();
-							});
-							p.umlCanvas();
-						});
-					}
-				}
-			};
-			
-			/*常用的三个变量*/
-			var projectTree = $.fn.zTree.init($("#projectTree"), setting, data); //工程树
-			var mainTab = $(".main_panel").tab(); //右边tab
-			var dialog = $().dialog({});		  //页面对话框
-			
-			/*创建工程*/
-			function createProject(btn){
-				var input = btn.prev();
-				if(input.val()){
-					projectTree.addNodes(null, [{name:input.val(), isParent:true}]);
-					dialog.close();
-					
-					/*$.ajax({
-						url : "",
-						type : "",
-						data : "",
-						dataType : "json",
-						success : function(data){
-							dialog.close();
-						}
-					});*/
-					
-					return;
-				}
-				
-				input.addClass("not_null");
-			};
-			
-			/*创建工程对话框*/
-			$("#add_project").click(function(){
-				dialog.
-					show().
-					setTitle("创建项目").
-					setBody('<form>\
-								<span>工程名</span>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
-								<button type="button" onclick="createProject($(this));">确定</button>\
-								<button type="button" onclick="dialog.close();">取消</button>\
-							</form>');
-					
-			});
-		</script>
+		<script type="text/javascript" src="js/index.js" ></script>
 	</body>
 </html>

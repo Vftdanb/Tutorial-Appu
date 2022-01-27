@@ -20,6 +20,7 @@ function umlCanvas(thiz){
 	this.TOOLBAR	= thiz.find(".tools");		//切换工具的工具栏
 	this.CURTOOL	= {type:"cursor",name:null};//当前的工具（currentTool）
 	
+	
 	this.FOCUSITEM	= null;						//当前被选中的节点或线条
 	this.CHARTID	= 000000000;				//当前uml图的id
 	
@@ -30,6 +31,8 @@ function umlCanvas(thiz){
 	/*全局缓存*/
 	this.LINEDOMS	= {};	//页面上的所有线条对象
 	this.NODEDOMS	= {};	//页面上的所有节点对象
+	
+	thiz.find(".toolsbar").data("canvas", thiz); //外部操作画布时需要的引用
 	
 	/*拖动鼠标画连线*/
 	(function(){
