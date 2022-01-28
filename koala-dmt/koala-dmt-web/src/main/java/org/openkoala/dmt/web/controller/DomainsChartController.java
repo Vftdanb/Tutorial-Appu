@@ -50,6 +50,14 @@ public class DomainsChartController extends BaseController {
 	}
 	
 	@ResponseBody
+	@RequestMapping("/find-by-project")
+	public List<DomainsChart> getDomainsChart(Long projectId) {
+		Project project = new Project();
+		project.setId(projectId);
+		return domainsChartApplication.findDomainsChartByProject(project);
+	}
+	
+	@ResponseBody
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json")
 	public void createDomainsChart(@RequestBody DomainsChartDto domainsChartDTO) {
 		domainsChartApplication.saveDomainsChart(domainsChartDTO.transformToDomainsChart());
