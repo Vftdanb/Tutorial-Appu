@@ -80,7 +80,6 @@ public class DomainsChartController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/gencode", method = RequestMethod.POST, consumes = "application/json")
 	public String gencode(@RequestBody DomainsChartDto domainsChartDTO, String packageName, HttpServletRequest request) {
-		packageName = "org.openkoala.domaintest";
 		String destinationPath = GENERATE_CODE_DIR + "/"
 				+ generateDirName(domainsChartDTO.getProject().getName());
 		String destinationRealPath = request.getSession().getServletContext().getRealPath("/") + "/"

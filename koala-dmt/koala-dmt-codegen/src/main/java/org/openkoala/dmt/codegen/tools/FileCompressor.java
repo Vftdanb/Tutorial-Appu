@@ -69,12 +69,4 @@ public class FileCompressor {
 		}
 		return results;
 	}
-	
-	public static void main(String[] args) {
-		try {
-			FileCompressor.zipFile("E:/temp/dmt-test", "E:/temp/dmt-test/test.zip");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }
