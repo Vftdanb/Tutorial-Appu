@@ -41,18 +41,19 @@ public class FileCompressor {
 		zipOutputStream.close();
 	}
 
-	private static String getAbsFileName(String baseDir, File realFileName) {
-		File real = realFileName;
+	private static String getAbsFileName(String baseDir, File file) {
+		File tempFile = file;
 		File base = new File(baseDir);
-		String result = real.getName();
+		String result = tempFile.getName();
 		while (true) {
-			real = real.getParentFile();
-			if (real == null)
+			tempFile = tempFile.getParentFile();
+			if (tempFile == null) {
 				break;
-			if (real.equals(base))
+			}
+			if (tempFile.equals(base)) {
 				break;
-			else
-				result = real.getName() + "/" + result;
+			}
+			result = tempFile.getName() + "/" + result;
 		}
 		return result;
 	}
