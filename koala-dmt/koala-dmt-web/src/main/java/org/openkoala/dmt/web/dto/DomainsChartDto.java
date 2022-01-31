@@ -7,13 +7,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
+import org.openkoala.dmt.domain.EntityShape;
+import org.openkoala.dmt.domain.InterfaceShape;
 import org.openkoala.dmt.domain.Project;
+import org.openkoala.dmt.web.dto.DomainShapeDto.ShapeType;
 
 public class DomainsChartDto implements Dto {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3411792002890207219L;
 
 	private Long id;
@@ -28,8 +28,6 @@ public class DomainsChartDto implements Dto {
 	
 	private String lineInfo;
 	
-//	private Set<LineDto> lineDtos = new HashSet<LineDto>();
-
 	public Long getId() {
 		return id;
 	}
@@ -70,14 +68,6 @@ public class DomainsChartDto implements Dto {
 		this.domainShapeDtos = domainShapeDtos;
 	}
 
-//	public Set<LineDto> getLineDtos() {
-//		return lineDtos;
-//	}
-//
-//	public void setLineDtos(Set<LineDto> lineDtos) {
-//		this.lineDtos = lineDtos;
-//	}
-	
 	public String getLineInfo() {
 		return lineInfo;
 	}
@@ -95,21 +85,47 @@ public class DomainsChartDto implements Dto {
 		result.setLineInfo(lineInfo);
 		
 		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
-			result.getDomainShapes().add(domainShapeDto.transformToDomainShape(this));
+			DomainShape domainShape = domainShapeDto.transformToDomainShape();
+			domainShape.setDomainsChart(result);
+			result.getDomainShapes().add(domainShape);
 		}
-		
+
+		setEntityAndInterfaceAssociation(result);
+		setDomainShapeParent(result);
 		return result;
 	}
 	
-	public DomainShape getDomainShapeByShapeName(String shapeName) {
-		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
-			if (shapeName.equals(domainShapeDto.getName())) {
-				return domainShapeDto.transformToDomainShape(this);
+	private void setEntityAndInterfaceAssociation(DomainsChart domainsChart) {
+		for (DomainShapeDto domainShapeDto : getDomainShapeDtos()) {
+			if (domainShapeDto.getShapeType() == ShapeType.ENTITY) {
+				for (String interfaceName : domainShapeDto.getImplementsNameSet()) {
+					EntityShape entityShape = (EntityShape) getDomainShapeByName(domainsChart, domainShapeDto.getName());
+					InterfaceShape interfaceShape = (InterfaceShape) getDomainShapeByName(domainsChart, interfaceName);
+					entityShape.getImplementsInterfaceShapes().add(interfaceShape);
+					interfaceShape.getEntityShapes().add(entityShape);
+				}
+			}
+		}
+	}
+	
+	private void setDomainShapeParent(DomainsChart domainsChart) {
+		for (DomainShapeDto domainShapeDto : getDomainShapeDtos()) {
+			if (domainShapeDto.getParentName() != null) {
+				getDomainShapeByName(domainsChart, domainShapeDto.getName())
+					.setParent(getDomainShapeByName(domainsChart, domainShapeDto.getParentName()));
+			}
+		}
+	}
+
+	private DomainShape getDomainShapeByName(DomainsChart domainsChart, String name) {
+		for (DomainShape domainShape : domainsChart.getDomainShapes()) {
+			if (domainShape.getName().equals(name)) {
+				return domainShape;
 			}
 		}
 		return null;
 	}
-
+	
 	public static DomainsChartDto getInstance(DomainsChart domainsChart) {
 		DomainsChartDto result = new DomainsChartDto();
 		result.setId(domainsChart.getId());
@@ -121,10 +137,6 @@ public class DomainsChartDto implements Dto {
 		for (DomainShape domainShape : domainsChart.getDomainShapes()) {
 			result.getDomainShapeDtos().add(DomainShapeDto.getInstance(domainShape));
 		}
-		
-//		for (Line line : domainsChart.getLines()) {
-//			result.getLineDtos().add(LineDto.getInstance(line));
-//		}
 		
 		return result;
 	}

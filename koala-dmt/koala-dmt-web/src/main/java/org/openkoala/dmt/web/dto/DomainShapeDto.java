@@ -8,7 +8,6 @@ import java.util.Set;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.openkoala.dmt.domain.DomainShape;
-import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.EntityShape;
 import org.openkoala.dmt.domain.EntityType;
 import org.openkoala.dmt.domain.EnumShape;
@@ -20,7 +19,7 @@ public class DomainShapeDto implements Dto {
 
 	private static final long serialVersionUID = -1551254242524216902L;
 
-	private enum ShapeType {
+	enum ShapeType {
 		ENTITY,
 		INTERFACE,
 		ENUM
@@ -177,78 +176,52 @@ public class DomainShapeDto implements Dto {
 		this.domainsChartId = domainsChartId;
 	}
 
-	public DomainShape transformToDomainShape(DomainsChartDto domainsChartDto) {
+	public DomainShape transformToDomainShape() {
 		if (ShapeType.ENTITY.equals(shapeType)) {
-			return generateEntityShape(domainsChartDto);
+			return generateEntityShape();
 		}
 		
 		if (ShapeType.INTERFACE.equals(shapeType)) {
-			return generateInterfaceShape(domainsChartDto);
+			return generateInterfaceShape();
 		}
 		
 		if (ShapeType.ENUM.equals(shapeType)) {
-			return generateEnumShape(domainsChartDto);
+			return generateEnumShape();
 		}
 		
 		return null;
 	}
 	
-	public EntityShape generateEntityShape(DomainsChartDto domainsChartDto) {
+	private EntityShape generateEntityShape() {
 		EntityShape result = new EntityShape();
-		setCommonsPropertiesValue(result, domainsChartDto);
+		dealCommonsPropertiesValue(result);
 		result.setEntityType(entityType);
 		result.setProperties(properties);
-		result.setImplementsInterfaceShapes(obtainImplementsInterfaceShapes(domainsChartDto));
-		
 		return result;
 	}
 	
-	private Set<InterfaceShape> obtainImplementsInterfaceShapes(DomainsChartDto domainsChartDto) {
-		Set<InterfaceShape> results = new HashSet<InterfaceShape>();
-		for (String shapeName : implementsNameSet) {
-			DomainShape domainShape = domainsChartDto.getDomainShapeByShapeName(shapeName);
-			if (domainShape != null) {
-				results.add((InterfaceShape) domainShape);
-			}
-		}
-		return results;
-	}
-	
-	private <T extends DomainShape> T setCommonsPropertiesValue(T domainShape, DomainsChartDto domainsChartDto) {
+	private <T extends DomainShape> void dealCommonsPropertiesValue(T domainShape) {
 		domainShape.setId(id);
 		domainShape.setVersion(version);
 		domainShape.setShapeId(shapeId);
 		domainShape.setName(name);
 		domainShape.setPosition(position);
-		domainShape.setHeight(height);
-		domainShape.setWidth(width);
 		domainShape.setDescription(description);
-		domainShape.setParent(domainsChartDto.getDomainShapeByShapeName(parentName));
-//		result.setDomainsChart(generateDomainsChart());
-		return domainShape;
 	}
 	
-	public InterfaceShape generateInterfaceShape(DomainsChartDto domainsChartDto) {
+	private InterfaceShape generateInterfaceShape() {
 		InterfaceShape result = new InterfaceShape();
-		setCommonsPropertiesValue(result, domainsChartDto);
-		
+		dealCommonsPropertiesValue(result);
 		return result;
 	}
 	
-	public EnumShape generateEnumShape(DomainsChartDto domainsChartDto) {
+	private EnumShape generateEnumShape() {
 		EnumShape result = new EnumShape();
-		setCommonsPropertiesValue(result, domainsChartDto);
+		dealCommonsPropertiesValue(result);
 		result.setEnumItems(enumItems);
-		
 		return result;
 	}
 	
-	public DomainsChart generateDomainsChart() {
-		DomainsChart result = new DomainsChart();
-		result.setId(domainsChartId);
-		return result;
-	}
-
 	public static DomainShapeDto getInstance(DomainShape domainShape) {
 		DomainShapeDto result = new DomainShapeDto();
 		result.setId(domainShape.getId());
@@ -256,8 +229,6 @@ public class DomainShapeDto implements Dto {
 		result.setName(domainShape.getName());
 		result.setShapeId(domainShape.getShapeId());
 		result.setPosition(domainShape.getPosition());
-		result.setHeight(domainShape.getHeight());
-		result.setWidth(domainShape.getWidth());
 		result.setDescription(domainShape.getDescription());
 		result.setDomainsChartId(domainShape.getDomainsChart().getId());
 		

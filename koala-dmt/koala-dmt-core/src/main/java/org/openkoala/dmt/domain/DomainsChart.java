@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -29,8 +30,6 @@ public class DomainsChart extends AbstractEntity {
 	
 	private Set<DomainShape> domainShapes = new HashSet<DomainShape>();
 
-//	private Set<Line> lines = new HashSet<Line>();
-	
 	private String lineInfo;
 	
 	@ManyToOne
@@ -60,16 +59,8 @@ public class DomainsChart extends AbstractEntity {
 		this.domainShapes = domainShapes;
 	}
 
-//	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//	public Set<Line> getLines() {
-//		return lines;
-//	}
-//
-//	public void setLines(Set<Line> lines) {
-//		this.lines = lines;
-//	}
-
 	@Column(name = "LINE_INFO")
+	@Lob
 	public String getLineInfo() {
 		return lineInfo;
 	}

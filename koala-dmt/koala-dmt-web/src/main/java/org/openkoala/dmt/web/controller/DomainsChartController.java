@@ -1,13 +1,18 @@
 package org.openkoala.dmt.web.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.openkoala.dmt.application.DomainsChartApplication;
 import org.openkoala.dmt.application.GenerateCodeApplication;
 import org.openkoala.dmt.application.ProjectApplication;
+import org.openkoala.dmt.codegen.tools.FileCompressor;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.Project;
 import org.openkoala.dmt.web.dto.DomainsChartDto;
@@ -31,6 +36,10 @@ public class DomainsChartController extends BaseController {
 	@Inject
 	private GenerateCodeApplication generateCodeApplication;
 	
+	private static final String GENERATE_CODE_DIR = "codefiles";
+	
+	private static final String COMPRESSED_FILE_SUFFIX = ".zip";
+	
 	@ResponseBody
 	@RequestMapping("/get")
 	public DomainsChartDto getDomainsChart(Long projectId, String name) {
@@ -38,6 +47,14 @@ public class DomainsChartController extends BaseController {
 		project.setId(projectId);
 		DomainsChart domainsChart = domainsChartApplication.getDomainsChart(project, name);
 		return DomainsChartDto.getInstance(domainsChart);
+	}
+	
+	@ResponseBody
+	@RequestMapping("/find-by-project")
+	public List<DomainsChart> getDomainsChart(Long projectId) {
+		Project project = new Project();
+		project.setId(projectId);
+		return domainsChartApplication.findDomainsChartByProject(project);
 	}
 	
 	@ResponseBody
@@ -61,9 +78,26 @@ public class DomainsChartController extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/gencode")
-	public String gencode(DomainsChartDto domainsChartDTO, String packageName, String destinationPath) {
-		generateCodeApplication.generateCodeFromDomainChart(domainsChartDTO.transformToDomainsChart(), packageName, destinationPath);
-		return "Success";
+	@RequestMapping(value = "/gencode", method = RequestMethod.POST, consumes = "application/json")
+	public String gencode(@RequestBody DomainsChartDto domainsChartDTO, String packageName, HttpServletRequest request) {
+		String destinationPath = GENERATE_CODE_DIR + "/"
+				+ generateDirName(domainsChartDTO.getProject().getName());
+		String destinationRealPath = request.getSession().getServletContext().getRealPath("/") + "/"
+				+ destinationPath;
+		generateCodeApplication.generateCodeFromDomainChart(domainsChartDTO.transformToDomainsChart(), packageName, destinationRealPath);
+		
+		String zipFileName = destinationRealPath + "/"
+				+ domainsChartDTO.getName() + COMPRESSED_FILE_SUFFIX;
+		try {
+			FileCompressor.zipFile(destinationRealPath, zipFileName);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return destinationPath;
+	}
+	
+	private String generateDirName(String projectName) {
+		Random random = new Random();
+		return projectName + new Date().getTime() + random.nextInt(10000);
 	}
 }
