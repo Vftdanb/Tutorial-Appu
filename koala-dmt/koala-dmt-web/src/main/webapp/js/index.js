@@ -2,39 +2,6 @@ $(".dialog").each(function(i, item){
 	$(item).tab();
 });
 
-var data = [{
-		"id" : 1,
-		"name" : "项目一",
-		"type" : "project",
-		"children" : [{
-			"id" : 7,
-			"name" : "图1",
-			"type" : "chart",
-			"actionUrl" : "forum",
-			"children" : [{
-				"id" : 7,
-				"name" : "实体1",
-				"type" : "item",
-				"actionUrl" : "forum"
-			}]
-		}]
-	}, {
-		"id" : 2,
-		"name" : "项目二",
-		"actionUrl" : "",
-		"type" : "project",
-		"children" : [{
-			"id" : 4,
-			"name" : "图1",
-			"type" : "chart",
-			"children" : [{
-				"id" 		: 7,
-				"name" 		: "实体1",
-				"actionUrl" : "forum"
-			}]
-		}]
-	}];
-	
 var setting = {
 	callback : {
 		onClick : function(event, treeId, treeData){
@@ -58,7 +25,7 @@ var setting = {
 };
 
 /*常用的三个变量*/
-var projectTree = $.fn.zTree.init($("#projectTree"), setting); //工程树
+var projectTree = $.fn.zTree.init($("#projectTree"), setting, []); //工程树
 var mainTab = $(".main_panel").tab(); //右边tab
 var dialog = $().dialog({});		  //页面对话框
 
@@ -68,6 +35,10 @@ $.ajax({
 	type : "get",
 	dataType : "json",
 	success : function(data){
+		$.each(data, function(i, d){
+			d.isParent = true;
+			d.type = "project";
+		});
 		projectTree.addNodes(null, data);
 	},
 	error : function(){
@@ -97,8 +68,8 @@ $("#add_chart").click(function(){
 		alert("请选择工程");
 		return;
 	} else if(project.type != "project"){
-		/*alert("请正确选择工程");
-		return;*/
+		alert("请正确选择工程");
+		return;
 	}
 	
 	dialog.
@@ -114,7 +85,7 @@ $("#add_chart").click(function(){
 });
 
 /*生成代码*/
-mainTab.PANELS.delegate(".generateCode", "click", function(){
+/*mainTab.PANELS.delegate(".generateCode", "click", function(){
 	var canvas = $(this).parents("tools_bar:first").data("canvas");
 
 	dialog.
@@ -127,7 +98,7 @@ mainTab.PANELS.delegate(".generateCode", "click", function(){
 						<button type="button" onclick="dialog.close();">取消</button>\
 					</div>\
 				</form>');
-});
+});*/
 
 
 
@@ -136,9 +107,14 @@ function createProject(btn){
 	var input = btn.parent().prev();
 	if(input.val()){
 		$.post('project/create', {"project.name":input.val()}, function(data){
-			projectTree.addNodes(null, [{name:input.val(), isParent:true}]);
-			dialog.close();
-		},"json");
+			if(data == "success"){
+				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project"}]);
+				dialog.close();
+			} else {
+				btn.html("创建失败");
+				setTimeout("btn.html('确定')", 500);
+			}
+		});
 		
 		return;
 	}
