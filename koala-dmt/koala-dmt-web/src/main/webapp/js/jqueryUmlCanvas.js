@@ -32,8 +32,6 @@ function umlCanvas(thiz){
 	this.LINEDOMS	= {};	//页面上的所有线条对象
 	this.NODEDOMS	= {};	//页面上的所有节点对象
 	
-	thiz.find(".toolsbar").data("canvas", thiz); //外部操作画布时需要的引用
-	
 	/*拖动鼠标画连线*/
 	(function(){
 		var drawing = false; 	//标志当前状态是否划线状态
@@ -350,7 +348,7 @@ function umlCanvas(thiz){
 };
 
 $.fn.umlCanvas = function(){
-	new umlCanvas($(this));
+	$(this).data("canvas", new umlCanvas($(this)));
 }
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓全局性事件↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
