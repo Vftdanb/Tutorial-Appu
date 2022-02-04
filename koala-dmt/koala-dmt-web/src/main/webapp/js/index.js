@@ -64,10 +64,11 @@ $("#add_project").click(function(){
 /*添加建图*/
 $("#add_chart").click(function(){
 	var project = projectTree.getSelectedNodes();
+	
 	if(project.length == 0){
 		alert("请选择工程");
 		return;
-	} else if(project.type != "project"){
+	} else if(project[0].type != "project"){
 		alert("请正确选择工程");
 		return;
 	}
