@@ -134,7 +134,7 @@ function addChart(btn){
 	var input = btn.parent().prev();
 	projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true, type:"chart"}]);
 	
-	/*if(input.val()){
+	if(input.val()){
 		$.ajax({
 			headers: { 
 		        'Accept': 'application/json',
@@ -158,7 +158,7 @@ function addChart(btn){
 		});
 		
 		return;
-	}*/
+	}
 	
 	input.addClass("not_null");
 };
