@@ -11,7 +11,7 @@ function swichTool(name, canvas){
 
 function umlCanvas(thiz){
 	/*全局变量*/
-	var THIS			= this;
+	var THIS		= this;
 	
 	this.ZOOM		= 1;						//uml图的缩放值
 	this.EASEL		= thiz.find(".uml_easel");	//画布容器（画架）
@@ -295,48 +295,6 @@ function umlCanvas(thiz){
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑右键功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 	
-	thiz.find(".print").click(function(){
-		var temp, lines = [], models = [];
-		for(temp in THIS.LINES){
-			lines.push(THIS.LINES[temp]);
-		}
-		
-		for(temp in THIS.MODELS){
-			models.push(THIS.MODELS[temp]);
-		}
-		
-		var domainsChart = {
-				project:{}
-		};
-		
-		domainsChart.id 		= "";
-		domainsChart.version 	= "";
-		domainsChart.name		= "test";
-		domainsChart.project.name = "test-project";
-		domainsChart.lineInfo	= JSON.stringify(lines);
-		domainsChart.domainShapeDtos = models;
-		
-		console.log(JSON.stringify(models));
-		
-		
-		$.ajax({
-			headers: { 
-		        'Accept': 'application/json',
-		        'Content-Type': 'application/json' 
-		    },
-			url 	: "domains-chart/gencode",
-			data 	:  JSON.stringify(domainsChart),
-			type	: "post",
-			dataType : "json",
-			success : function(data){
-				console.log(data);
-			},
-			error :function(){
-				
-			}
-		});
-	});
-	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 	THIS.UMLCANVAS.delegate(".node,.line", "mousedown", function(){
 		if(THIS.CURTOOL.type == "cursor"){
@@ -347,8 +305,29 @@ function umlCanvas(thiz){
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 };
 
+umlCanvas.prototype = {
+	getModels : function(){
+		var models = [];
+		
+		for(temp in this.MODELS){
+			models.push(this.MODELS[temp]);
+		}
+		
+		return models;
+	},
+	
+	getLines : function(){
+		var temp, lines = [];
+		for(temp in this.LINES){
+			lines.push(this.LINES[temp]);
+		}
+		
+		return lines;
+	}
+};
+
 $.fn.umlCanvas = function(){
-	$(this).data("canvas", new umlCanvas($(this)));
+	$(this).find(".tools_bar:first").data("canvas", new umlCanvas($(this)));
 }
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓全局性事件↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
@@ -390,6 +369,7 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 	
 	thiz.parent(".contextmenu").blur();
 });
+
 /*右键编辑 */
 $("#edit_lines").delegate(".contextmenu_item","click",function(){
 	var thiz = $(this),

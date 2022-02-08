@@ -6,18 +6,18 @@ var setting = {
 	callback : {
 		onClick : function(event, treeId, treeData){
 			if(treeData.type == "project"){
-				
+				$("#add_chart").show();
 			} else {
+				$("#add_chart").hide();
 				if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
 					mainTab.addTab({
-						title : "title",
+						title : treeData.name,
 						afterAdd : function(tab, panel){
 							tab.addClass("tab_"+treeData.id);
 							$.get('pages/template.html').done(function(data) {
 								panel.html(data);
 								panel.find('#canvas').umlCanvas();
 							});
-							panel.umlCanvas();
 						},
 						closeable : true
 					});
@@ -93,9 +93,7 @@ $("#add_chart").click(function(){
  * 生成代码。生成代码的按钮所在的工具栏已经缓存了当前的画布对象了
  */
 mainTab.panels.delegate(".generateCode", "click", function(){
-	var canvas = $(this).parents("tools_bar:first").data("canvas");
-	
-	console.log(canvas);
+	var canvas = $(this).parents(".tools_bar:first").data("canvas");
 	
 	dialog.
 		show().
@@ -107,13 +105,15 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 						<button type="button" onclick="dialog.close();">取消</button>\
 					</div>\
 				</form>');
+				
+	dialog.canvas = canvas;
 });
 
 /*创建工程*/
 function createProject(btn){
 	var input = btn.parent().prev();
 	if(input.val()){
-		$.post('project/create', {"project.name":input.val()}, function(data){
+		$.post('project/create', {"name":input.val()}, function(data){
 			if(data == "success"){
 				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project"}]);
 				dialog.close();
@@ -134,7 +134,7 @@ function addChart(btn){
 	var input = btn.parent().prev();
 	projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true, type:"chart"}]);
 	
-	if(input.val()){
+	/*if(input.val()){
 		$.ajax({
 			headers: { 
 		        'Accept': 'application/json',
@@ -158,13 +158,32 @@ function addChart(btn){
 		});
 		
 		return;
-	}
+	}*/
 	
 	input.addClass("not_null");
 };
 
 /*生成代码的按钮*/
 function generateCode(btn){
+	var canvas = dialog.canvas;
+	
+	var domainsChart = {
+			project:{}
+		};
+		
+	
+	var lines = canvas.getLines(),
+		models = canvas.getModels();
+		
+	domainsChart.id 			= "";
+	domainsChart.version 		= "";
+	domainsChart.name			= "test";
+	domainsChart.project.name 	= "test-project";
+	domainsChart.lineInfo		= JSON.stringify(lines);
+	domainsChart.domainShapeDtos = models;
+	
+	console.log(2232323);
+	
 	$.ajax({
 		headers: { 
 	        'Accept': 'application/json',
