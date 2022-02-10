@@ -107,7 +107,7 @@ $("#add_chart").click(function(){
 function createProject(btn){
 	var input = btn.parent().prev();
 	if(input.val()){
-		$.post('project/create', {"project.name":input.val()}, function(data){
+		$.post('project/create', {name:input.val()}, function(data){
 			if(data == "success"){
 				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project"}]);
 				dialog.close();
