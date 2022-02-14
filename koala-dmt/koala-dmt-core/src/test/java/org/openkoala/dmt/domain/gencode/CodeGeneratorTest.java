@@ -93,6 +93,13 @@ public class CodeGeneratorTest {
 		addrProp.setRelation(DomainPropertyRelation.Embedded);
 		properties.add(addrProp);
 		
+		Property listProp = new Property();
+		listProp.setType("List");
+		listProp.setName("testList");
+		listProp.setGenericity("String");
+		listProp.setRelation(DomainPropertyRelation.ElementCollection);
+		properties.add(listProp);
+		
 		result.setProperties(properties);
 		return result;
 	}
