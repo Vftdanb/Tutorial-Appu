@@ -58,8 +58,20 @@ public class DomainsChartController extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = "application/json")
-	public void createDomainsChart(@RequestBody DomainsChartDto domainsChartDTO) {
+	@RequestMapping("/create")
+	public void createDomainsChart(String name, Long projectId) {
+		DomainsChart domainsChart = new DomainsChart();
+		domainsChart.setName(name);
+		
+		Project project = new Project();
+		project.setId(projectId);
+		domainsChart.setProject(project);
+		domainsChartApplication.saveDomainsChart(domainsChart);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/save", method = RequestMethod.POST, consumes = "application/json")
+	public void saveDomainsChart(@RequestBody DomainsChartDto domainsChartDTO) {
 		domainsChartApplication.saveDomainsChart(domainsChartDTO.transformToDomainsChart());
 	}
 	

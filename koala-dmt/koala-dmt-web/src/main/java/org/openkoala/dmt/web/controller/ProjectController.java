@@ -27,6 +27,6 @@ public class ProjectController extends BaseController {
 	@RequestMapping("/create")
 	public String createProjects(Project project) {
 		projectApplication.createProject(project);
-		return SUCCESS;
+		return String.valueOf(project.getId());
 	}
 }
