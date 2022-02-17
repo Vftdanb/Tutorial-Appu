@@ -3,13 +3,34 @@ $(".dialog").each(function(i, item){
 });
 
 var setting = {
+	async : {
+		autoParam : ["projectId"],
+		dataType:"json",
+		enable:true,
+		url : "/domains-chart/find-by-project",
+		dataFilter : function(treeId, parentNode, responseData){
+			$.each(responseData, function(i, chart){
+				chart.isParent = true;
+			});
+			
+			return responseData;
+		}
+	},
 	callback : {
+		beforeAsync : function(treeId, treeNode){
+			if(treeNode && (treeNode.type == "project")){
+				return true;
+			} else {
+				return false;
+			}
+		},
 		onClick : function(event, treeId, treeData){
 			if(treeData.type == "project"){
 				$("#add_chart").show();
 			} else {
 				$("#add_chart").hide();
 				if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
+					var project = projectTree.getSelectedNodes()[0].getParentNode();
 					mainTab.addTab({
 						title : treeData.name,
 						afterAdd : function(tab, panel){
@@ -18,6 +39,8 @@ var setting = {
 								panel.html(data);
 								panel.find('#canvas').umlCanvas();
 							});
+							
+							panel.find(".tools_bar:first").data("projectId", project.id);
 						},
 						closeable : true
 					});
@@ -41,6 +64,7 @@ $.ajax({
 	success : function(data){
 		$.each(data, function(i, d){
 			d.isParent = true;
+			d.projectId = d.id;
 			d.type = "project";
 		});
 		projectTree.addNodes(null, data);
@@ -93,8 +117,6 @@ $("#add_chart").click(function(){
  * 生成代码。生成代码的按钮所在的工具栏已经缓存了当前的画布对象了
  */
 mainTab.panels.delegate(".generateCode", "click", function(){
-	var canvas = $(this).parents(".tools_bar:first").data("canvas");
-	
 	dialog.
 		show().
 		setTitle("生成代码").
@@ -105,8 +127,10 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 						<button type="button" onclick="dialog.close();">取消</button>\
 					</div>\
 				</form>');
-				
-	dialog.canvas = canvas;
+	
+	var toolBar = $(this).parents(".tools_bar:first");
+	dialog.canvas = toolBar.data("canvas");
+	dialog.projectId = toolBar.data("projectId");
 });
 
 /*创建工程*/
@@ -115,7 +139,7 @@ function createProject(btn){
 	if(input.val()){
 		$.post('project/create', {"name":input.val()}, function(data){
 			if(data == "success"){
-				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project"}]);
+				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project", projectId:data.id}]);
 				dialog.close();
 			} else {
 				btn.html("创建失败");
@@ -166,6 +190,7 @@ function addChart(btn){
 /*生成代码的按钮*/
 function generateCode(btn){
 	var canvas = dialog.canvas;
+	var projectId = dialog.projectId;
 	
 	var domainsChart = {
 			project:{}
@@ -178,7 +203,7 @@ function generateCode(btn){
 	domainsChart.id 			= "";
 	domainsChart.version 		= "";
 	domainsChart.name			= "test";
-	domainsChart.project.name 	= "test-project";
+	domainsChart.project.id 	= projectId;
 	domainsChart.lineInfo		= JSON.stringify(lines);
 	domainsChart.domainShapeDtos = models;
 	
