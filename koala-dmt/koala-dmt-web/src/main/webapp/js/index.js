@@ -91,15 +91,11 @@ $("#add_project").click(function(){
 
 /*添加建图*/
 $("#add_chart").click(function(){
-	var project = projectTree.getSelectedNodes();
+	var project = projectTree.getSelectedNodes()[0];
 	
-	if(project.length == 0){
-		alert("请选择工程");
-		return;
-	} else if(project[0].type != "project"){
-		alert("请正确选择工程");
-		return;
-	}
+	dialog.projectId = project.id;
+	
+	console.log(project.id);
 	
 	dialog.
 		show().
@@ -158,21 +154,15 @@ function addChart(btn){
 	var input = btn.parent().prev();
 	projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true, type:"chart"}]);
 	
-	/*if(input.val()){
+	if(input.val()){
 		$.ajax({
-			headers: { 
-		        'Accept': 'application/json',
-		        'Content-Type': 'application/json' 
-		    },
 		    type:"post",
 			url : "domains-chart/create",
 			dataType:"json",
-			data:JSON.stringify({
+			data:{
 				"name" : input.val(),
-				"project" : {
-					"id" : 1
-				}
-			}),
+				"projectId" : dialog.projectId
+			},
 			success : function(data){
 				dialog.close();
 			},
@@ -182,7 +172,7 @@ function addChart(btn){
 		});
 		
 		return;
-	}*/
+	}
 	
 	input.addClass("not_null");
 };
