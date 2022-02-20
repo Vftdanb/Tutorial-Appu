@@ -121,7 +121,7 @@
 			
 			/*根据class查找*/
 			isExistTab : function(id){
-				
+				return this.tabs.find(".tab_"+id).length != 0;
 			},
 			
 			/**
