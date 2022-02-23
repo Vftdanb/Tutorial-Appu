@@ -10,7 +10,9 @@ var setting = {
 		url : "/domains-chart/find-by-project",
 		dataFilter : function(treeId, parentNode, responseData){
 			$.each(responseData, function(i, chart){
+				chart.projectId = parentNode.id;
 				chart.isParent = true;
+				chart.type = "chart";
 			});
 			
 			return responseData;
@@ -30,7 +32,6 @@ var setting = {
 			} else {
 				$("#add_chart").hide();
 				if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
-					var project = projectTree.getSelectedNodes()[0].getParentNode();
 					mainTab.addTab({
 						title : treeData.name,
 						afterAdd : function(tab, panel){
@@ -38,9 +39,11 @@ var setting = {
 							$.get('pages/template.html').done(function(data) {
 								panel.html(data);
 								panel.find('#canvas').umlCanvas();
+								/*将projectId缓存在工具栏上，以待后续操作用到*/
+								panel.find(".tools_bar:first").data("projectId", treeData.projectId);
 							});
 							
-							panel.find(".tools_bar:first").data("projectId", project.id);
+							
 						},
 						closeable : true
 					});
@@ -127,6 +130,8 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 	var toolBar = $(this).parents(".tools_bar:first");
 	dialog.canvas = toolBar.data("canvas");
 	dialog.projectId = toolBar.data("projectId");
+	
+	console.log(dialog.projectId);
 });
 
 /*创建工程*/
@@ -197,14 +202,12 @@ function generateCode(btn){
 	domainsChart.lineInfo		= JSON.stringify(lines);
 	domainsChart.domainShapeDtos = models;
 	
-	console.log(2232323);
-	
 	$.ajax({
 		headers: { 
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json' 
 	    },
-		url 	: "domains-chart/create",
+		url 	: "domains-chart/save",
 		data 	:  JSON.stringify(domainsChart),
 		type	: "post",
 		dataType : "json",
