@@ -130,8 +130,6 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 	var toolBar = $(this).parents(".tools_bar:first");
 	dialog.canvas = toolBar.data("canvas");
 	dialog.projectId = toolBar.data("projectId");
-	
-	console.log(dialog.projectId);
 });
 
 /*创建工程*/
@@ -169,6 +167,7 @@ function addChart(btn){
 				"projectId" : dialog.projectId
 			},
 			success : function(data){
+				alert(23);
 				dialog.close();
 			},
 			error:function(){
