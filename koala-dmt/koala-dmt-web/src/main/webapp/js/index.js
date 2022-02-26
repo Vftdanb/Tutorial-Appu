@@ -135,7 +135,7 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 /*创建工程*/
 function createProject(btn){
 	var input = btn.parent().prev();
-	if(input.val()){
+	if(input.val()) {
 		$.post('project/create', {"name":input.val()}, function(data){
 			if(data == "success"){
 				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project", projectId:data.id}]);
@@ -157,7 +157,7 @@ function addChart(btn){
 	var input = btn.parent().prev();
 	projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true, type:"chart"}]);
 	
-	if(input.val()){
+	if(input.val()) {
 		$.ajax({
 		    type:"post",
 			url : "domains-chart/create",
@@ -181,8 +181,8 @@ function addChart(btn){
 	input.addClass("not_null");
 };
 
-/*生成代码的按钮*/
-function generateCode(btn){
+/*保存图数据*/
+function save() {
 	var canvas = dialog.canvas;
 	var projectId = dialog.projectId;
 	
@@ -217,4 +217,45 @@ function generateCode(btn){
 			
 		}
 	});
+}
+
+/*生成代码的按钮*/
+function generateCode(btn){
+	var input = btn.parent().prev();
+	if(input.val()){
+		var canvas = dialog.canvas;
+		var projectId = dialog.projectId;
+		
+		var domainsChart = {
+				project:{}
+			};
+			
+		
+		var lines = canvas.getLines(),
+			models = canvas.getModels();
+			
+		domainsChart.id 			= "";
+		domainsChart.version 		= "";
+		domainsChart.name			= "test";
+		domainsChart.project.id 	= projectId;
+		domainsChart.lineInfo		= JSON.stringify(lines);
+		domainsChart.domainShapeDtos = models;
+		
+		$.ajax({
+			headers: { 
+		        'Accept': 'application/json',
+		        'Content-Type': 'application/json' 
+		    },
+			url 	: "domains-chart/gencode?packageName=" + input.val(),
+			data 	:  JSON.stringify(domainsChart),
+			type	: "post",
+			dataType : "json",
+			success : function(data){
+				console.log(data);
+			},
+			error :function(){
+				
+			}
+		});
+	}
 }
