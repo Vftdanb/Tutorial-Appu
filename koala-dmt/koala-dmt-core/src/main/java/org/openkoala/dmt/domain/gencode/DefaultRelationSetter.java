@@ -1,9 +1,7 @@
 package org.openkoala.dmt.domain.gencode;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.openkoala.dmt.domain.DomainPropertyRelation;
 import org.openkoala.dmt.domain.DomainShape;
@@ -28,7 +26,9 @@ public class DefaultRelationSetter {
 			if (domainShape instanceof EntityShape) {
 				EntityShape entityShape = (EntityShape) domainShape;
 				for (Property property : entityShape.getProperties()) {
-					setRelation(property);
+					if (property.getRelation() == null) {
+						setRelation(property);
+					}
 				}
 			}
 		}
