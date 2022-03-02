@@ -10,7 +10,9 @@ var setting = {
 		url : "domains-chart/find-by-project",
 		dataFilter : function(treeId, parentNode, responseData){
 			$.each(responseData, function(i, chart){
+				chart.projectId = parentNode.id;
 				chart.isParent = true;
+				chart.type = "chart";
 			});
 			
 			return responseData;
@@ -30,7 +32,6 @@ var setting = {
 			} else {
 				$("#add_chart").hide();
 				if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
-					var project = projectTree.getSelectedNodes()[0].getParentNode();
 					mainTab.addTab({
 						title : treeData.name,
 						afterAdd : function(tab, panel){
@@ -38,9 +39,11 @@ var setting = {
 							$.get('pages/template.html').done(function(data) {
 								panel.html(data);
 								panel.find('#canvas').umlCanvas();
+								/*将projectId缓存在工具栏上，以待后续操作用到*/
+								panel.find(".tools_bar:first").data("projectId", treeData.projectId);
 							});
 							
-							panel.find(".tools_bar:first").data("projectId", project.id);
+							
 						},
 						closeable : true
 					});
@@ -91,15 +94,11 @@ $("#add_project").click(function(){
 
 /*添加建图*/
 $("#add_chart").click(function(){
-	var project = projectTree.getSelectedNodes();
+	var project = projectTree.getSelectedNodes()[0];
 	
-	if(project.length == 0){
-		alert("请选择工程");
-		return;
-	} else if(project[0].type != "project"){
-		alert("请正确选择工程");
-		return;
-	}
+	dialog.projectId = project.id;
+	
+	console.log(project.id);
 	
 	dialog.
 		show().
@@ -158,22 +157,17 @@ function addChart(btn){
 	var input = btn.parent().prev();
 	projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true, type:"chart"}]);
 	
-	/*if(input.val()){
+	if(input.val()){
 		$.ajax({
-			headers: { 
-		        'Accept': 'application/json',
-		        'Content-Type': 'application/json' 
-		    },
 		    type:"post",
 			url : "domains-chart/create",
 			dataType:"json",
-			data:JSON.stringify({
+			data:{
 				"name" : input.val(),
-				"project" : {
-					"id" : 1
-				}
-			}),
+				"projectId" : dialog.projectId
+			},
 			success : function(data){
+				alert(23);
 				dialog.close();
 			},
 			error:function(){
@@ -182,7 +176,7 @@ function addChart(btn){
 		});
 		
 		return;
-	}*/
+	}
 	
 	input.addClass("not_null");
 };
@@ -207,14 +201,12 @@ function generateCode(btn){
 	domainsChart.lineInfo		= JSON.stringify(lines);
 	domainsChart.domainShapeDtos = models;
 	
-	console.log(2232323);
-	
 	$.ajax({
 		headers: { 
 	        'Accept': 'application/json',
 	        'Content-Type': 'application/json' 
 	    },
-		url 	: "domains-chart/create",
+		url 	: "domains-chart/save",
 		data 	:  JSON.stringify(domainsChart),
 		type	: "post",
 		dataType : "json",
