@@ -15,6 +15,7 @@ import org.openkoala.dmt.application.ProjectApplication;
 import org.openkoala.dmt.codegen.tools.FileCompressor;
 import org.openkoala.dmt.domain.DomainsChart;
 import org.openkoala.dmt.domain.Project;
+import org.openkoala.dmt.domain.gencode.DefaultRelationSetter;
 import org.openkoala.dmt.web.dto.DomainsChartDto;
 import org.openkoala.dmt.web.dto.ProjectDomainsChartDto;
 import org.springframework.stereotype.Controller;
@@ -59,7 +60,7 @@ public class DomainsChartController extends BaseController {
 	
 	@ResponseBody
 	@RequestMapping("/create")
-	public void createDomainsChart(String name, Long projectId) {
+	public String createDomainsChart(String name, Long projectId) {
 		DomainsChart domainsChart = new DomainsChart();
 		domainsChart.setName(name);
 		
@@ -67,12 +68,16 @@ public class DomainsChartController extends BaseController {
 		project.setId(projectId);
 		domainsChart.setProject(project);
 		domainsChartApplication.saveDomainsChart(domainsChart);
+		return String.valueOf(domainsChart.getId());
 	}
 	
 	@ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.POST, consumes = "application/json")
 	public void saveDomainsChart(@RequestBody DomainsChartDto domainsChartDTO) {
-		domainsChartApplication.saveDomainsChart(domainsChartDTO.transformToDomainsChart());
+		DomainsChart domainsChart = domainsChartDTO.transformToDomainsChart();
+		DefaultRelationSetter defaultRelationSetter = new DefaultRelationSetter(domainsChart);
+		defaultRelationSetter.setRelationForProperties();
+		domainsChartApplication.saveDomainsChart(domainsChart);
 	}
 	
 	/**

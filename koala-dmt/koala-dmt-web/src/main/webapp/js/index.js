@@ -7,7 +7,7 @@ var setting = {
 		autoParam : ["projectId"],
 		dataType:"json",
 		enable:true,
-		url : "/domains-chart/find-by-project",
+		url : "domains-chart/find-by-project",
 		dataFilter : function(treeId, parentNode, responseData){
 			$.each(responseData, function(i, chart){
 				chart.projectId = parentNode.id;
