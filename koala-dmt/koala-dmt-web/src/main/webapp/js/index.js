@@ -40,7 +40,7 @@ var setting = {
 								panel.html(data);
 								panel.find('#canvas').umlCanvas();
 								/*将projectId缓存在工具栏上，以待后续操作用到*/
-								panel.find(".tools_bar:first").data("projectId", treeData.projectId);
+								panel.find(".tools_bar:first").data("project",treeData);
 							});
 							
 							
@@ -85,7 +85,7 @@ $("#add_project").click(function(){
 		setBody('<form class="dialog_form">\
 					<label>工程名</label>&nbsp;&nbsp;<input type="text" oninput="var input=$(this);if(input.val()) {input.removeClass(\'not_null\')} else {input.addClass(\'not_null\')}"/>\
 					<div class="dialog_buttons">\
-						<button type="button" onclick="createProject($(this));">确定</button>\
+						<button type="button" onclick="createProject($(this));">创建</button>\
 						<button type="button" onclick="dialog.close();">取消</button>\
 					</div>\
 				</form>');
@@ -97,9 +97,7 @@ $("#add_chart").click(function(){
 	var project = projectTree.getSelectedNodes()[0];
 	
 	dialog.projectId = project.id;
-	
-	console.log(project.id);
-	
+
 	dialog.
 		show().
 		setTitle("添加UML图").
@@ -129,67 +127,20 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 	
 	var toolBar = $(this).parents(".tools_bar:first");
 	dialog.canvas = toolBar.data("canvas");
-	dialog.projectId = toolBar.data("projectId");
+	dialog.project = toolBar.data("project");
 });
 
-/*创建工程*/
-function createProject(btn){
-	var input = btn.parent().prev();
-	if(input.val()) {
-		$.post('project/create', {"name":input.val()}, function(data){
-			if(data == "success"){
-				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project", projectId:data.id}]);
-				dialog.close();
-			} else {
-				btn.html("创建失败");
-				setTimeout("btn.html('确定')", 500);
-			}
-		});
+/**
+ * 生成代码
+ */
+mainTab.panels.delegate(".save", "click", function(){
+	var toolBar = $(this).parents(".tools_bar:first"),
+		canvas = toolBar.data("canvas"),
+		projectId = toolBar.data("project").id;
 		
-		return;
-	}
-	
-	input.addClass("not_null");
-};
-
-/*添加建图*/
-function addChart(btn){
-	var input = btn.parent().prev();
-	projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), isParent:true, type:"chart"}]);
-	
-	if(input.val()) {
-		$.ajax({
-		    type:"post",
-			url : "domains-chart/create",
-			dataType:"json",
-			data:{
-				"name" : input.val(),
-				"projectId" : dialog.projectId
-			},
-			success : function(data){
-				alert(23);
-				dialog.close();
-			},
-			error:function(){
-				alert("添加失败");
-			}
-		});
-		
-		return;
-	}
-	
-	input.addClass("not_null");
-};
-
-/*保存图数据*/
-function save() {
-	var canvas = dialog.canvas;
-	var projectId = dialog.projectId;
-	
 	var domainsChart = {
 			project:{}
 		};
-		
 	
 	var lines = canvas.getLines(),
 		models = canvas.getModels();
@@ -217,14 +168,68 @@ function save() {
 			
 		}
 	});
-}
+});
+
+/*创建工程*/
+function createProject(btn){
+	var input = btn.parent().prev();
+	if(input.val()) {
+		$.post('project/create', {"name":input.val()}, function(data){
+			if(!isNaN(data)) {
+				projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project", projectId:data.id}]);
+				dialog.close();
+			} else {
+				btn.html("创建失败");
+				setTimeout(function(){btn.html('创建')}, 500);
+			}
+		});
+		
+		return;
+	}
+	
+	input.addClass("not_null");
+};
+
+/*添加建图*/
+function addChart(btn){
+	var input = btn.parent().prev();
+	
+	if(input.val()) {
+		$.ajax({
+		    type:"post",
+			url : "domains-chart/create",
+			dataType:"json",
+			data:{
+				"name" : input.val(),
+				"projectId" : dialog.projectId
+			},
+			success : function(data){
+				if(!isNaN(data)) {
+					console.log([{name:input.val(), id: data, isParent:true, type:"chart", projectId:dialog.projectId}]);
+					projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), id: data, isParent:true, type:"chart", projectId:dialog.projectId}]);
+					dialog.close();
+				} else {
+					btn.html("创建失败");
+					setTimeout(function(){btn.html('创建')}, 500);
+				}
+			},
+			error:function(){
+				alert("添加失败");
+			}
+		});
+		
+		return;
+	}
+	
+	input.addClass("not_null");
+};
 
 /*生成代码的按钮*/
 function generateCode(btn){
 	var input = btn.parent().prev();
 	if(input.val()){
 		var canvas = dialog.canvas;
-		var projectId = dialog.projectId;
+		var project = dialog.project;
 		
 		var domainsChart = {
 				project:{}
@@ -237,7 +242,8 @@ function generateCode(btn){
 		domainsChart.id 			= "";
 		domainsChart.version 		= "";
 		domainsChart.name			= "test";
-		domainsChart.project.id 	= projectId;
+		domainsChart.project.id 	= project.id;
+		domainsChart.project.name	= project.name;
 		domainsChart.lineInfo		= JSON.stringify(lines);
 		domainsChart.domainShapeDtos = models;
 		
