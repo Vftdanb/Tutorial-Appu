@@ -52,10 +52,15 @@ public class DomainsChartController extends BaseController {
 	
 	@ResponseBody
 	@RequestMapping("/find-by-project")
-	public List<DomainsChart> getDomainsChart(Long projectId) {
+	public List<DomainsChartDto> getDomainsChart(Long projectId) {
 		Project project = new Project();
 		project.setId(projectId);
-		return domainsChartApplication.findDomainsChartByProject(project);
+		
+		List<DomainsChartDto> results = new ArrayList<DomainsChartDto>();
+		for (DomainsChart domainsChart : domainsChartApplication.findDomainsChartByProject(project)) {
+			results.add(DomainsChartDto.getInstance(domainsChart));
+		}
+		return results;
 	}
 	
 	@ResponseBody
@@ -101,7 +106,11 @@ public class DomainsChartController extends BaseController {
 				+ generateDirName(domainsChartDTO.getProject().getName());
 		String destinationRealPath = request.getSession().getServletContext().getRealPath("/") + "/"
 				+ destinationPath;
-		generateCodeApplication.generateCodeFromDomainChart(domainsChartDTO.transformToDomainsChart(), packageName, destinationRealPath);
+		
+		DomainsChart domainsChart = domainsChartDTO.transformToDomainsChart();
+		DefaultRelationSetter defaultRelationSetter = new DefaultRelationSetter(domainsChart);
+		defaultRelationSetter.setRelationForProperties();
+		generateCodeApplication.generateCodeFromDomainChart(domainsChart, packageName, destinationRealPath);
 		
 		String zipFileName = destinationRealPath + "/"
 				+ domainsChartDTO.getName() + COMPRESSED_FILE_SUFFIX;

@@ -13,7 +13,7 @@ import org.openkoala.dmt.domain.Property;
 public class DefaultRelationSetter {
 
 	private static final String[] STRING_AND_WRAP_TYPES = {"String", "Integer", "Long ", "Character", "Float", "Double", "Byte", "Short", "Boolean"};
-	private static final String[] COLLECTION_TYPES = {"Collection", "List", "Set ", "Map"};
+	private static final String[] COLLECTION_TYPES = {"Collection", "List", "Set", "SortedSet", "Map", "SortedMap",};
 	
 	private DomainsChart domainsChart;
 	
@@ -27,14 +27,14 @@ public class DefaultRelationSetter {
 				EntityShape entityShape = (EntityShape) domainShape;
 				for (Property property : entityShape.getProperties()) {
 					if (property.getRelation() == null) {
-						setRelation(property);
+						property.setRelation(getDefaultRelation(property));
 					}
 				}
 			}
 		}
 	}
 	
-	private DomainPropertyRelation setRelation(Property property) {
+	private DomainPropertyRelation getDefaultRelation(Property property) {
 		if (!isCollectionType(property.getType())) {
 			return null;
 		}
