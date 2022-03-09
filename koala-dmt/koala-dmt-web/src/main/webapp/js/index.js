@@ -27,6 +27,7 @@ var setting = {
 			}
 		},
 		onClick : function(event, treeId, treeData){
+			console.log(treeData);
 			if(treeData.type == "project"){
 				$("#add_chart").show();
 			} else {
@@ -39,8 +40,9 @@ var setting = {
 							$.get('pages/template.html').done(function(data) {
 								panel.html(data);
 								panel.find('#canvas').umlCanvas();
-								/*将projectId缓存在工具栏上，以待后续操作用到*/
-								panel.find(".tools_bar:first").data("project",treeData);
+								/*将project和chart缓存在工具栏上，以待后续操作用到*/
+								panel.find(".tools_bar:first").data("project", treeData.getParentNode());
+								panel.find(".tools_bar:first").data("chart", treeData);
 							});
 							
 							
@@ -128,6 +130,7 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 	var toolBar = $(this).parents(".tools_bar:first");
 	dialog.canvas = toolBar.data("canvas");
 	dialog.project = toolBar.data("project");
+	dialog.chart = toolBar.data("chart");
 });
 
 /**
@@ -135,8 +138,7 @@ mainTab.panels.delegate(".generateCode", "click", function(){
  */
 mainTab.panels.delegate(".save", "click", function(){
 	var toolBar = $(this).parents(".tools_bar:first"),
-		canvas = toolBar.data("canvas"),
-		projectId = toolBar.data("project").id;
+		canvas = toolBar.data("canvas");
 		
 	var domainsChart = {
 			project:{}
@@ -147,8 +149,8 @@ mainTab.panels.delegate(".save", "click", function(){
 		
 	domainsChart.id 			= "";
 	domainsChart.version 		= "";
-	domainsChart.name			= "test";
-	domainsChart.project.id 	= projectId;
+	domainsChart.name			= toolBar.data("chart").name;
+	domainsChart.project.id 	= toolBar.data("project").id;
 	domainsChart.lineInfo		= JSON.stringify(lines);
 	domainsChart.domainShapeDtos = models;
 	
@@ -228,20 +230,21 @@ function addChart(btn){
 function generateCode(btn){
 	var input = btn.parent().prev();
 	if(input.val()){
-		var canvas = dialog.canvas;
-		var project = dialog.project;
+		var canvas = dialog.canvas,
+			project = dialog.project,
+			chart	= dialog.chart;
 		
 		var domainsChart = {
 				project:{}
 			};
 			
-		
+		console.log(project);
 		var lines = canvas.getLines(),
 			models = canvas.getModels();
 			
 		domainsChart.id 			= "";
 		domainsChart.version 		= "";
-		domainsChart.name			= "test";
+		domainsChart.name			= chart.name;
 		domainsChart.project.id 	= project.id;
 		domainsChart.project.name	= project.name;
 		domainsChart.lineInfo		= JSON.stringify(lines);
