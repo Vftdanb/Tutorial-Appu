@@ -47,7 +47,7 @@ public class EntityShape extends DomainShape {
 		this.properties = properties;
 	}
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "ENTITY_INTERFACE_SHAPES", inverseJoinColumns = @JoinColumn(name = "IS_ID"), joinColumns = @JoinColumn(name = "ES_ID"))
 	public Set<InterfaceShape> getImplementsInterfaceShapes() {
 		return implementsInterfaceShapes;
