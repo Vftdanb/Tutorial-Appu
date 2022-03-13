@@ -43,8 +43,6 @@ var setting = {
 								panel.find(".tools_bar:first").data("project", treeData.getParentNode());
 								panel.find(".tools_bar:first").data("chart", treeData);
 							});
-							
-							
 						},
 						closeable : true
 					});
@@ -123,28 +121,27 @@ $("#add_chart").click(function(){
 	
 	form.find("button:first").click(function(){
 		var btn = $(this),
-			input = btn.parent().prev();
-	
+			input = btn.parent().prev(),
+			project = projectTree.getSelectedNodes()[0];
+			console.log(project);
 		if(input.val()) {
 			$.ajax({
-			    type:"post",
-				url : "domains-chart/create",
+			    type	:"post",
+				url 	: "domains-chart/create",
 				dataType:"json",
-				data:{
-					"name" : input.val(),
-					"projectId" : dialog.projectId
-				},
+				data	:{"name" : input.val(),"projectId":dialog.projectId },
 				success : function(data){
 					if(!isNaN(data)) {
-						console.log([{name:input.val(), id: data, isParent:true, type:"chart", projectId:dialog.projectId}]);
-						projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), id: data, isParent:true, type:"chart", projectId:dialog.projectId}]);
+						if(project.isAjaxing != false){
+							projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), id: data, isParent:true, type:"chart", projectId:dialog.projectId}]);
+						}
 						dialog.close();
 					} else {
 						btn.html("创建失败");
 						setTimeout(function(){btn.html('创建')}, 500);
 					}
 				},
-				error:function(){
+				error 	: function(){
 					alert("添加失败");
 				}
 			});
