@@ -26,8 +26,20 @@ function umlCanvas(thiz){
 	
 	
 	/*需要持久化的数据*/
+	/*  line的数据结构（伪代码）:
+	 	line = {
+			description: null
+			domainsChartId: 0
+			lineId: "8607e7185d7664254f149e80a48c593d"
+			lineType: "extends"
+			fromShapeId: "527cc94f46ee1a4ff4b63a4b27a62027"
+			toShapeId: "0ad536ac6e3166cf7c283fd28f30a2fb"
+		}
+	 */
 	this.LINES 		= {}; 	//所有线条的控制数据(json对象,需要持久化)
+	/*model的数据结构请参考tool.js内定义的结构*/
 	this.MODELS 	= {}; 	//所有节点的控制数据(json对象,需要持久化)
+	
 	/*全局缓存*/
 	this.LINEDOMS	= {};	//页面上的所有线条对象
 	this.NODEDOMS	= {};	//页面上的所有节点对象
@@ -152,6 +164,48 @@ function umlCanvas(thiz){
 		});
 	})();
 	
+	/*拖动线段形成转折点*/
+	(function(){
+		var turningPoint,
+			startPosition,
+			fromNode,
+			toNode,
+			line,
+			draging = false; 	//标志当前状态是否划线状态
+		
+		/*拖动线段*/
+		function drag(e){
+			svgGraph.dragLine(fromNode, toNode, [turningPoint[0] + e.clientX - startPosition[0], turningPoint[1] + e.clientY - startPosition[1]], line);
+		}
+		
+		THIS.UMLCANVAS.delegate("polyline", "mousedown", function(e){
+			line = $(this);
+			line.addClass("draging");
+			var lineData = THIS.LINES[line.parent().attr("id")];
+			fromNode = $("#"+lineData.fromShapeId);
+			toNode = $("#"+lineData.toShapeId);
+			
+			var canvasOffset = THIS.UMLCANVAS.offset();
+			turningPoint = [e.clientX - canvasOffset.left, e.clientY - canvasOffset.top];
+			startPosition = [e.clientX, e.clientY];
+			THIS.UMLCANVAS.bind("mousemove", drag);
+			draging = true;
+		});
+		
+		THIS.UMLCANVAS.mouseup(function(){
+			if(draging){
+				THIS.UMLCANVAS.unbind("mousemove", drag);
+				line.removeClass("draging");
+				draging = false;
+				line = null;
+				toNode = null;
+				fromNode = null;
+				turningPoint = null;
+				startPosition = null;
+			}
+		});
+	})();
+	
 	/*拖拽节点，线条联动*/
 	(function(){
 		var target 			= null;	//被拖动的元素
@@ -170,7 +224,7 @@ function umlCanvas(thiz){
 			svgGraph.resetLines(target, THIS.NODEDOMS, THIS.LINEDOMS, relatedLines.outLines, relatedLines.inLines);
 		};
 		
-		THIS.UMLCANVAS.delegate(".header","mousedown",function(e){
+		THIS.UMLCANVAS.delegate(".header", "mousedown", function(e){
 			if(THIS.CURTOOL.type != "line" && !$(e.target).is("input")){
 				target 			= $(this).parent();
 				startPosition 	= target.position();

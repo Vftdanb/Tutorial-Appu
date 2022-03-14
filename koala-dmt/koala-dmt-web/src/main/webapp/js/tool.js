@@ -22,9 +22,6 @@ svgGraph = {
 	
 	//重构所有连向某个结点的线的显示，传参结构为nodes数组的一个单元结构
 	resetLines : function(node, nodes, lines, outs, ins) {
-		var line,startNode,endNode;
-		var endPoints;
-		
 		/*重画指出的线*/
 		for(var i=outs.length-1 ; i>=0 ; i--){
 			endpoints = this.getEndpoints(node,nodes[outs[i].toShapeId]);
@@ -38,34 +35,61 @@ svgGraph = {
 		}
 	},
 	
-	/*
-	 * 当两个节点之间连直线时，计算连线的起点和终点
+	/**
+	 * 拖动线段生成转折点
+	 * startNode:开始节点
+	 * endNode:结束节点
+	 * turningPoint:转折点
+	 * line:线段
 	 */
-	getEndpoints : function(n1,n2){
-		var start , end , center2;
+	dragLine : function(startNode, endNode, turningPoint, line){
+		var arr = this.getEndpoints(startNode, turningPoint);
+		line.attr("points", 
+			this.getEndpoints(startNode, turningPoint).start.join() + 
+			" " + 
+			turningPoint.join() + 
+			" " + 
+			this.getEndpoints(turningPoint, endNode).end.join())
+	},
+	
+	/*
+	 * 计算连线的起点和终点
+	 * 1.点和矩形连线
+	 * 2.矩形和矩形连线
+	 * 
+	 * 返回值:{
+	 * 		start:[],
+	 * 		end:[]
+	 * }
+	 */
+	getEndpoints : function(startPoint, endPoint){
+		var start , end , center;
 		
-		/*在获取起点之前，要先知道第二个节点中心*/
-		if(n2 instanceof Array){
-			center2 = [n2[0] ,n2[1]];
-		} else {
-			var p2 = n2.position();
-			center2 = [p2.left+n2.width()/2 , p2.top+n2.height()/2];
+		/*
+		 * 在获取起点之前，要先知道第二个节点中心
+		 * （其实是知道任意一个节点的中心点）
+		 */
+		if(endPoint instanceof Array){ //如果是数组，说endPoint是点
+			center = [endPoint[0] ,endPoint[1]];
+		} else { //否则是矩形，计算中心点
+			var p2 = endPoint.position();
+			center = [p2.left+endPoint.width()/2 , p2.top+endPoint.height()/2];
 		}
 		
 		/*获取起点*/
-		if(n1 instanceof Array){
-			start = n1;
-		} else {
-			var p1 = n1.position();
-			start = this.getPoint([p1.left,p1.top],n1.outerWidth(),n1.outerHeight(),center2);
+		if(startPoint instanceof Array){ //如果是数组，说endPoint是点
+			start = startPoint;
+		} else { //
+			var p1 = startPoint.position();
+			start = this.getPoint([p1.left, p1.top],startPoint.outerWidth(),startPoint.outerHeight(),center);
 		}
 		
 		/*获取终点*/
-		if(n2 instanceof Array){
-			end = n2;
+		if(endPoint instanceof Array){
+			end = endPoint;
 		} else {
-			var p2 = n2.position();
-			end = this.getPoint([p2.left,p2.top],n2.outerWidth(),n2.outerHeight(),start);
+			var p2 = endPoint.position();
+			end = this.getPoint([p2.left,p2.top],endPoint.outerWidth(),endPoint.outerHeight(),start);
 		}
 		
 		return {
@@ -75,13 +99,13 @@ svgGraph = {
 	},
 	
 	/**
-	 * 在矩形中心与矩形外任意一点连线时，获取该连线与矩形的边的交点
+	 * 在矩形中心与矩形外任意一点作连心线时，获取该连线与矩形的边的交点
 	 * p1：矩形左上角坐标，数组
 	 * w：矩形的width
 	 * h：矩形的height
 	 * p2：矩形外的点，数组
 	 */
-	getPoint : function(p1,w,h,p2){
+	getPoint : function(p1, w, h, p2){
 		var x1,y1,x,y;
 		
 		x1 = p1[0] + w/2;
@@ -104,7 +128,7 @@ svgGraph = {
 			x = (p2[0] > x1 ? p1[0]+w : p1[0]);
 		}
 		
-		return [x,y];
+		return [x, y];
 	}
 };
 

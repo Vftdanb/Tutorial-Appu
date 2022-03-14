@@ -68,8 +68,8 @@
                 border-radius:0px;
                 border:1px solid #5890c1;
                 font-size:14px;
-                background: -webkit-gradient(linear, 0 0, 0 100%, from(#CCFFFF), to(#CCFFFF));
                 font-size:13px;
+                background:rgba(255,255,255,0.5);
             }
         }
     }
@@ -79,20 +79,15 @@
         .uml_lines {
             cursor:hand;
             polyline {
+                stroke-linecap:round;
                 stroke-width:2px;
                 stroke:#5890c1;
+                fill:none;
                 cursor:pointer;
                 transition: 0.3s stroke-width;
             }
-            .active polyline{
+            .active[not(.draging)] polyline{
                 stroke-width:3px;
-            }
-        }
-        
-        marker {
-            path {
-                fill:#FFF;
-                stroke:#5890c1;
             }
         }
     }

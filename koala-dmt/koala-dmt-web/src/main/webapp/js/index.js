@@ -92,7 +92,7 @@ $("#add_project").click(function(){
 		if(input.val()) {
 			$.post('project/create', {"name":input.val()}, function(data){
 				if(!isNaN(data)) {
-					projectTree.addNodes(null, [{name:input.val(), isParent:true, type:"project", projectId:data.id}]);
+					projectTree.addNodes(null, [{name:input.val(), id:data, isParent:true, type:"project", projectId:data}]);
 					dialog.close();
 				} else {
 					btn.html("创建失败");
@@ -129,7 +129,7 @@ $("#add_chart").click(function(){
 			    type	:"post",
 				url 	: "domains-chart/create",
 				dataType:"json",
-				data	:{"name" : input.val(),"projectId":dialog.projectId },
+				data	:{"name" : input.val(), "projectId":dialog.projectId },
 				success : function(data){
 					if(!isNaN(data)) {
 						if(project.isAjaxing != false){
@@ -151,6 +151,7 @@ $("#add_chart").click(function(){
 	});
 	
 	dialog.projectId = project.id;
+	console.log(project);
 	dialog.show().setTitle("添加UML图").setBody(form);
 });
 

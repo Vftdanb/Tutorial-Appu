@@ -391,18 +391,6 @@ function deleteLines(lines,canvas){
 	});
 }
 
-/*删除属性*/
-function deleteProperty(){
-	/*TODO:同步更新缓存数据*/
-}
-/*删除行为*/
-function deleteAction(){
-	/*TODO:同步更新缓存数据*/
-}
-/*删除枚举项*/
-function deleteEnumItem(){
-	/*TODO:同步更新缓存数据*/
-}
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有删除操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
 
