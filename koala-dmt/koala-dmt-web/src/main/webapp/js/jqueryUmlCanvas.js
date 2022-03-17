@@ -195,12 +195,16 @@ function umlCanvas(thiz){
 		
 		THIS.UMLCANVAS.mouseup(function(e){
 			if(draging){
-				console.log(JSON.stringify(lineData));
-				
 				lineData.turningPoint = [turningPoint[0]+e.clientX-startPosition[0], turningPoint[1]+e.clientY-startPosition[1]];
-				lineData.line
+				lineData.lineType = "turning_line";
 				THIS.UMLCANVAS.unbind("mousemove", drag);
 				line.removeClass("draging");
+				
+				lineData.startPoint = line.attr("points").split(" ")[0].split(",");
+				lineData.endPoint = line.attr("points").split(" ")[2].split(",");
+				
+				console.log(JSON.stringify(THIS.LINES));
+				
 				draging = false;
 				line = null;
 				toNode = null;
@@ -217,7 +221,8 @@ function umlCanvas(thiz){
 		var startPosition 	= null;	//被拖动元素开始的位置
 		var downPosition 	= null;	//鼠标点击的初始位置
 		var relatedLines 	= null;	//与被拖动节点相连的线
-		var moving			= false;
+		var moving			= false;//
+		var endPoints		= null;
 		/*拖拽节点事件处理函数*/
 		var drag = function(e){
 			e.preventDefault();
@@ -225,6 +230,7 @@ function umlCanvas(thiz){
 				top : startPosition.top  + e.clientY - downPosition.top  + THIS.EASEL.scrollTop(),
 				left: startPosition.left + e.clientX - downPosition.left + THIS.EASEL.scrollLeft()
 			});
+			
 			/*改变连线*/
 			svgGraph.resetLines(target, THIS.NODEDOMS, THIS.LINEDOMS, relatedLines.outLines, relatedLines.inLines);
 		};

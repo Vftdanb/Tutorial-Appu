@@ -4,32 +4,42 @@
 		<meta charset="utf-8">
 		<title></title>
 		<style>
-			.param{
-				
+			html,body{
+				padding:0;
+				margin:0;
 			}
-			
-			.param_type{
-				
+			.container{
+				width:100%;
+				height:500px;
+				background:pink;
+				position:relative;
 			}
-			
-			.genericity{
-				min-width:20px;
+			.turn{
+				position:absolute;
+				transform:rotate(45deg);
+				height:100px;
+				width:100px;
+				display:inline-block;
+				background:green;
+				left:100px;
+				top:100px;
 			}
-			
-			.genericity:before{
-				content:"<";
-				padding-right:1px;
-			}
-			.genericity:after{
-				content:">";
-				padding-left:1px;
+			.text{
+				transform:rotate(0);
+				position:absolute;
+				left:20px;
+				top:20px;
+				width:40px;
+				height:40px;
+				background:red;
 			}
 		</style>
 	</head>
 	<body>
-		<span class="param_type common">
-			<span>List</span>
-			<span class="genericity">String</span>
-		</span>
+		<div class="container">
+			<div class="turn">
+				<span class="text">文字</span>
+			</div>
+		</div>
 	</body>
 </html>

@@ -14,24 +14,50 @@ svgGraph = {
 	} ,
 	
 	/*移动一条直线*/
-	moveLine : function(line ,start ,end){
+	moveLine : function(line, start, end, turningPoint){
 		line.children("polyline").attr("points", 
 			start[0] 	+ "," + start[1] 	+ " " +
 			end[0] 		+ "," + end[1] 		+ " ");
 	},
 	
-	//重构所有连向某个结点的线的显示，传参结构为nodes数组的一个单元结构
+	/*
+	 * 重构所有连向某个结点的线的显示，传参结构为nodes数组的一个单元结构
+	 * node:被拖动的节点
+	 * nodes:当前画布上的所有节点（dom元素）
+	 * lines:当前画布上的多有线条（dom元素）
+	 * outs:所有从被拖动节点连出的箭头
+	 * ins:所有指向被拖动节点的箭头
+	 */
 	resetLines : function(node, nodes, lines, outs, ins) {
+		var endpoints;
 		/*重画指出的线*/
 		for(var i=outs.length-1 ; i>=0 ; i--){
-			endpoints = this.getEndpoints(node,nodes[outs[i].toShapeId]);
-			this.moveLine(lines[outs[i].lineId],endpoints.start, endpoints.end);
+			if(outs[i].lineType == "line_of_centers"){
+				endpoints = this.getEndpoints(node, nodes[outs[i].toShapeId]);
+				this.moveLine(lines[outs[i].lineId], endpoints.start, endpoints.end);
+			} else if(outs[i].lineType == "turning_line"){
+				endpoints = this.getEndpoints(node, outs[i].turningPoint);
+				var points = lines[outs[i].lineId].children("polyline").attr("points").split(" ");
+				points[0] = endpoints.start.join();
+				lines[outs[i].lineId].children("polyline").attr("points", points.join(" "));
+			} else {
+				
+			}
 		}
 		
 		/*重画指入的线*/
 		for(var i=ins.length-1 ; i>=0 ; i--){
-			endpoints = this.getEndpoints(nodes[ins[i].fromShapeId],node);
-			this.moveLine(lines[ins[i].lineId],endpoints.start, endpoints.end);
+			if(ins[i].lineType == "line_of_centers"){
+				endpoints = this.getEndpoints(nodes[ins[i].fromShapeId], node);
+				this.moveLine(lines[ins[i].lineId],endpoints.start, endpoints.end);
+			} else if(ins[i].lineType == "turning_line"){
+				endpoints = this.getEndpoints(ins[i].turningPoint, node);
+				var points = lines[ins[i].lineId].children("polyline").attr("points").split(" ");
+				points[2] = endpoints.end.join();
+				lines[ins[i].lineId].children("polyline").attr("points", points.join(" "));
+			} else {
+				
+			}
 		}
 	},
 	
@@ -256,7 +282,9 @@ function Line(chartId, id, type, from, to, desc){
 	this.domainsChartId	= chartId;
 	
 	/*后续操作赋值*/
-	this.lineType;
+	this.lineType		= "line_of_centers";
+	this.startPoint;
+	this.endPoint;
 	this.turningPoint;
 }
 
