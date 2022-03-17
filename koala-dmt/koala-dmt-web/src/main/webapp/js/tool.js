@@ -238,14 +238,26 @@ function DomainChar(name){
 	this.lineDtos		= null;
 }
 
-/*线条数据结构*/
-function Line(chartId,id,type,from,to,desc){
+/**
+ * 线条数据结构
+ * @param chartId
+ * @param id 线条id
+ * @param type 线条代表的关系（继承，实现，关联，聚合。。。）
+ * @param from 线条的开始节点
+ * @param to 线条的结束节点
+ * @param desc 线条描述
+ */
+function Line(chartId, id, type, from, to, desc){
 	this.lineId			= id;
 	this.fromShapeId 	= from;
 	this.toShapeId		= to;
-	this.lineType 		= type;
+	this.relationType 	= type;
 	this.description	= desc;
 	this.domainsChartId	= chartId;
+	
+	/*后续操作赋值*/
+	this.lineType;
+	this.turningPoint;
 }
 
 /*节点数据结构*/
@@ -260,7 +272,17 @@ function DomainShape(id,charid,name,point,type,desc){
 
 /****************************顶级数据结构****************************/
 
-/*实体类*/
+/**
+ * 实体类
+ * @param id
+ * @param charid
+ * @param name
+ * @param point
+ * @param type
+ * @param desc
+ * @param isAbstract
+ * @param isMapped
+ */
 function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 	DomainShape.call(this, id,charid,name,point,type,desc); 		//继承DomainShap
 	

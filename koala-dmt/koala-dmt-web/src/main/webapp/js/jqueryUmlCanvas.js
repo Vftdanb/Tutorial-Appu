@@ -31,7 +31,7 @@ function umlCanvas(thiz){
 			description: null
 			domainsChartId: 0
 			lineId: "8607e7185d7664254f149e80a48c593d"
-			lineType: "extends"
+			relationType: "extends"
 			fromShapeId: "527cc94f46ee1a4ff4b63a4b27a62027"
 			toShapeId: "0ad536ac6e3166cf7c283fd28f30a2fb"
 		}
@@ -171,6 +171,7 @@ function umlCanvas(thiz){
 			fromNode,
 			toNode,
 			line,
+			lineData,
 			draging = false; 	//标志当前状态是否划线状态
 		
 		/*拖动线段*/
@@ -181,7 +182,7 @@ function umlCanvas(thiz){
 		THIS.UMLCANVAS.delegate("polyline", "mousedown", function(e){
 			line = $(this);
 			line.addClass("draging");
-			var lineData = THIS.LINES[line.parent().attr("id")];
+			lineData = THIS.LINES[line.parent().attr("id")];
 			fromNode = $("#"+lineData.fromShapeId);
 			toNode = $("#"+lineData.toShapeId);
 			
@@ -192,8 +193,12 @@ function umlCanvas(thiz){
 			draging = true;
 		});
 		
-		THIS.UMLCANVAS.mouseup(function(){
+		THIS.UMLCANVAS.mouseup(function(e){
 			if(draging){
+				console.log(JSON.stringify(lineData));
+				
+				lineData.turningPoint = [turningPoint[0]+e.clientX-startPosition[0], turningPoint[1]+e.clientY-startPosition[1]];
+				lineData.line
 				THIS.UMLCANVAS.unbind("mousemove", drag);
 				line.removeClass("draging");
 				draging = false;

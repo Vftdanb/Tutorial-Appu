@@ -166,7 +166,7 @@ function updateNodeName(node, input, canvas){
 		node = $("#"+line.fromShapeId);
 		model = node.data("data");
 		
-		switch (line.lineType){
+		switch (line.relationType){
 			/**
 			 * 被继承者更名时，继承者的继承对象要更名 
 			 */
@@ -339,7 +339,7 @@ function deleteLines(lines,canvas){
 	$.each(lines,function(i,line){
 		id		= line.lineId;
 		ldom 	= canvas.LINEDOMS[id];
-		switch(line.lineType){
+		switch(line.relationType){
 			/*如果*/
 			case "extends" : {		//继承线的删除
 				var from = canvas.MODELS[line.fromShapeId];

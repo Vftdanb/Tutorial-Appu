@@ -1,3 +1,15 @@
-连心线：line_of_centers
+1.连心线：line_of_centers
+数据结构：{
+    "lineId": "eae3203d639bc3b84c7ddcef14e2d53c", 
+    "fromShapeId": "8b20b3cd22774239f035c98b2da4ff56", 
+    "toShapeId": "a64f3420ce7f85a72eda5bde6e2e9b0b", 
+    "relationType": "extends", 
+    "description": null, 
+    "domainsChartId": 0
+}
+
 自由折线：polyline
+
+
 手动折线：turning_line
+数据结构:
