@@ -2,6 +2,7 @@ package org.openkoala.dmt.domain;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,12 +58,31 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		interfaceShap.setShapeId("interfaceshapeid");
 		interfaceShap.getEntityShapes().add(entityShape);
 		
+		List<Property> parameters = new ArrayList<Property>();
+		Property parameter = new Property();
+		parameter.setName("parameter");
+		parameter.setType("String");
+		parameters.add(parameter);
+		
+		Property returnValue = new Property();
+		returnValue.setType("ReturnType");
+		
+		List<Action> actions = new ArrayList<Action>();
+		Action action = new Action();
+		action.setName("action");
+		action.setParameters(parameters);
+		action.setDescription("action description");
+		action.setReturnValue(returnValue);
+		action.setDomainShape(entityShape);
+		actions.add(action);
+		
 		entityShape.setDomainsChart(result);
 		entityShape.setName("Entity");
 		entityShape.setPosition(new Position(100, 100));
 		entityShape.setShapeId("entityshapeid");
 		entityShape.setProperties(properties);
 		entityShape.getImplementsInterfaceShapes().add(interfaceShap);
+		entityShape.setActions(actions);
 		
 		enumShape.setDomainsChart(result);
 		enumShape.setName("Enum");

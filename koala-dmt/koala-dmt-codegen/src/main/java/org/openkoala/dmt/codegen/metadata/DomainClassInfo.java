@@ -24,6 +24,9 @@ public class DomainClassInfo {
 	/* 枚举类的枚举项 */
 	private List<String> enumItems = new ArrayList<String>();
 
+	/* 方法 */
+	private List<ActionInfo> actionInfos = new ArrayList<ActionInfo>();
+	
 	public String getPackageName() {
 		return packageName;
 	}
@@ -88,6 +91,14 @@ public class DomainClassInfo {
 
 	public void setEnumItems(List<String> enumItems) {
 		this.enumItems = enumItems;
+	}
+
+	public List<ActionInfo> getActionInfos() {
+		return actionInfos;
+	}
+
+	public void setActionInfos(List<ActionInfo> actionInfos) {
+		this.actionInfos = actionInfos;
 	}
 
 	public void addPropertyInfo(PropertyInfo propertyInfo) {

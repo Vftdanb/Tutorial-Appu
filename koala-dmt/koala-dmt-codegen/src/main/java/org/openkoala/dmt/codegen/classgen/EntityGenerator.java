@@ -30,6 +30,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.openkoala.dmt.codegen.metadata.DomainClassInfo;
 import org.openkoala.dmt.codegen.metadata.PropertyInfo;
+import org.openkoala.dmt.codegen.tools.MethodGenerator;
 
 public class EntityGenerator extends DomainClassGenerator {
 
@@ -41,6 +42,10 @@ public class EntityGenerator extends DomainClassGenerator {
 	public ClassOrInterfaceDeclaration createTypeDeclare() {
 		ClassOrInterfaceDeclaration result = super.createTypeDeclare();
 		result.setExtends(Arrays.asList(new ClassOrInterfaceType(domainClassInfo.getBaseClass()))); // 扩展基类
+		
+		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos());
+		methodGenerator.generateMethods(result);
+		ASTHelper.addMember(result, createGetMethod());
 		ASTHelper.addMember(result, createGetMethod());
 		ASTHelper.addMember(result, createGetByBpkMethod());
 		if (!domainClassInfo.isAbstract()) {

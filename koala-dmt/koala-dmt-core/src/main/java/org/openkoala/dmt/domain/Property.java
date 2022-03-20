@@ -64,6 +64,7 @@ public class Property implements ValueObject {
 	 */
 	private String description;
 	
+	@Column(name = "PROP_NAME")
 	public String getName() {
 		return name;
 	}
@@ -131,6 +132,7 @@ public class Property implements ValueObject {
 		this.relation = relation;
 	}
 
+	@Column(name = "PROP_DES")
 	public String getDescription() {
 		return description;
 	}

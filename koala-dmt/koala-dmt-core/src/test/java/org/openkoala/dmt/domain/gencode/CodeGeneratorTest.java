@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
+import org.openkoala.dmt.domain.Action;
 import org.openkoala.dmt.domain.DomainPropertyRelation;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.DomainsChart;
@@ -16,6 +18,7 @@ import org.openkoala.dmt.domain.InterfaceShape;
 import org.openkoala.dmt.domain.Project;
 import org.openkoala.dmt.domain.Property;
 
+@Ignore
 public class CodeGeneratorTest {
 
 	@Test
@@ -99,8 +102,33 @@ public class CodeGeneratorTest {
 		listProp.setGenericity("String");
 		listProp.setRelation(DomainPropertyRelation.ElementCollection);
 		properties.add(listProp);
-		
 		result.setProperties(properties);
+		
+		List<Action> actions = new ArrayList<Action>();
+		Action action = new Action();
+		action.setName("action");
+		action.setDescription("action-description");
+		
+		Property returnValue = new Property();
+		returnValue.setType("List");
+		returnValue.setGenericity("String");
+		returnValue.setName("returnvalue");
+		action.setReturnValue(returnValue);
+		
+		Property parameter1 = new Property();
+		parameter1.setType("Set");
+		parameter1.setGenericity("Long");
+		parameter1.setName("para1");
+		action.getParameters().add(parameter1);
+		
+		Property parameter2 = new Property();
+		parameter2.setType("String");
+		parameter2.setName("para2");
+		action.getParameters().add(parameter2);
+		
+		actions.add(action);
+		result.setActions(actions);
+		
 		return result;
 	}
 
