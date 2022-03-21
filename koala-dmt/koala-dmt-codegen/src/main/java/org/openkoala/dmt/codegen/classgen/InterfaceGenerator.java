@@ -11,6 +11,7 @@ import japa.parser.ast.expr.NameExpr;
 import org.apache.commons.lang3.StringUtils;
 import org.openkoala.dmt.codegen.metadata.DomainClassInfo;
 import org.openkoala.dmt.codegen.tools.ClassGenerator;
+import org.openkoala.dmt.codegen.tools.MethodGenerator;
 
 /**
  * 实体生成器，根据实体信息生成Java编译单元（类文件）
@@ -51,6 +52,9 @@ public class InterfaceGenerator implements ClassGenerator {
 		ClassOrInterfaceDeclaration result = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, domainClassInfo.getClassName());
 		result.setInterface(true);
 		result.setJavaDoc(new JavadocComment(domainClassInfo.getEntityComment())); // 设置类文档注释
+		
+		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos());
+		methodGenerator.generateMethods(result);
 		return result;
 	}
 

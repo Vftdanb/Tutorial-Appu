@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.openkoala.dmt.codegen.metadata.ActionInfo;
 import org.openkoala.dmt.codegen.metadata.ClassCategory;
 import org.openkoala.dmt.codegen.metadata.DomainClassInfo;
 import org.openkoala.dmt.codegen.metadata.PropertyExt;
@@ -15,6 +16,7 @@ import org.openkoala.dmt.codegen.metadata.proptype.ListPropertyType;
 import org.openkoala.dmt.codegen.metadata.proptype.SetPropertyType;
 import org.openkoala.dmt.codegen.metadata.proptype.SingleValuePropertyType;
 import org.openkoala.dmt.codegen.metadata.proptype.SortedSetPropertyType;
+import org.openkoala.dmt.domain.Action;
 import org.openkoala.dmt.domain.DomainPropertyRelation;
 import org.openkoala.dmt.domain.DomainShape;
 import org.openkoala.dmt.domain.EntityShape;
@@ -49,13 +51,14 @@ public class EntityInfoGenerator {
 	public DomainClassInfo generateEntityInfo(DomainShape domainShape) {
 		DomainClassInfo result = createBasicEntityInfo(domainShape);
 		result.setPropertyInfos(createPropertyInfos(domainShape));
+		result.setActionInfos(createActionInfos(domainShape.getActions()));
 		if (domainShape instanceof EnumShape) {
 			EnumShape enumShape = (EnumShape) domainShape;
 			result.setEnumItems(enumShape.getEnumItems());
 		}
 		return result;
 	}
-	
+
 	private DomainClassInfo createBasicEntityInfo(DomainShape domainShape) {
 		DomainClassInfo result = new DomainClassInfo();
 		result.setClassName(domainShape.getName());
@@ -118,6 +121,26 @@ public class EntityInfoGenerator {
 			results.add(createPropertyInfoByProperty(property));
 		}
 		return results;
+	}
+	
+	private List<ActionInfo> createActionInfos(List<Action> actions) {
+		List<ActionInfo> results = new ArrayList<ActionInfo>();
+		for (Action action : actions) {
+			results.add(createActionInfo(action));
+		}
+		return results;
+	}
+	
+	private ActionInfo createActionInfo(Action action) {
+		ActionInfo result = new ActionInfo();
+		result.setName(action.getName());
+		result.setDescription(action.getDescription());
+		result.setReturnValue(createPropertyInfoByProperty(action.getReturnValue()));
+		for (Property parameter : action.getParameters()) {
+			result.getParameters().add(createPropertyInfoByProperty(parameter));
+		}
+		
+		return result;
 	}
 
 	private PropertyInfo createPropertyInfoByProperty(Property property) {

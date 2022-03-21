@@ -1,14 +1,20 @@
 package org.openkoala.dmt.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -35,6 +41,8 @@ public abstract class DomainShape extends AbstractEntity {
 	private String name;
 
 	private String description;
+	
+	private List<Action> actions = new ArrayList<Action>();
 	
 	private DomainShape parent;
 	
@@ -72,6 +80,15 @@ public abstract class DomainShape extends AbstractEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "domainShape", fetch = FetchType.EAGER)
+	public List<Action> getActions() {
+		return actions;
+	}
+
+	public void setActions(List<Action> actions) {
+		this.actions = actions;
 	}
 
 	@ManyToOne
