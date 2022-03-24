@@ -58,11 +58,24 @@
 			}
 			
 			.option_list div:hover{
-				background:yellow;
+				background:#ffebbf;
 			}
 			
 			.option_list .selected{
 				background:#ccc;
+			}
+			
+			.multiplicity{
+				display: inline-block;
+				text-align: center;
+				width:20px;
+				background:white;
+				border:1px solid #ccc;
+				cursor:pointer;
+			}
+			
+			.multiplicity:hover{
+				background:#ffebbf;
 			}
 		</style>
 	</head>
@@ -269,13 +282,6 @@
 
 		<!-- 一些共用模板 -->
 		<div id="template" style="display: none;">
-			<style>
-				.line_info span{
-					background:#ccc;
-					width:20px;
-					display:inline-block;
-				}
-			</style>
 			<!-- 线条模板 -->
 			<svg id="line-template">
 				<!-- 继承关系连线模板 -->
@@ -305,10 +311,10 @@
 				<g class="line compose templine">
 					<foreignobject>
 						<div class="start line_info">
-							<span>*</span>
+							<span class="multiplicity">*</span>
 						</div>
 						<div class="end line_info">
-							<span>*</span>
+							<span class="multiplicity">*</span>
 						</div>
 					</foreignobject>
 					<polyline points="0,0 0,0" style="marker-start:url(#arrow3)"></polyline>
@@ -317,10 +323,10 @@
 				<g class="line associate templine">
 					<foreignobject>
 						<div class="start line_info">
-							<span>*</span>
+							<span class="multiplicity">*</span>
 						</div>
 						<div class="end line_info">
-							<span>*</span>
+							<span class="multiplicity">*</span>
 						</div>
 					</foreignobject>
 					<polyline points="0,0 0,0"></polyline>

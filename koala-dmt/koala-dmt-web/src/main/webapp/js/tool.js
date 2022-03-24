@@ -342,11 +342,12 @@ function Line(chartId, id, type, from, to, desc){
 	this.turningPoint;
 }
 
+/*关联箭头*/
 function AssociatedLine(chartId, id, type, from, to, desc){
 	Line.call(this, chartId, id, type, from, to, desc);
 	this.multiplicity	= {
-		test : "*",
-		type : "Set",
+		test : "1",
+		type : "",
 		name : "",
 		left : 0,
 		top : 0
@@ -354,7 +355,7 @@ function AssociatedLine(chartId, id, type, from, to, desc){
 }
 
 /*节点数据结构*/
-function DomainShape(id,charid,name,point,type,desc){
+function DomainShape(id, charid, name, point, type, desc){
 	this.shapeId		= id;
 	this.position 		= point;
 	this.shapeType		= type;

@@ -64,7 +64,7 @@ function umlCanvas(thiz){
 			line 	= svgGraph.drawLine(startP, [e.pageX - offset.left, e.pageY - offset.top],THIS.CURTOOL.name);
 			node1 		= $(this);
 			
-			line.attr("id",commonTool.guid());
+			line.attr("id", commonTool.guid());
 			THIS.SVGLINES.append(line);
 		})
 		.delegate(".node","mouseenter",function(e){ 	//结束节点的获取
@@ -86,7 +86,7 @@ function umlCanvas(thiz){
 				} else if(toolName == "implements"){
 					((nodeType == "entity")) ? //只能有类实现接口
 						thiz.addClass("legal") : thiz.addClass("illegal");
-				} else if(toolName == "aggregate" || toolName == "compose") {
+				} else if(toolName == "aggregate" || toolName == "compose" || toolName == "associate") {
 					((nodeType != "interface")) ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
 				} else {
@@ -100,12 +100,11 @@ function umlCanvas(thiz){
 				model2 = node2.data("data");
 				
 				if(toolName == "extends"){
-					(nodeType == "entity") ? 
-						thiz.addClass("legal") : thiz.addClass("illegal");
+					(nodeType == "entity") ?  thiz.addClass("legal") : thiz.addClass("illegal");
 				} else if(toolName == "implements"){
 					((nodeType == "interface") && ($.inArray(model2.name, model1.implementsNameSet) < 0)) ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
-				} else if(toolName == "aggregate" || toolName == "compose"){
+				} else if(toolName == "aggregate" || toolName == "compose" || toolName == "associate"){
 					thiz.addClass("legal");
 				} else {
 					thiz.addClass("illegal");
@@ -114,7 +113,7 @@ function umlCanvas(thiz){
 				if($(this).is(".illegal")) node2 = null;
 			}
 		})
-		.delegate(".node","mouseleave",function(e){ 	//结束节点的取消
+		.delegate(".node", "mouseleave", function(e){ 	//结束节点的取消
 			$(this).removeClass("illegal legal");
 			node2 = null;
 		})
@@ -138,7 +137,7 @@ function umlCanvas(thiz){
 					model1.parentName = model2.name;
 				} else if(line.is(".implements")){
 					model1.implementsNameSet.push(model2.name);
-				} else if(line.is(".aggregate,.compose")){
+				} else if(line.is(".aggregate,.compose,.associate")){
 					addProperty(node1,"List",model2.name,line.attr("id"));
 				} else if(line.is(".")){
 					
@@ -149,7 +148,13 @@ function umlCanvas(thiz){
 				
 				var id 	= line.attr("id");
 				var type = line.attr("class").split(" ")[1];
-				THIS.LINES[id] = new Line(THIS.CHARTID, id ,type ,node1.attr("id") ,node2.attr("id"),null);
+				
+				if(line.is(".aggregate,.compose,.associate")){
+					THIS.LINES[id] = new AssociatedLine(THIS.CHARTID, id, type, node1.attr("id"), node2.attr("id"), null);
+				} else {
+					THIS.LINES[id] = new Line(THIS.CHARTID, id, type, node1.attr("id") ,node2.attr("id"),null);
+				}
+				
 				THIS.LINEDOMS[id] = line;	//把新增的连线缓存起来
 				
 				line.attr("class",line.attr("class").replace("templine",""));
@@ -376,7 +381,14 @@ function umlCanvas(thiz){
 		optionList : "<div class='option_list'><div class='option'>*</div><div class='option'>1</div></div>",
 		target : ".multiplicity",
 		format : function(target, option){
-			return option.html();
+			var value = option.html();
+			if(value == "*"){
+				
+			} else if(value == "1"){
+				
+			}
+			
+			return value;
 		}
 	});
 };
