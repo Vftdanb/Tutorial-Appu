@@ -30,37 +30,93 @@ svgGraph = {
 	 */
 	resetLines : function(node, nodes, lines, outs, ins) {
 		var endpoints;
+		//dy = DELTA left
+		//dx = DELTA top
+		var Deg, dx, dy,lineId;
+		
 		/*重画指出的线*/
 		for(var i=outs.length-1 ; i>=0 ; i--){
-			if(outs[i].lineType == "line_of_centers"){
+			lineId = outs[i].lineId;
+			if(outs[i].lineType == "line_of_centers"){//连心线
 				endpoints = this.getEndpoints(node, nodes[outs[i].toShapeId]);
 				this.moveLine(lines[outs[i].lineId], endpoints.start, endpoints.end);
-			} else if(outs[i].lineType == "turning_line"){
+			} else if(outs[i].lineType == "turning_line"){ //手动折线
 				endpoints = this.getEndpoints(node, outs[i].turningPoint);
 				var points = lines[outs[i].lineId].children("polyline").attr("points").split(" ");
 				points[0] = endpoints.start.join();
 				lines[outs[i].lineId].children("polyline").attr("points", points.join(" "));
-			} else {
-				
+			}
+			Deg = this.getDeg(endpoints.end[1] - endpoints.start[1], endpoints.end[0] - endpoints.start[0]);
+			
+			dy = Math.sin(Deg)*30-10;
+			dx = Math.cos(Deg)*30-10;
+			$("#"+lineId+" .start").css({
+				top:endpoints.start[1] + dy,
+				left:endpoints.start[0] + dx
+			});
+			
+			if(outs[i].lineType != "turning_line"){
+				dy = Math.sin(Deg+Math.PI)*30 -10;
+				dx = Math.cos(Deg+Math.PI)*30 -10;
+				$("#" + lineId + " .end").css({
+					top : endpoints.end[1] + dy,
+					left : endpoints.end[0] + dx
+				});
 			}
 		}
 		
 		/*重画指入的线*/
 		for(var i=ins.length-1 ; i>=0 ; i--){
-			if(ins[i].lineType == "line_of_centers"){
+			lineId = ins[i].lineId;
+			if(ins[i].lineType == "line_of_centers"){//连心线
 				endpoints = this.getEndpoints(nodes[ins[i].fromShapeId], node);
 				this.moveLine(lines[ins[i].lineId],endpoints.start, endpoints.end);
-			} else if(ins[i].lineType == "turning_line"){
+			} else if(ins[i].lineType == "turning_line"){ //手动折线
 				endpoints = this.getEndpoints(ins[i].turningPoint, node);
 				var points = lines[ins[i].lineId].children("polyline").attr("points").split(" ");
 				points[2] = endpoints.end.join();
 				lines[ins[i].lineId].children("polyline").attr("points", points.join(" "));
-			} else {
-				
 			}
+			
+			Deg = this.getDeg(endpoints.end[1] - endpoints.start[1], endpoints.end[0] - endpoints.start[0]);
+			if(ins[i].lineType != "turning_line"){
+				dy = Math.sin(Deg)*30-10;
+				dx = Math.cos(Deg)*30-10;
+				$("#"+lineId+" .start").css({
+					top:endpoints.start[1] + dy,
+					left:endpoints.start[0] + dx
+				});
+			}
+			
+			dy = Math.sin(Deg + Math.PI)*30 - 10;
+			dx = Math.cos(Deg + Math.PI)*30 - 10;
+			$("#"+lineId+" .end").css({
+				top:endpoints.end[1] + dy,
+				left : endpoints.end[0] + dx
+			});
 		}
 	},
 	
+	/*获取角度*/
+	getDeg : function(dx, dy){
+		var sin = dx / Math.sqrt(dx*dx + dy*dy);
+		var Deg = Math.abs(Math.asin(sin));
+		
+		if(dx > 0){
+			if(dy < 0){
+				Deg = Math.PI - Deg;
+			}
+		} else if(dx < 0){
+			if(dy < 0){
+				Deg = Math.PI + Deg;
+			} else if(dy > 0){
+				Deg = 2*Math.PI - Deg
+			}
+		}
+		
+		return Deg;
+	},
+		
 	/**
 	 * 拖动线段生成转折点
 	 * startNode:开始节点
@@ -115,7 +171,7 @@ svgGraph = {
 			end = endPoint;
 		} else {
 			var p2 = endPoint.position();
-			end = this.getPoint([p2.left,p2.top],endPoint.outerWidth(),endPoint.outerHeight(),start);
+			end = this.getPoint([p2.left, p2.top],endPoint.outerWidth(),endPoint.outerHeight(),start);
 		}
 		
 		return {
@@ -280,12 +336,21 @@ function Line(chartId, id, type, from, to, desc){
 	this.relationType 	= type;
 	this.description	= desc;
 	this.domainsChartId	= chartId;
-	
-	/*后续操作赋值*/
 	this.lineType		= "line_of_centers";
-	this.startPoint;
-	this.endPoint;
+	/*后续操作赋值*/
+	this.points;
 	this.turningPoint;
+}
+
+function AssociatedLine(chartId, id, type, from, to, desc){
+	Line.call(this, chartId, id, type, from, to, desc);
+	this.multiplicity	= {
+		test : "*",
+		type : "Set",
+		name : "",
+		left : 0,
+		top : 0
+	};
 }
 
 /*节点数据结构*/
@@ -299,7 +364,6 @@ function DomainShape(id,charid,name,point,type,desc){
 }
 
 /****************************顶级数据结构****************************/
-
 /**
  * 实体类
  * @param id

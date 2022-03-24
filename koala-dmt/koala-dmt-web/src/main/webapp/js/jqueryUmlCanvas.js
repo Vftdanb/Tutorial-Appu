@@ -259,7 +259,7 @@ function umlCanvas(thiz){
 	})();
 	
 	/*点击鼠标添加节点*/
-	THIS.UMLCANVAS.delegate("svg","mousedown",function(e){
+	THIS.UMLCANVAS.delegate("svg", "mousedown", function(e){
 		if(THIS.CURTOOL.type == "node"){
 			addNode(e, null, THIS);
 		}
@@ -268,7 +268,7 @@ function umlCanvas(thiz){
 		if(THIS.CURTOOL.type != "line"){
 			swichTool("cursor",THIS);
 		}
-		return false;
+		//return false;
 	});
 	
 	THIS.UMLCANVAS.contextmenu(function(e){
@@ -361,13 +361,24 @@ function umlCanvas(thiz){
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑右键功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对话框编辑功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
-	THIS.UMLCANVAS.delegate(".node,.line", "mousedown", function(){
+	THIS.UMLCANVAS.delegate(".node", "mousedown", function(){
 		if(THIS.CURTOOL.type == "cursor"){
 			editDialog.initDialog($(this),THIS);
 		}
 		return false;
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
+	
+	
+	THIS.UMLCANVAS.comboBox({
+		option : ".option",
+		seleted : ".selected",
+		optionList : "<div class='option_list'><div class='option'>*</div><div class='option'>1</div></div>",
+		target : ".multiplicity",
+		format : function(target, option){
+			return option.html();
+		}
+	});
 };
 
 umlCanvas.prototype = {
