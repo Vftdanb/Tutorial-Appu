@@ -147,12 +147,12 @@ function umlCanvas(thiz){
 				svgGraph.moveLine(line,endpoints.start ,endpoints.end);
 				
 				var id 	= line.attr("id");
-				var type = line.attr("class").split(" ")[1];
-				
+				var type = line.attr("relationType");
+				console.log(type);
 				if(line.is(".aggregate,.compose,.associate")){
-					THIS.LINES[id] = new AssociatedLine(THIS.CHARTID, id, type, node1.attr("id"), node2.attr("id"), null);
+					THIS.LINES[id] = new AssociatedLine(id, type, node1.attr("id"), node2.attr("id"), null);
 				} else {
-					THIS.LINES[id] = new Line(THIS.CHARTID, id, type, node1.attr("id") ,node2.attr("id"),null);
+					THIS.LINES[id] = new Line(id, type, node1.attr("id"), node2.attr("id"), null);
 				}
 				
 				THIS.LINEDOMS[id] = line;	//把新增的连线缓存起来

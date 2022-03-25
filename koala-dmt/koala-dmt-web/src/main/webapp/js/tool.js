@@ -329,13 +329,12 @@ function DomainChar(name){
  * @param to 线条的结束节点
  * @param desc 线条描述
  */
-function Line(chartId, id, type, from, to, desc){
+function Line(id, type, from, to, desc){
 	this.lineId			= id;
 	this.fromShapeId 	= from;
 	this.toShapeId		= to;
 	this.relationType 	= type;
 	this.description	= desc;
-	this.domainsChartId	= chartId;
 	this.lineType		= "line_of_centers";
 	/*后续操作赋值*/
 	this.points;
@@ -343,8 +342,8 @@ function Line(chartId, id, type, from, to, desc){
 }
 
 /*关联箭头*/
-function AssociatedLine(chartId, id, type, from, to, desc){
-	Line.call(this, chartId, id, type, from, to, desc);
+function AssociatedLine(id, type, from, to, desc){
+	Line.call(this, id, type, from, to, desc);
 	this.multiplicity	= {
 		test : "1",
 		type : "",

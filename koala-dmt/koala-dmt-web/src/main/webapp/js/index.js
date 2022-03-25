@@ -180,6 +180,8 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 			var lines = canvas.getLines(),
 				models = canvas.getModels();
 				
+			console.log(JSON.stringify(lines));			
+			
 			domainsChart.id 			= "";
 			domainsChart.version 		= "";
 			domainsChart.name			= chart.name;
@@ -196,11 +198,9 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 				data 	:  JSON.stringify(domainsChart),
 				type	: "post",
 				success : function(data){
-					console.log(2233232);
 					window.location.assign(data + "/" + domainsChart.name + ".zip");
 				},
 				error : function(){
-					alert(23232);
 				}
 			});
 		}

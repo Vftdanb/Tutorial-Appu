@@ -285,17 +285,17 @@
 			<!-- 线条模板 -->
 			<svg id="line-template">
 				<!-- 继承关系连线模板 -->
-				<g class="line extends templine">
+				<g class="line extends templine" relationType="extends">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1)"></polyline>
 				</g>
 				
 				<!-- 实现关系连线模板 -->
-				<g class="line implements templine">
+				<g class="line implements templine" relationType="implements">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1);stroke-dasharray:5"></polyline>
 				</g>
 				
 				<!-- 聚合关系连线模板 -->
-				<g class="line aggregate templine">
+				<g class="line aggregate templine" relationType="aggregate">
 					<foreignobject>
 						<div class="start line_info">
 							<span class="multiplicity">*</span>
@@ -308,7 +308,7 @@
 				</g>
 				
 				<!-- 组合关系连线模板  -->
-				<g class="line compose templine">
+				<g class="line compose templine" relationType="compose">
 					<foreignobject>
 						<div class="start line_info">
 							<span class="multiplicity">*</span>
@@ -320,7 +320,7 @@
 					<polyline points="0,0 0,0" style="marker-start:url(#arrow3)"></polyline>
 				</g>
 				<!-- 关联关系连线模板  -->
-				<g class="line associate templine">
+				<g class="line associate templine" relationType="associate">
 					<foreignobject>
 						<div class="start line_info">
 							<span class="multiplicity">*</span>
