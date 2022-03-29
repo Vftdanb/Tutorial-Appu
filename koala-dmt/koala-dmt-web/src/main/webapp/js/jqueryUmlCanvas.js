@@ -62,7 +62,7 @@ function umlCanvas(thiz){
 			drawing = true;
 			startP 	= [e.pageX - offset.left, e.pageY - offset.top];
 			line 	= svgGraph.drawLine(startP, [e.pageX - offset.left, e.pageY - offset.top],THIS.CURTOOL.name);
-			node1 		= $(this);
+			node1 	= $(this);
 			
 			line.attr("id", commonTool.guid());
 			THIS.SVGLINES.append(line);
@@ -138,17 +138,15 @@ function umlCanvas(thiz){
 				} else if(line.is(".implements")){
 					model1.implementsNameSet.push(model2.name);
 				} else if(line.is(".aggregate,.compose,.associate")){
-					addProperty(node1,"List",model2.name,line.attr("id"));
-				} else if(line.is(".")){
-					
+					addProperty(node1, model2.name, line.attr("id"));
 				}
 				
 				endpoints = svgGraph.getEndpoints(node1,node2);
-				svgGraph.moveLine(line,endpoints.start ,endpoints.end);
+				svgGraph.moveLine(line, endpoints.start, endpoints.end);
 				
 				var id 	= line.attr("id");
 				var type = line.attr("relationType");
-				console.log(type);
+
 				if(line.is(".aggregate,.compose,.associate")){
 					THIS.LINES[id] = new AssociatedLine(id, type, node1.attr("id"), node2.attr("id"), null);
 				} else {
@@ -157,8 +155,10 @@ function umlCanvas(thiz){
 				
 				THIS.LINEDOMS[id] = line;	//把新增的连线缓存起来
 				
-				line.attr("class",line.attr("class").replace("templine",""));
+				line.attr("class", line.attr("class").replace("templine",""));
+				
 			}
+			
 			line = null;
 			node2 = null;
 			node1 = null;
@@ -207,8 +207,6 @@ function umlCanvas(thiz){
 				
 				lineData.startPoint = line.attr("points").split(" ")[0].split(",");
 				lineData.endPoint = line.attr("points").split(" ")[2].split(",");
-				
-				console.log(JSON.stringify(THIS.LINES));
 				
 				draging = false;
 				line = null;
@@ -321,27 +319,7 @@ function umlCanvas(thiz){
 			thiz.data("closed",true);
 			thiz.parent().removeClass("folder");
 		}
-	});	
-	
-	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓鼠标滑过线条提示，增加体验↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
-	//鼠标滑过，线条变粗
-	THIS.SVGLINES.delegate(".line:not(.templine)", "mouseenter", function(e){
-		var line = THIS.LINES[$(this).attr("id")],
-			from = THIS.NODEDOMS[line.fromShapeId],
-			l	= THIS.LINEDOMS[line.lineId];	
-			
-		l.attr("class",l.attr("class") + " active");
-		from.find("."+line.lineId).addClass("active");
-	}).delegate(".line:not(.templine)","mouseout",function(e){
-		var line = THIS.LINES[$(this).attr("id")],
-			from = THIS.NODEDOMS[line.fromShapeId],
-			l	= THIS.LINEDOMS[line.lineId];
-			
-		l.attr("class",l.attr("class").replace(" active", ""));
-		from.find("."+line.lineId).removeClass("active");
 	});
-	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑鼠标滑过线条提示，增加体验↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
-	
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓右键功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 	/*右键添加属性或行为或枚举项等等*/
@@ -374,18 +352,19 @@ function umlCanvas(thiz){
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 	
-	
+	/*g*/
 	THIS.UMLCANVAS.comboBox({
 		option : ".option",
 		seleted : ".selected",
-		optionList : "<div class='option_list'><div class='option'>*</div><div class='option'>1</div></div>",
-		target : ".multiplicity",
+		optionList : "<div class='option_list'><div class='option'>1</div><div class='option'>Set</div><div class='option'>List</div></div>",
+		target : ".property_type",
+		width:"auto",
 		format : function(target, option){
 			var value = option.html();
 			if(value == "*"){
-				
+				console.log(target.parents("g").attr("id"));
 			} else if(value == "1"){
-				
+				console.log("1");
 			}
 			
 			return value;
@@ -444,7 +423,6 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 	var thiz  	= $(this) ,
 		target 	= thiz.parent().data("target"),
 		canvas	= thiz.parent().data("canvas");
-	
 	if(thiz.is(".add_property")){
 		addProperty(target,"String");
 	} else if(thiz.is(".add_action")){

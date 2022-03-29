@@ -101,9 +101,33 @@
   cursor: pointer;
   transition: 0.3s stroke-width;
 }
+.canvas svg .uml_lines .line.aggregate polyline {
+  marker-start: url(#arrow2);
+}
+.canvas svg .uml_lines .line.compose polyline {
+  marker-start: url(#arrow3);
+}
 .canvas svg .uml_lines .line .line_info {
   position: absolute;
   z-index: 10;
+  font-size: 0;
+}
+.canvas svg .uml_lines .line .line_info .multiplicity {
+  width: 20px;
+  white-space: nowrap;
+}
+.canvas svg .uml_lines .line .line_info .property_type {
+  min-width: 20px;
+  height: 20px;
+}
+.canvas svg .uml_lines .line .line_info span {
+  font-size: 16px;
+  display: inline-block;
+  cursor: pointer;
+  padding: 2px;
+}
+.canvas svg .uml_lines .line .line_info span:hover {
+  background: #ffebbf;
 }
 .canvas svg .uml_lines .line.templine .line_info {
   display: none;

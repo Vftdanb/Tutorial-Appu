@@ -48,16 +48,16 @@ svgGraph = {
 			}
 			Deg = this.getDeg(endpoints.end[1] - endpoints.start[1], endpoints.end[0] - endpoints.start[0]);
 			
-			dy = Math.sin(Deg)*30-10;
-			dx = Math.cos(Deg)*30-10;
+			dy = Math.sin(Deg+7*Math.PI/4)*30-10;
+			dx = Math.cos(Deg+7*Math.PI/4)*30-10;
 			$("#"+lineId+" .start").css({
 				top:endpoints.start[1] + dy,
 				left:endpoints.start[0] + dx
 			});
 			
 			if(outs[i].lineType != "turning_line"){
-				dy = Math.sin(Deg+Math.PI)*30 -10;
-				dx = Math.cos(Deg+Math.PI)*30 -10;
+				dy = Math.sin(Deg+5*Math.PI/4)*30 -10;
+				dx = Math.cos(Deg+5*Math.PI/4)*30 -10;
 				$("#" + lineId + " .end").css({
 					top : endpoints.end[1] + dy,
 					left : endpoints.end[0] + dx
@@ -80,21 +80,25 @@ svgGraph = {
 			
 			Deg = this.getDeg(endpoints.end[1] - endpoints.start[1], endpoints.end[0] - endpoints.start[0]);
 			if(ins[i].lineType != "turning_line"){
-				dy = Math.sin(Deg)*30-10;
-				dx = Math.cos(Deg)*30-10;
+				dy = Math.sin(Deg+7*Math.PI/4)*30-10;
+				dx = Math.cos(Deg+7*Math.PI/4)*30-10;
 				$("#"+lineId+" .start").css({
 					top:endpoints.start[1] + dy,
 					left:endpoints.start[0] + dx
 				});
 			}
 			
-			dy = Math.sin(Deg + Math.PI)*30 - 10;
-			dx = Math.cos(Deg + Math.PI)*30 - 10;
+			dy = Math.sin(Deg+5*Math.PI/4)*30 - 10;
+			dx = Math.cos(Deg+5*Math.PI/4)*30 - 10;
 			$("#"+lineId+" .end").css({
 				top:endpoints.end[1] + dy,
 				left : endpoints.end[0] + dx
 			});
 		}
+	},
+	
+	resetLineInfo : function(startPoint, endPoint, lineData){
+		
 	},
 	
 	/*获取角度*/
@@ -128,9 +132,7 @@ svgGraph = {
 		var arr = this.getEndpoints(startNode, turningPoint);
 		line.attr("points", 
 			this.getEndpoints(startNode, turningPoint).start.join() + 
-			" " + 
-			turningPoint.join() + 
-			" " + 
+			" " +  turningPoint.join() +  " " + 
 			this.getEndpoints(turningPoint, endNode).end.join())
 	},
 	
@@ -342,14 +344,19 @@ function Line(id, type, from, to, desc){
 }
 
 /*关联箭头*/
-function AssociatedLine(id, type, from, to, desc){
+function AssociatedLine(id, type, from, to, desc, startPosition, endPosition){
 	Line.call(this, id, type, from, to, desc);
 	this.multiplicity	= {
-		test : "1",
-		type : "",
-		name : "",
-		left : 0,
-		top : 0
+		start:{
+			mapping : "1",
+			name : "",
+			position:[] //left,top坐标
+		},
+		end:{
+			mapping : "1",
+			name : "",
+			position:[] //left,top坐标
+		}
 	};
 }
 
@@ -408,7 +415,7 @@ function EnumShape(id,charid,name,point,type,desc){
 
 /****************************二级数据结构****************************/
 /*属性类*/
-function Property(name, type){
+function Property(name, type, autoBy){
 	this.name 			= name;
 	this.type 			= type;
 	this.genericity		= null;
@@ -416,6 +423,7 @@ function Property(name, type){
 	this.nullable		= true;
 	this.isUnique		= false;
 	this.transientPro	= false;
+	this.autoBy 		= autoBy;
 	this.relation		= null;		//manytonone,manytomany...
 }
 

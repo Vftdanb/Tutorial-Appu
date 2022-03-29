@@ -64,19 +64,6 @@
 			.option_list .selected{
 				background:#ccc;
 			}
-			
-			.multiplicity{
-				display: inline-block;
-				text-align: center;
-				width:20px;
-				background:white;
-				border:1px solid #ccc;
-				cursor:pointer;
-			}
-			
-			.multiplicity:hover{
-				background:#ffebbf;
-			}
 		</style>
 	</head>
 	<body>
@@ -298,37 +285,46 @@
 				<g class="line aggregate templine" relationType="aggregate">
 					<foreignobject>
 						<div class="start line_info">
-							<span class="multiplicity">*</span>
+							<div class="multiplicity">
+								<span class="property_type">Set</span>
+							</div>
 						</div>
 						<div class="end line_info">
-							<span class="multiplicity">*</span>
+							<div class="multiplicity">
+								<span class="property_type">Set</span>
+							</div>
 						</div>
 					</foreignobject>
-					<polyline points="0,0 0,0" style="marker-start:url(#arrow2)"></polyline>
+					<polyline points="0,0 0,0"></polyline>
 				</g>
 				
 				<!-- 组合关系连线模板  -->
 				<g class="line compose templine" relationType="compose">
-					<foreignobject>
-						<div class="start line_info">
-							<span class="multiplicity">*</span>
+					<div class="start line_info">
+							<div class="multiplicity">
+								<span class="property_type">Set</span>
+							</div>
 						</div>
 						<div class="end line_info">
-							<span class="multiplicity">*</span>
+							<div class="multiplicity">
+								<span class="property_type">Set</span>
+							</div>
 						</div>
-					</foreignobject>
-					<polyline points="0,0 0,0" style="marker-start:url(#arrow3)"></polyline>
+					<polyline points="0,0 0,0""></polyline>
 				</g>
-				<!-- 关联关系连线模板  -->
+				
+				<!--关联关系连线模板-->
 				<g class="line associate templine" relationType="associate">
-					<foreignobject>
-						<div class="start line_info">
-							<span class="multiplicity">*</span>
+					<div class="start line_info">
+							<div class="multiplicity">
+								<span class="property_type">Set</span>
+							</div>
 						</div>
 						<div class="end line_info">
-							<span class="multiplicity">*</span>
+							<div class="multiplicity">
+								<span class="property_type">Set</span>
+							</div>
 						</div>
-					</foreignobject>
 					<polyline points="0,0 0,0"></polyline>
 				</g>
 			</svg>

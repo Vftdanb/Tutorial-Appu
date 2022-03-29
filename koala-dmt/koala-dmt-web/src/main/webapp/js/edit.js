@@ -11,7 +11,7 @@ function ZOOM(t,canvas){
 }
 
 /*显示右键菜单*/
-function showContextmenu(target,e,menuName,selector,canvas){
+function showContextmenu(target, e, menuName, selector, canvas){
 	e.preventDefault();
 	var position = commonTool.mousePosition(e);
 	
@@ -82,11 +82,11 @@ function addProperty(target, type, autoBy) {
 			return namespace;
 		})()),
 		
-		property = new Property(name,type);
+		property = new Property(name, type, autoBy);
 		dmodel.properties.push(property);
 		
 	/*如果属性由连线时自动生成，则记录生成属性对应的线段*/
-	if(!autoBy){
+	if(!autoBy) {
 		propertyDom = $("#node-template .property").clone();
 		propertyDom.find(".propertyType").html(type)
 		propertyDom.find(".propertyName").html(name)
