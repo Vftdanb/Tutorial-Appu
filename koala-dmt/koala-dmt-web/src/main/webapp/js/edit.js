@@ -192,20 +192,13 @@ function updateNodeName(node, input, canvas){
 			/**
 			 * 被聚合（组合）者更名时，关联的属性（泛型）类型也要更名
 			 */
-			case "aggregate" : 
+			case "aggregate" :
+			case "associate" :
 			case "compose"   : {
 				var propertyNode 	= node.find("." + line.lineId);
 				var property = propertyNode.data("data");
 				propertyNode.find(".genericity").html(newName);
 				property.name = newName;
-				break;
-			};
-			
-			/**
-			 * 联合
-			 */
-			case "associate" : {
-				
 				break;
 			};
 		}
@@ -401,7 +394,7 @@ function deleteLines(lines,canvas){
  * 自动命名。
  * 在某个命名空间内，采用递增的方式获取一个可用的命名
  */
-function getName(nodeType,nameSpace){
+function getName(nodeType, nameSpace){
 	var name;
 	
 	for(var i=1 ; ; i++){

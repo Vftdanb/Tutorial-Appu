@@ -139,6 +139,7 @@ function umlCanvas(thiz){
 					model1.implementsNameSet.push(model2.name);
 				} else if(line.is(".aggregate,.compose,.associate")){
 					addProperty(node1, model2.name, line.attr("id"));
+					addProperty(node2, model1.name, line.attr("id"));
 				}
 				
 				endpoints = svgGraph.getEndpoints(node1,node2);
@@ -155,7 +156,7 @@ function umlCanvas(thiz){
 				
 				THIS.LINEDOMS[id] = line;	//把新增的连线缓存起来
 				
-				line.attr("class", line.attr("class").replace("templine",""));
+				line.attr("class", line.attr("class").replace("templine", ""));
 				
 			}
 			
@@ -285,7 +286,7 @@ function umlCanvas(thiz){
 	THIS.UMLCANVAS.delegate(".node", "click", function(e){
 		var node = $(this);
 		if(THIS.CURTOOL.name == "property"){			//添加属性
-			addProperty(node,"String");
+			addProperty(node, "String");
 		} else if(THIS.CURTOOL.name == "action"){ 	//添加行为
 			addAction(node);
 		} 
@@ -323,7 +324,7 @@ function umlCanvas(thiz){
 	
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓右键功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 	/*右键添加属性或行为或枚举项等等*/
-	THIS.UMLCANVAS.delegate(".node","contextmenu", function(e){
+	THIS.UMLCANVAS.delegate(".node", "contextmenu", function(e){
 		var thiz = $(this), selector;
 		
 		if(thiz.is(".entity")){ 			//右键实体，添加属性和行为
@@ -338,7 +339,7 @@ function umlCanvas(thiz){
 	});
 	
 	/*编辑线条的右键菜单*/
-	THIS.SVGLINES.delegate(".line","contextmenu",function(e){
+	THIS.SVGLINES.delegate(".line","contextmenu", function(e){
 		showContextmenu($(this), e, "edit_lines", null, THIS);
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑右键功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
@@ -361,10 +362,34 @@ function umlCanvas(thiz){
 		width:"auto",
 		format : function(target, option){
 			var value = option.html();
-			if(value == "*"){
-				console.log(target.parents("g").attr("id"));
-			} else if(value == "1"){
-				console.log("1");
+			var lineId = target.parents(".line:first").attr("id");
+			var line = THIS.LINES[lineId];
+			
+			var model;
+			if(target.parents(".line_info:first").is(".end")){
+				model = THIS.MODELS[line.fromShapeId];
+			} else if(target.parents(".line_info:first").is(".start")){
+				model = THIS.MODELS[line.toShapeId];
+			}
+			
+			var property;
+			for(var i in model.properties){
+				property = model.properties[i];
+				if(property.autoBy && property.autoBy == lineId){
+					break;
+				}
+			}
+			
+			if(value == "1" && property.genericity != null){
+				property.type = property.genericity;
+				property.genericity = null;
+			} else {
+				if(property.genericity != null){
+					property.type = value;
+				} else {
+					property.genericity = property.type;
+					property.type = value;
+				}
 			}
 			
 			return value;

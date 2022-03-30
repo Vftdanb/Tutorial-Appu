@@ -66,7 +66,7 @@ svgGraph = {
 		}
 		
 		/*重画指入的线*/
-		for(var i=ins.length-1 ; i>=0 ; i--){
+		for(var i=ins.length-1; i>=0; i--){
 			lineId = ins[i].lineId;
 			if(ins[i].lineType == "line_of_centers"){//连心线
 				endpoints = this.getEndpoints(nodes[ins[i].fromShapeId], node);
@@ -423,7 +423,7 @@ function Property(name, type, autoBy){
 	this.nullable		= true;
 	this.isUnique		= false;
 	this.transientPro	= false;
-	this.autoBy 		= autoBy;
+	this.autoBy 		= autoBy;	//根据关联关系生成的属性，将拥有关联线的id
 	this.relation		= null;		//manytonone,manytomany...
 }
 
@@ -433,6 +433,7 @@ function Constant(name ,type){
 	this.type 	= type;
 	this.value 	= null;
 }
+
 /*行为类*/
 function Action(name ,returnType){
 	this.name = name;
