@@ -9,7 +9,7 @@ function swichTool(name, canvas){
 	tool.addClass("current-tool");
 }
 
-function umlCanvas(thiz){
+function umlCanvas(thiz, renderData){
 	/*全局变量*/
 	var THIS		= this;
 	
@@ -138,8 +138,29 @@ function umlCanvas(thiz){
 				} else if(line.is(".implements")){
 					model1.implementsNameSet.push(model2.name);
 				} else if(line.is(".aggregate,.compose,.associate")){
-					addProperty(node1, model2.name, line.attr("id"));
-					addProperty(node2, model1.name, line.attr("id"));
+					
+					/*自动获取不重复的命名*/
+					var name = getName("property", (function(){
+						var namespace = [];
+						$.each(model1.properties, function(i,p){
+							namespace.push(p.name);
+						});
+						return namespace;
+					})());
+					var property1 = new Property(name, model2.name, line.attr("id"));
+					
+					/*自动获取不重复的命名*/
+					name = getName("property", (function(){
+						var namespace = [];
+						$.each(model2.properties, function(i,p){
+							namespace.push(p.name);
+						});
+						return namespace;
+					})());
+					var property2 = new Property(name, model1.name, line.attr("id"));
+					
+					addProperty(node1, property1, true);
+					addProperty(node2, property2, true);
 				}
 				
 				endpoints = svgGraph.getEndpoints(node1,node2);
@@ -265,7 +286,30 @@ function umlCanvas(thiz){
 	/*点击鼠标添加节点*/
 	THIS.UMLCANVAS.delegate("svg", "mousedown", function(e){
 		if(THIS.CURTOOL.type == "node"){
-			addNode(e, null, THIS);
+			var offset = THIS.UMLCANVAS.offset();
+			var position = {
+					x:e.pageX - offset.left,
+					y:e.pageY - offset.top
+				};
+			var type = THIS.CURTOOL.name;
+			
+			var node = $("#node-template ."+type.toLowerCase()).clone().css({
+				left : position.x,
+				top  : position.y
+			});
+			var id = commonTool.guid();
+			var modelName = getName(type.toLowerCase(), getNodeNameSpace(THIS.MODELS)).firstUpcase();
+			
+			var model;
+			if(type == "ENTITY"){
+				model 		= new EntityShape(id, THIS.CHARTID, modelName, position, type, "", false, false);
+			} else if(type == "INTERFACE"){
+				model 		= new InterfaceShape(id, THIS.CHARTID, modelName, position, type, "");
+			} else if(type == "ENUM"){
+				model 		= new EnumShape(id, THIS.CHARTID, modelName, position, type, "");
+			}
+			
+			addNode(THIS, model);
 		}
 		
 		/*当画布被点击一次时，如果当前不是线条工具，将工具切换回鼠标工具*/
@@ -286,7 +330,17 @@ function umlCanvas(thiz){
 	THIS.UMLCANVAS.delegate(".node", "click", function(e){
 		var node = $(this);
 		if(THIS.CURTOOL.name == "property"){			//添加属性
-			addProperty(node, "String");
+			var name = getName("property", (function(){
+					var namespace = [];
+					$.each(node.data("data").properties, function(i,p){
+						namespace.push(p.name);
+					});
+					return namespace;
+				})());
+			
+			var property = new Property(name, "String");
+			
+			addProperty(node, property, true);
 		} else if(THIS.CURTOOL.name == "action"){ 	//添加行为
 			addAction(node);
 		} 
@@ -395,6 +449,9 @@ function umlCanvas(thiz){
 			return value;
 		}
 	});
+	
+	/*从数据反向生成图*/
+	THIS.render(renderData);
 };
 
 umlCanvas.prototype = {
@@ -408,6 +465,15 @@ umlCanvas.prototype = {
 		return models;
 	},
 	
+	render : function(data){
+		var lines = JSON.parse(data.lineInfo);
+		var models = JSON.parse(data.modelInfo);
+		var canvas = this;
+		$.each(models, function(i, model){
+			addNode(canvas, model);
+		});
+	},
+	
 	getLines : function(){
 		var temp, lines = [];
 		for(temp in this.LINES){
@@ -418,8 +484,11 @@ umlCanvas.prototype = {
 	}
 };
 
-$.fn.umlCanvas = function(){
-	$(this).find(".tools_bar:first").data("canvas", new umlCanvas($(this)));
+/**
+ * renderData:反向生成图的数据，可以为空
+ */
+$.fn.umlCanvas = function(renderData){
+	$(this).find(".tools_bar:first").data("canvas", new umlCanvas($(this), renderData));
 }
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓全局性事件↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
@@ -428,18 +497,43 @@ $("#edit_contextmenus .contextmenu").blur(function(){
 	$(this).slideUp(50);
 });
 //右键菜单添加领域模型
-$("#add_nodes").delegate(".contextmenu_item","click",function(e){
+$("#add_nodes").delegate(".contextmenu_item", "click", function(e){
 	var thiz 	= $(this), 
 		canvas	= thiz.parent().data("canvas");
 		
+	var type;
 	if(thiz.is(".add_entity")){
-		addNode(e,"ENTITY",canvas);
+		type="ENTITY";
 	} else if(thiz.is(".add_interface")){
-		addNode(e,"INTERFACE",canvas);
+		type = "INTERFACE";
 	} else if(thiz.is(".add_enum")){
-		addNode(e,"ENUM",canvas);
+		type = "ENUM";
 	}
 	
+	var offset = canvas.UMLCANVAS.offset();
+	var position = {
+			x:e.pageX - offset.left,
+			y:e.pageY - offset.top
+		};
+	
+	var node = $("#node-template ."+type.toLowerCase()).clone().css({
+		left : position.x,
+		top  : position.y
+	});
+	var id = commonTool.guid();
+	var modelName = getName(type.toLowerCase(), getNodeNameSpace(canvas.MODELS)).firstUpcase();
+	
+	var model;
+	if(type == "ENTITY"){
+		model 		= new EntityShape(id, canvas.CHARTID, modelName, position, type, "", false, false);
+	} else if(type == "INTERFACE"){
+		model 		= new InterfaceShape(id, canvas.CHARTID, modelName, position, type, "");
+	} else if(type == "ENUM"){
+		model 		= new EnumShape(id, canvas.CHARTID, modelName, position, type, "");
+	}
+	
+	addNode(canvas, model);
+		
 	thiz.parent(".contextmenu").blur();
 });
 
@@ -449,11 +543,33 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 		target 	= thiz.parent().data("target"),
 		canvas	= thiz.parent().data("canvas");
 	if(thiz.is(".add_property")){
-		addProperty(target,"String");
+			var model = target.data("data");
+			/*自动获取不重复的命名*/
+			var name = getName("property", (function(){
+				var namespace = [];
+				$.each(model.properties, function(i,p){
+					namespace.push(p.name);
+				});
+				return namespace;
+			})());
+			var property = new Property(name, "String");
+		
+		addProperty(target,property,true);
+		
+		
 	} else if(thiz.is(".add_action")){
 		addAction(target);
 	} else if(thiz.is(".add_enumItem")){
-		addEnumItem(target);
+		var name = getName("ENUMITEM",(function(){
+				var namespace = [];
+				$.each(dmodel.enumItems,function(i,p){
+					namespace.push(p.name);
+				});
+				return namespace;
+			})());
+		
+		var enumItem = new EnumItem(name);
+		addEnumItem(target, enumItem);
 	} else if(thiz.is(".delete")){
 		deleteNode(target,canvas);
 	}

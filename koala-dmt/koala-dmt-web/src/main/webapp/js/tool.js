@@ -361,9 +361,9 @@ function AssociatedLine(id, type, from, to, desc, startPosition, endPosition){
 }
 
 /*节点数据结构*/
-function DomainShape(id, charid, name, point, type, desc){
+function DomainShape(id, charid, name, position, type, desc){
 	this.shapeId		= id;
-	this.position 		= point;
+	this.position 		= position;
 	this.shapeType		= type;
 	this.name			= name;
 	this.description	= desc;
@@ -376,14 +376,14 @@ function DomainShape(id, charid, name, point, type, desc){
  * @param id
  * @param charid
  * @param name
- * @param point
+ * @param position
  * @param type
  * @param desc
  * @param isAbstract
  * @param isMapped
  */
-function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
-	DomainShape.call(this, id,charid,name,point,type,desc); 		//继承DomainShap
+function EntityShape(id,charid,name,position,type,desc,isAbstract,isMapped){
+	DomainShape.call(this, id,charid,name,position,type,desc); 		//继承DomainShap
 	
 	this.parentName			= null;			//父类
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
@@ -393,21 +393,24 @@ function EntityShape(id,charid,name,point,type,desc,isAbstract,isMapped){
 }
 
 /*值对象*/
-function ValueObject(id,charid,name,point,type,desc){
-	DomainShape.call(this, id,charid,name,point,type,desc);
+function ValueObject(id,charid,name,position,type,desc){
+	DomainShape.call(this, id,charid,name,position,type,desc);
+	this.parentName			= null;			//父类
+	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	
-	this.name =  name;
+	this.properties 		= []; 			//属性数组（属性对象数组）
+	this.entityType 		= "VALUEOBJECT";
 }
+
 /*接口类*/
-function InterfaceShape(id,charid,name,point,type,desc){
-	DomainShape.call(this, id,charid,name,point,type,desc);
-	
-	this.name 		= name;
+function InterfaceShape(id,charid,name,position,type,desc){
+	DomainShape.call(this, id,charid,name,position,type,desc);
 //	this.actions 	= [];	//
 }
+
 /*枚举*/
-function EnumShape(id,charid,name,point,type,desc){
-	DomainShape.call(this, id,charid,name,point,type,desc);
+function EnumShape(id,charid,name,position,type,desc){
+	DomainShape.call(this, id,charid,name,position,type,desc);
 	this.enumItems = [];
 }
 

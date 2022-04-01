@@ -25,82 +25,74 @@ function showContextmenu(target, e, menuName, selector, canvas){
 }
 
 
-/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对模型的编辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/	
+/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对模型的编辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/*
+ * canvas : 
+ * lineData:
+ */
+function addLine(canvas, lineData, lineDom){
+	var endpoints;
+}
+
 /*页面上添加一个节点，对应业务上的一个类或接口*/
-function addNode(e, type, canvas){
-	var id = commonTool.guid();
-	var offset 	= canvas.UMLCANVAS.offset();
-	var position = {
-			x:e.pageX - offset.left,
-			y:e.pageY - offset.top
-		};
-	var nodeType = type ? type : canvas.CURTOOL.name;
-	var node = $("#node-template ."+nodeType.toLowerCase()).clone().css({
-			left : position.x,
-			top  : position.y
+function addNode(canvas, model){
+	var node = $("#node-template ."+model.shapeType.toLowerCase()).clone().css({
+			left : model.position.x,
+			top  : model.position.y
 		});
-		
-	/*判断要生成那种领域模型*/
-	var model = null ,name;
-	if(nodeType == "ENTITY"){
-		
-		name 	= getName("entity", getNodeNameSpace(canvas.MODELS)).firstUpcase();
-		model 	= new EntityShape(id,canvas.CHARTID,name,position,nodeType,"",false,false);
-		
-	} else if(nodeType == "INTERFACE"){
-		
-		name 	= getName("interface", getNodeNameSpace(canvas.MODELS)).firstUpcase();
-		model 	= new InterfaceShape(id,canvas.CHARTID,name,position,nodeType,"Interface",false,false);
-		
-	} else if(nodeType == "ENUM"){
-		
-		name 	= getName("enum", getNodeNameSpace(canvas.MODELS)).firstUpcase();
-		model 	= new EnumShape(id ,canvas.CHARTID ,name ,position ,nodeType ,"");
-	}
 	
-	node.find(".name").html(name);
-	node.attr("id",id).data("data",model); //把对应领域模型缓存在dom节点上，方便查找
+	node.find(".name").html(model.name);
+	node.attr("id", model.shapeId).data("data", model); //把对应领域模型缓存在dom节点上，方便查找
+	canvas.MODELS[model.shapeId]	= model; //节点的控制数据（前端用）
+	canvas.NODEDOMS[model.shapeId] = node;
+	
 	canvas.UMLCANVAS.append(node);
 	
-	canvas.MODELS[id] 	= model;						//节点的控制数据（前端用）
-	canvas.NODEDOMS[id] = node;
+	if(model.properties){
+		$.each(model.properties, function(i, property){
+			addProperty(node, property, false);
+		});
+	}
 	
-	return id;
+	return node;
 }
+
 /**************************************添加节点的各种成员******************************************/
 /*
  * 添加属性
  * autoBy:指定该属性是否由于连线而自动生成
  */
-function addProperty(target, type, autoBy) {
+function addProperty(target, propertyData, isAddToModel) {
 	var dmodel = target.data("data"),
 		name = getName("property",(function(){
 			var namespace = [];
-			$.each(dmodel.properties,function(i,p){
+			$.each(dmodel.properties, function(i,p){
 				namespace.push(p.name);
 			});
 			return namespace;
-		})()),
+		})());
 		
-		property = new Property(name, type, autoBy);
-		dmodel.properties.push(property);
+		if(isAddToModel) dmodel.properties.push(propertyData);
 		
-	/*如果属性由连线时自动生成，则记录生成属性对应的线段*/
-	if(!autoBy) {
+	/*
+	 * 如果属性由连线时自动生成，则记录生成属性对应的线段
+	 * 把添加的属性显示出来
+	 */
+	if(!propertyData.autoBy) {
 		propertyDom = $("#node-template .property").clone();
-		propertyDom.find(".propertyType").html(type)
-		propertyDom.find(".propertyName").html(name)
+		propertyDom.find(".propertyType").html(propertyData.type)
+		propertyDom.find(".propertyName").html(propertyData.name)
 		
 		target.find(".properties").append(propertyDom);
 		
 		/*把对应的属性对象缓存到dom节点上，方便查找*/
-		propertyDom.data("data",property);
+		propertyDom.data("data", propertyData);
 		
 		/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
 		var dialog = $("#" + target.attr("dialogId"));
 		if(dialog.length == 1){
 			var copy = propertyDom.clone().data("data", propertyDom);
-			propertyDom.data("copy",copy);
+			propertyDom.data("copy", copy);
 			dialog.find(".properties").append(copy);
 			copy.click(); //设置为当前编辑项
 			copy.data("data",propertyDom).addClass("active");
@@ -109,7 +101,7 @@ function addProperty(target, type, autoBy) {
 }
 
 /*添加行为*/
-function addAction(target){
+function addAction(target, actionData){
 	var dmodel = target.data("data");
 	var action = new Action("action","void");
 	var actDom = $("#node-template .action").clone();
@@ -120,7 +112,7 @@ function addAction(target){
 }
 
 /*添加枚举项*/
-function addEnumItem(target){
+function addEnumItem(target, itemData, isAddToModel){
 	var enumDom = $("#node-template .enumItem").clone(),
 		dmodel = target.data("data"),
 		name = getName("ENUMITEM",(function(){
@@ -135,8 +127,10 @@ function addEnumItem(target){
 	enumDom.html(name);
 
 	var enumItem = new EnumItem(name);
-	enumDom.data("data",enumItem);
-	dmodel.enumItems.push(enumItem);
+	enumDom.data("data",itemData);
+	if(isAddToModel){
+		dmodel.enumItems.push(enumItem);
+	}
 	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
 	var dialog = $("#" + target.attr("dialogId"));
 	if(dialog.length == 1){

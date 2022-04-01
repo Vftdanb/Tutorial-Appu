@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../lib/comboBox/css/style.css" type="text/css"/>
+		<style>
+			.dialog_body{
+				font-size:0;
+			}
+			
+			.left, .middle, .right{
+				height:200px;
+				display:inline-block;
+				font-size:14px;
+				border:1px solid #ccc;
+				vertical-align:middle;
+			}
+			
+			.left{
+				width:210px;
+			}
+			
+			.middle{
+				width:50px;
+				text-align:center;
+			}
+			
+			.right{
+				width:200px;
+			}
+			
+			.left > div{
+				padding:2px;
+			}
+			.role{
+				margin:1px;
+			}
+			.role_name, .departments{
+				display:inline-block;
+			}
+			
+			.departments{
+				width:150px;
+				border:solid 1px #ccc;
+				padding:2px;
+			}
+			.department{
+				padding:2px;	
+				display:inline-block;
+				background:#A0C1FF;
+			}
+			.option{
+				background:#9999FF;
+				margin:2px;
+				padding:2px;
+				cursor:pointer;
+			}
+			.option.selected{
+				background:#CCCC00;
+			}
+			.role.selected{
+				background:#99CC66;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="dialog_body">
+			<div class="left">
+				<h4 style="text-align: center;">已授角色</h4>
+				<div class="role">
+					<span class="role_name">角色1</span>
+					<span class="departments">
+						<span class="department">部门1</span>
+						<span class="department">部门1</span>
+						<span class="department">部门1</span>
+					</span>
+				</div>
+				<div class="role">
+					<span class="role_name">角色1</span>
+					<span class="departments">
+						<span class="department">部门1</span>
+						<span class="department">部门1</span>
+						<span class="department">部门1</span>
+					</span>
+				</div>
+				<div class="role">
+					<span class="role_name">角色1</span>
+					<span class="departments">
+						<span class="department">部门1</span>
+					</span>
+				</div>
+				<div class="role">
+					<span class="role_name">角色1</span>
+					<span class="departments">
+						<span class="department">部门1</span>
+					</span>
+				</div>
+			</div>
+			<div class="middle">
+				<button class="aaa">授权</button>
+				<button class="bbb">撤权</button>
+			</div>
+			<div class="right">
+				<h4 style="text-align: center;">未授角色</h4>
+			</div>
+		</div>
+		<div class="select" style="display:none;">
+			<div class="option"><span>拓展部</span></div>
+			<div class="option"><span>研发部</span></div>
+			<div class="option"><span>工程部</span></div>
+			<div class="option"><span>学院部</span></div>
+			<div class="button" style="background:#66CCFF;padding:2px;display:inline-block;cursor:pointer;margin:2px;">确定</div>
+		</div>
+		<script type="text/javascript" src="../lib/jquery-2.1.0.min.js" ></script>
+		<script type="text/javascript" src="../lib/comboBox/comboBox.js"></script>
+		<script>
+			/*g*/
+			$(".left,.right").delegate(".role", "click", function(e){
+				if($(e.target).is(".role_name"))
+				var role = $(this);
+				if(role.is(".selected")){
+					role.removeClass("selected");
+				} else {
+					role.addClass("selected");
+				}
+			});
+			
+			
+			$(".bbb").click(function(){
+				$(".right").append($(".left .role.selected"));
+			});
+			
+			$(".aaa").click(function(){
+				$(".left").append($(".right .role.selected"));
+			});
+			
+			$(".left,.right").comboBox({
+				option : ".button",
+				target : ".departments",
+				format : function(target, option){
+					var value = option.html();
+					
+					return value;
+				},
+				render : function(target, cb){
+					cb.html($(".select").clone().html());
+					cb.delegate(".option", "click", function(){
+						var option = $(this);
+						if(option.is(".selected")){
+							option.removeClass("selected");
+						} else {
+							option.addClass("selected");
+						}
+					});
+				}
+			});
+	</script>
+	</body>
+</html>

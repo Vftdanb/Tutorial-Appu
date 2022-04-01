@@ -32,19 +32,31 @@ var setting = {
 			} else {
 				$("#add_chart").hide();
 				if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
-					mainTab.addTab({
-						title : treeData.name,
-						afterAdd : function(tab, panel){
-							tab.addClass("tab_"+treeData.id);
-							$.get('pages/template.html').done(function(data) {
-								panel.html(data);
-								panel.find('#canvas').umlCanvas();
-								/*将project和chart缓存在工具栏上，以待后续操作用到*/
-								panel.find(".tools_bar:first").data("project", treeData.getParentNode());
-								panel.find(".tools_bar:first").data("chart", treeData);
+					//TODO 先获取数据在生成uml图
+					$.ajax({
+						url : "js/chart.js",
+						dataType:"json",
+						type:"post",
+						success:function(chartData){
+							
+							mainTab.addTab({
+								title : treeData.name,
+								afterAdd : function(tab, panel){
+									tab.addClass("tab_"+treeData.id);
+									$.get('pages/template.html').done(function(data) {
+										panel.html(data);
+										
+										var renderData = null;
+										panel.find('#canvas').umlCanvas(chartData);
+										
+										/*将project和chart缓存在工具栏上，以待后续操作用到*/
+										panel.find(".tools_bar:first").data("project", treeData.getParentNode());
+										panel.find(".tools_bar:first").data("chart", treeData);
+									});
+								},
+								closeable : true
 							});
-						},
-						closeable : true
+						}
 					});
 				}
 			}
@@ -180,14 +192,13 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 			var lines = canvas.getLines(),
 				models = canvas.getModels();
 				
-			console.log(JSON.stringify(lines));			
-			
 			domainsChart.id 			= "";
 			domainsChart.version 		= "";
 			domainsChart.name			= chart.name;
 			domainsChart.project.id 	= project.id;
 			domainsChart.project.name	= project.name;
 			domainsChart.lineInfo		= JSON.stringify(lines);
+			domainsChart.modelInfo		= JSON.stringify(models);
 			domainsChart.domainShapeDtos = models;
 			
 			console.log(JSON.stringify(domainsChart));
