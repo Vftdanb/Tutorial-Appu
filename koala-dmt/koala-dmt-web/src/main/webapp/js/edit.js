@@ -5,12 +5,23 @@
 })();
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对话框编辑，编辑结果实时同步↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
+/**
+ * @param t
+ * @param canvas
+ */
 function ZOOM(t,canvas){
-		var value = $(t).val();
-		canvas.UMLCANVAS.css("transform","scale("+value+")");
+	var value = $(t).val();
+	canvas.UMLCANVAS.css("transform","scale("+value+")");
 }
 
 /*显示右键菜单*/
+/**
+ * @param target
+ * @param e
+ * @param menuName
+ * @param selector
+ * @param canvas
+ */
 function showContextmenu(target, e, menuName, selector, canvas){
 	e.preventDefault();
 	var position = commonTool.mousePosition(e);
@@ -26,15 +37,27 @@ function showContextmenu(target, e, menuName, selector, canvas){
 
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对模型的编辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
-/*
- * canvas : 
- * lineData:
+/**
+ * @param canvas
+ * @param lineData
  */
-function addLine(canvas, lineData, lineDom){
-	var endpoints;
+function addLine(canvas, lineData){
+	lineDom = $("#line-template ."+name).clone();
+	var pline = lineDom.children();
+	
+	pline.attr("points",lineData.points);
+	
+	if(lineData){
+		
+	}
 }
 
 /*页面上添加一个节点，对应业务上的一个类或接口*/
+/**
+ * @param canvas
+ * @param model
+ * @returns
+ */
 function addNode(canvas, model){
 	var node = $("#node-template ."+model.shapeType.toLowerCase()).clone().css({
 			left : model.position.x,
@@ -61,6 +84,11 @@ function addNode(canvas, model){
 /*
  * 添加属性
  * autoBy:指定该属性是否由于连线而自动生成
+ */
+/**
+ * @param target
+ * @param propertyData
+ * @param isAddToModel
  */
 function addProperty(target, propertyData, isAddToModel) {
 	var dmodel = target.data("data"),
@@ -101,6 +129,10 @@ function addProperty(target, propertyData, isAddToModel) {
 }
 
 /*添加行为*/
+/**
+ * @param target
+ * @param actionData
+ */
 function addAction(target, actionData){
 	var dmodel = target.data("data");
 	var action = new Action("action","void");
@@ -112,6 +144,11 @@ function addAction(target, actionData){
 }
 
 /*添加枚举项*/
+/**
+ * @param target
+ * @param itemData
+ * @param isAddToModel
+ */
 function addEnumItem(target, itemData, isAddToModel){
 	var enumDom = $("#node-template .enumItem").clone(),
 		dmodel = target.data("data"),
@@ -144,6 +181,11 @@ function addEnumItem(target, itemData, isAddToModel){
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有更新操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*更新名字，需要级联更改自动生成的属性的类型名*/
+/**
+ * @param node
+ * @param input
+ * @param canvas
+ */
 function updateNodeName(node, input, canvas){
 	checkNodeName(node, input, canvas);
 	
@@ -206,6 +248,10 @@ function updateNodeName(node, input, canvas){
 }
 
 /*更新实体类型*/
+/**
+ * @param target
+ * @param type
+ */
 function updateEntityType(target, type){
 	var data = target.data("data");
 	target.find(".entityType").html(type);
@@ -213,12 +259,20 @@ function updateEntityType(target, type){
 }
 
 /*编辑元素的描述信息*/
+/**
+ * @param target
+ * @param val
+ */
 function updateDescription(target, val){
 	var data = target.data("data");
 	data.description = val;
 }
 
 /*更改属性的名字*/
+/**
+ * @param propertyDom
+ * @param val
+ */
 function updatePropertyName(propertyDom, val){
 	if(!propertyDom) return;
 	
@@ -231,6 +285,11 @@ function updatePropertyName(propertyDom, val){
 }
 
 /*更改属性的类型*/
+/**
+ * @param propertyDom
+ * @param val
+ * @param form
+ */
 function updatePropertyType(propertyDom, val, form){
 	if(!propertyDom) return;
 	
@@ -258,6 +317,10 @@ function updatePropertyType(propertyDom, val, form){
 }
 
 /*更改属性的泛型*/
+/**
+ * @param propertyDom
+ * @param val
+ */
 function updatePropertyGenericity(propertyDom, val){
 	if(!propertyDom) return;
 	
@@ -272,6 +335,10 @@ function updatePropertyGenericity(propertyDom, val){
 }
 
 /*更改枚举项的名字*/
+/**
+ * @param enumDom
+ * @param val
+ */
 function updateEnumName(enumDom, val){
 	if(!enumDom) return;
 	
@@ -285,6 +352,11 @@ function updateEnumName(enumDom, val){
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有检查操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
+/**
+ * @param node
+ * @param name
+ * @param canvas
+ */
 function checkNodeName(node, name, canvas){
 	var models 	= canvas.MODELS,
 		val 	= name.val(),
@@ -303,6 +375,10 @@ function checkNodeName(node, name, canvas){
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有删除操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*删除节点*/
+/**
+ * @param node
+ * @param canvas
+ */
 function deleteNode(node, canvas){
 	var id = node.attr("id");
 	var ls = commonTool.findRelatedLines(id,canvas.LINES);
@@ -320,6 +396,10 @@ function deleteNode(node, canvas){
 /**
  * 删除连线.
  * 有级联操作
+ */
+/**
+ * @param lines
+ * @param canvas
  */
 function deleteLines(lines,canvas){
 	var ldom,id;
@@ -388,6 +468,11 @@ function deleteLines(lines,canvas){
  * 自动命名。
  * 在某个命名空间内，采用递增的方式获取一个可用的命名
  */
+/**
+ * @param nodeType
+ * @param nameSpace
+ * @returns
+ */
 function getName(nodeType, nameSpace){
 	var name;
 	
@@ -399,6 +484,10 @@ function getName(nodeType, nameSpace){
 }
 
 /*获取所有已经被占用的节点名(忽略大小写)*/
+/**
+ * @param MS
+ * @returns {Array}
+ */
 function getNodeNameSpace(MS){
 	var namespace = [];
 	for(i in MS){

@@ -20,7 +20,7 @@ svgGraph = {
 			end[0] 		+ "," + end[1] 		+ " ");
 	},
 	
-	/*
+	/**
 	 * 重构所有连向某个结点的线的显示，传参结构为nodes数组的一个单元结构
 	 * node:被拖动的节点
 	 * nodes:当前画布上的所有节点（dom元素）
@@ -216,23 +216,6 @@ svgGraph = {
 	}
 };
 
-/*画html节点的画笔*/
-domGraph = {
-	/*选中节点*/
-	focusItem : function(){
-		
-	},
-	
-	/*删除节点时，需要级联删除连线和与连线有关系的属性*/
-	deleteNode : function(){
-		
-	},
-	
-	/*更新节点时，需要级联更新*/
-	updateNode : function(){
-		
-	}
-};
 /*
  * 部分关系到节点和连线的操作，以及所有跟连线和节点无关的操作放在commonTool里
  */
@@ -339,7 +322,7 @@ function Line(id, type, from, to, desc){
 	this.description	= desc;
 	this.lineType		= "line_of_centers";
 	/*后续操作赋值*/
-	this.points;
+	this.points			= [];
 	this.turningPoint;
 }
 
