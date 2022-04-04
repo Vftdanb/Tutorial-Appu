@@ -45,8 +45,6 @@ var setting = {
 									tab.addClass("tab_"+treeData.id);
 									$.get('pages/template.html').done(function(data) {
 										panel.html(data);
-										
-										var renderData = null;
 										panel.find('#canvas').umlCanvas(chartData);
 										
 										/*将project和chart缓存在工具栏上，以待后续操作用到*/
@@ -107,7 +105,7 @@ $("#add_project").click(function(){
 					dialog.close();
 				} else {
 					btn.html("创建失败");
-					setTimeout(function(){btn.html('创建')}, 500);
+					setTimeout(function(){btn.html('创建');}, 500);
 				}
 			});
 			
@@ -149,7 +147,7 @@ $("#add_chart").click(function(){
 						dialog.close();
 					} else {
 						btn.html("创建失败");
-						setTimeout(function(){btn.html('创建')}, 500);
+						setTimeout(function(){btn.html('创建');}, 500);
 					}
 				},
 				error 	: function(){

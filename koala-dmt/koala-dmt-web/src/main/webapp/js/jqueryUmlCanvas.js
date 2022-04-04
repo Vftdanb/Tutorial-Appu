@@ -174,8 +174,22 @@ function umlCanvas(thiz, renderData){
 				
 				THIS.LINEDOMS[lineId] = line;	//把新增的连线缓存起来
 				line.attr("class", line.attr("class").replace("templine", ""));
-				
 				THIS.resetLine(line);
+				
+				if(line.is(".aggregate,.compose,.associate")){
+					var l = THIS.LINES[lineId];
+					
+					var start = line.children("foreignobject").children(".start");
+					var end	= line.children("foreignobject").children(".end");
+					
+					l.multiplicity.start.name = "property1";
+					l.multiplicity.start.position = start.position();
+					
+					console.log(start.position());
+					
+					l.multiplicity.end.name="property2";
+					l.multiplicity.end.position = end.position();
+				}
 			}
 			
 			line = null;
@@ -419,8 +433,10 @@ function umlCanvas(thiz, renderData){
 			var model;
 			if(target.parents(".line_info:first").is(".end")){
 				model = THIS.MODELS[line.fromShapeId];
+				line.multiplicity.end.mapping = value;
 			} else if(target.parents(".line_info:first").is(".start")){
 				model = THIS.MODELS[line.toShapeId];
+				line.multiplicity.start.mapping = value;
 			}
 			
 			var property;
@@ -442,6 +458,8 @@ function umlCanvas(thiz, renderData){
 					property.type = value;
 				}
 			}
+			
+			
 			
 			return value;
 		}
@@ -471,8 +489,6 @@ umlCanvas.prototype = {
 		var models = JSON.parse(data.modelInfo);
 		var canvas = this;
 		
-		var canvas = this;
-		
 		/*反向生成节点*/
 		$.each(models, function(i, model){
 			addNode(canvas, model);
@@ -481,13 +497,31 @@ umlCanvas.prototype = {
 		/*方向生成线条*/
 		var lineDom, polyline;
 		$.each(lines, function(i, line){
-			lineDom = $("#line-template ." + line.relationType).clone();
+			lineDom = $("#line-template ." + line.relationType)
+					.clone()
+					.attr("id", line.lineId);
+			
+			lineDom.attr("class", lineDom.attr("class").replace("templine"), "");
+			
 			polyline = lineDom.children("polyline");
 			polyline.attr("points",line.points);
+			canvas.LINEDOMS[line.lineId] = lineDom;
+			canvas.LINES[line.lineId] = line;
 			
-			console.log(line);
+			if(line.relationType == "aggregate" ||
+			line.relationType == "associate" ||
+			line.relationType == "compose"){
+				var start = lineDom.children("foreignobject").children(".start");
+				var end = lineDom.children("foreignobject").children(".end");
+				
+				start.css(line.multiplicity.start.position);
+				end.css(line.multiplicity.end.position);
+				
+				start.find(".property_type").html(line.multiplicity.start.mapping);
+				end.find(".property_type").html(line.multiplicity.end.mapping);
+			}
 			
-			canvas.UMLCANVAS.append(lineDom);
+			canvas.SVGLINES.append(lineDom);
 		});
 	},
 	
@@ -521,7 +555,7 @@ umlCanvas.prototype = {
 		var lineData = this.LINES[line.attr("id")];
 		var node = $("#"+lineData.toShapeId);
 		
-		this.resetLines(node, [], [lineData]);
+		this.resetLines(node, null, [lineData]);
 	},
 	
 	/**
@@ -620,7 +654,7 @@ umlCanvas.prototype = {
 			if(dy < 0){
 				Deg = Math.PI + Deg;
 			} else if(dy > 0){
-				Deg = 2*Math.PI - Deg
+				Deg = 2*Math.PI - Deg;
 			}
 		}
 		
@@ -651,11 +685,10 @@ umlCanvas.prototype = {
 	 * @param line 线段
 	 */
 	dragLine : function(startNode, endNode, turningPoint, line){
-		var arr = this.getEndpoints(startNode, turningPoint);
 		line.attr("points", 
 			this.getEndpoints(startNode, turningPoint).start.join() + 
 			" " +  turningPoint.join() +  " " + 
-			this.getEndpoints(turningPoint, endNode).end.join())
+			this.getEndpoints(turningPoint, endNode).end.join());
 	},
 	
 	/**
@@ -779,7 +812,7 @@ umlCanvas.prototype = {
  */
 $.fn.umlCanvas = function(renderData){
 	$(this).find(".tools_bar:first").data("canvas", new umlCanvas($(this), renderData));
-}
+};
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓全局性事件↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /*收起右键菜单*/
@@ -798,6 +831,8 @@ $("#add_nodes").delegate(".contextmenu_item", "click", function(e){
 		type = "INTERFACE";
 	} else if(thiz.is(".add_enum")){
 		type = "ENUM";
+	} else {
+		return;
 	}
 	
 	var offset = canvas.UMLCANVAS.offset();
@@ -806,10 +841,6 @@ $("#add_nodes").delegate(".contextmenu_item", "click", function(e){
 			y:e.pageY - offset.top
 		};
 	
-	var node = $("#node-template ."+type.toLowerCase()).clone().css({
-		left : position.x,
-		top  : position.y
-	});
 	var id = commonTool.guid();
 	var modelName = getName(type.toLowerCase(), getNodeNameSpace(canvas.MODELS)).firstUpcase();
 	

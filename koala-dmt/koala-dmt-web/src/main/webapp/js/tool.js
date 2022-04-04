@@ -114,7 +114,7 @@ svgGraph = {
 			if(dy < 0){
 				Deg = Math.PI + Deg;
 			} else if(dy > 0){
-				Deg = 2*Math.PI - Deg
+				Deg = 2*Math.PI - Deg;
 			}
 		}
 		
@@ -129,11 +129,10 @@ svgGraph = {
 	 * line:线段
 	 */
 	dragLine : function(startNode, endNode, turningPoint, line){
-		var arr = this.getEndpoints(startNode, turningPoint);
 		line.attr("points", 
 			this.getEndpoints(startNode, turningPoint).start.join() + 
 			" " +  turningPoint.join() +  " " + 
-			this.getEndpoints(turningPoint, endNode).end.join())
+			this.getEndpoints(turningPoint, endNode).end.join());
 	},
 	
 	/*
@@ -329,16 +328,17 @@ function Line(id, type, from, to, desc){
 /*关联箭头*/
 function AssociatedLine(id, type, from, to, desc, startPosition, endPosition){
 	Line.call(this, id, type, from, to, desc);
+	
 	this.multiplicity	= {
 		start:{
 			mapping : "1",
 			name : "",
-			position:[] //left,top坐标
+			position:{"left":0,"top":0} //left,top坐标
 		},
 		end:{
 			mapping : "1",
 			name : "",
-			position:[] //left,top坐标
+			position:{} //left,top坐标
 		}
 	};
 }
