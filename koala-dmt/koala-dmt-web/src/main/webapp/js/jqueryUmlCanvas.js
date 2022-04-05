@@ -9,7 +9,15 @@ function swichTool(name, canvas){
 	tool.addClass("current-tool");
 }
 
-function umlCanvas(thiz, renderData){
+function /**
+ * @author LW
+ *
+ */
+/**
+ * @author LW
+ *
+ */
+umlCanvas(thiz, renderData){
 	/*全局变量*/
 	var THIS		= this;
 	
@@ -122,9 +130,9 @@ function umlCanvas(thiz, renderData){
 				e.preventDefault();
 				
 				if(node2){
-					endpoints = svgGraph.getEndpoints(node1,node2);
+					endpoints = THIS.getEndpoints(node1,node2);
 				} else {
-					endpoints = svgGraph.getEndpoints(node1,[e.pageX - offset.left, e.pageY - offset.top]);
+					endpoints = THIS.getEndpoints(node1,[e.pageX - offset.left, e.pageY - offset.top]);
 				}
 				THIS.moveLine(line, endpoints.start , endpoints.end);
 			}
@@ -214,7 +222,7 @@ function umlCanvas(thiz, renderData){
 		
 		/*拖动线段*/
 		function drag(e){
-			svgGraph.dragLine(fromNode, toNode, [turningPoint[0] + e.clientX - startPosition[0], turningPoint[1] + e.clientY - startPosition[1]], line);
+			THIS.dragLine(fromNode, toNode, [turningPoint[0] + e.clientX - startPosition[0], turningPoint[1] + e.clientY - startPosition[1]], line);
 		}
 		
 		THIS.UMLCANVAS.delegate("polyline", "mousedown", function(e){
@@ -584,23 +592,7 @@ umlCanvas.prototype = {
 				this.LINEDOMS[outs[i].lineId].children("polyline").attr("points", points.join(" "));
 			}
 			
-			Deg = this.getDeg(endpoints.end[1] - endpoints.start[1], endpoints.end[0] - endpoints.start[0]);
-			
-			dy = Math.sin(Deg+7*Math.PI/4)*30-10;
-			dx = Math.cos(Deg+7*Math.PI/4)*30-10;
-			$("#"+lineId+" .start").css({
-				top:endpoints.start[1] + dy,
-				left:endpoints.start[0] + dx
-			});
-			
-			if(outs[i].lineType != "turning_line"){
-				dy = Math.sin(Deg+5*Math.PI/4)*30 -10;
-				dx = Math.cos(Deg+5*Math.PI/4)*30 -10;
-				$("#" + lineId + " .end").css({
-					top : endpoints.end[1] + dy,
-					left : endpoints.end[0] + dx
-				});
-			}
+			this.resetLineInfo(outs[i], endpoints, "start");
 		}
 		
 		/*重画指入的线*/
@@ -609,7 +601,7 @@ umlCanvas.prototype = {
 			lineId = ins[i].lineId;
 			if(ins[i].lineType == "line_of_centers"){//连心线
 				endpoints = this.getEndpoints(this.NODEDOMS[ins[i].fromShapeId], node);
-				ins[i].points = this.moveLine(this.LINEDOMS[ins[i].lineId],endpoints.start, endpoints.end);
+				ins[i].points = this.moveLine(this.LINEDOMS[ins[i].lineId], endpoints.start, endpoints.end);
 			} else if(ins[i].lineType == "turning_line"){ //手动折线
 				endpoints = this.getEndpoints(ins[i].turningPoint, node);
 				var points = this.LINEDOMS[ins[i].lineId].children("polyline").attr("points").split(" ");
@@ -617,22 +609,46 @@ umlCanvas.prototype = {
 				this.LINEDOMS[ins[i].lineId].children("polyline").attr("points", points.join(" "));
 			}
 			
+			this.resetLineInfo(ins[i], endpoints, "end");
+		}
+	},
+	/**
+	 * 拖动线条时，线条的描述信息联动
+	 * @param lineData
+	 * @param endpoints
+	 */
+	resetLineInfo : function(lineData, endpoints, endOrStart){
+		if(lineData.relationType == "aggregate" || 
+		lineData.relationType == "associate" || 
+		lineData.relationType == "compose"){
 			Deg = this.getDeg(endpoints.end[1] - endpoints.start[1], endpoints.end[0] - endpoints.start[0]);
-			if(ins[i].lineType != "turning_line"){
+			if(lineData.lineType != "turning_line" || endOrStart == "start"){
 				dy = Math.sin(Deg+7*Math.PI/4)*30-10;
 				dx = Math.cos(Deg+7*Math.PI/4)*30-10;
-				$("#"+lineId+" .start").css({
+				$("#"+lineData.lineId+" .start").css({
 					top:endpoints.start[1] + dy,
 					left:endpoints.start[0] + dx
 				});
+				
+				lineData.multiplicity.start.position = {
+					top : endpoints.start[1] + dy,
+					left: endpoints.start[0] + dx
+				};
 			}
 			
-			dy = Math.sin(Deg+5*Math.PI/4)*30 - 10;
-			dx = Math.cos(Deg+5*Math.PI/4)*30 - 10;
-			$("#"+lineId+" .end").css({
-				top:endpoints.end[1] + dy,
-				left : endpoints.end[0] + dx
-			});
+			if(lineData.lineType != "turning_line" || endOrStart == "end"){
+				dy = Math.sin(Deg+5*Math.PI/4)*30 - 10;
+				dx = Math.cos(Deg+5*Math.PI/4)*30 - 10;
+				$("#"+lineData.lineId+" .end").css({
+					top:endpoints.end[1] + dy,
+					left : endpoints.end[0] + dx
+				});
+				
+				lineData.multiplicity.end.position = {
+						top : endpoints.end[1] + dy,
+						left: endpoints.end[0] + dx
+				};
+			}
 		}
 	},
 	
@@ -662,6 +678,56 @@ umlCanvas.prototype = {
 	},
 	
 	/**
+	 * 计算连线的起点和终点
+	 * 有两种情况
+	 * 1.点和矩形连线
+	 * 2.矩形和矩形连线
+	 * 
+	 * 返回值:{
+	 * 		start:[],
+	 * 		end:[]
+	 * }
+	 * 
+	 * @param startPoint
+	 * @param endPoint
+	 * @returns {___anonymous20654_20697}
+	 */
+	getEndpoints : function(startPoint, endPoint){
+		var start , end , center;
+		/*
+		 * 在获取起点之前，要先知道第二个节点中心
+		 * （其实是知道任意一个节点的中心点）
+		 */
+		if(endPoint instanceof Array){ //如果是数组，说endPoint是点
+			center = [endPoint[0] ,endPoint[1]];
+		} else { //否则是矩形，计算中心点
+			var p2 = endPoint.position();
+			center = [p2.left+endPoint.width()/2 , p2.top+endPoint.height()/2];
+		}
+		
+		/*获取起点*/
+		if(startPoint instanceof Array){ //如果是数组，说endPoint是点
+			start = startPoint;
+		} else { //
+			var p1 = startPoint.position();
+			start = this.getPoint([p1.left, p1.top],startPoint.outerWidth(),startPoint.outerHeight(),center);
+		}
+		
+		/*获取终点*/
+		if(endPoint instanceof Array){
+			end = endPoint;
+		} else {
+			var p2 = endPoint.position();
+			end = this.getPoint([p2.left, p2.top],endPoint.outerWidth(),endPoint.outerHeight(),start);
+		}
+		
+		return {
+			"start" : start,
+			"end" 	: end
+		};
+	},
+	
+	/**
 	 * 移动一条直线
 	 * @param line
 	 * @param start
@@ -685,10 +751,18 @@ umlCanvas.prototype = {
 	 * @param line 线段
 	 */
 	dragLine : function(startNode, endNode, turningPoint, line){
+		var eps1 = this.getEndpoints(startNode, turningPoint);
+		var eps2 = this.getEndpoints(turningPoint, endNode);
+		
 		line.attr("points", 
-			this.getEndpoints(startNode, turningPoint).start.join() + 
+			eps1.start.join() + 
 			" " +  turningPoint.join() +  " " + 
-			this.getEndpoints(turningPoint, endNode).end.join());
+			eps2.end.join());
+		
+		var lineId = line.parents(".line:first").attr("id");
+		
+		this.resetLineInfo(this.LINES[lineId], eps1, "start");
+		this.resetLineInfo(this.LINES[lineId], eps2, "end");
 	},
 	
 	/**
@@ -798,8 +872,8 @@ umlCanvas.prototype = {
 	 * @returns {Array}
 	 */
 	getLines : function(){
-		var temp, lines = [];
-		for(temp in this.LINES){
+		var lines = [];
+		for(var temp in this.LINES){
 			lines.push(this.LINES[temp]);
 		}
 		
