@@ -59,8 +59,8 @@ umlCanvas(thiz, renderData){
 		var model1 = model2 = null;		//起点和终点分别对应领域模型
 		var startP 	= null;
 		var endpoints = null;
-		var line;
-		var offset;
+		var line = null;
+		var offset = null;
 		
 		/*拖动划线*/
 		THIS.UMLCANVAS.delegate(".node", "mousedown", function(e){
@@ -79,7 +79,7 @@ umlCanvas(thiz, renderData){
 			if(THIS.CURTOOL.type != "line") return;
 			
 			var thiz  = $(this),
-				toolName = THIS.CURTOOL.name, 					//toolname
+				toolName = THIS.CURTOOL.name, 				//toolname
 				nodeType = thiz.attr("class").split(" ")[1];	//nodeType
 			
 			/**
@@ -212,12 +212,12 @@ umlCanvas(thiz, renderData){
 	
 	/*拖动线段形成转折点*/
 	(function(){
-		var turningPoint,
-			startPosition,
-			fromNode,
-			toNode,
-			line,
-			lineData,
+		var turningPoint = null,
+			startPosition = null,
+			fromNode = null,
+			toNode = null,
+			line = null,
+			lineData = null,
 			draging = false; 	//标志当前状态是否划线状态
 		
 		/*拖动线段*/
@@ -246,8 +246,7 @@ umlCanvas(thiz, renderData){
 				THIS.UMLCANVAS.unbind("mousemove", drag);
 				line.removeClass("draging");
 				
-				lineData.startPoint = line.attr("points").split(" ")[0].split(",");
-				lineData.endPoint = line.attr("points").split(" ")[2].split(",");
+				lineData.points = line.attr("points");
 				
 				draging = false;
 				line = null;
@@ -266,7 +265,6 @@ umlCanvas(thiz, renderData){
 		var downPosition 	= null;	//鼠标点击的初始位置
 		var relatedLines 	= null;	//与被拖动节点相连的线
 		var moving			= false;//
-		var endPoints		= null;
 		/*拖拽节点事件处理函数*/
 		var drag = function(e){
 			e.preventDefault();
@@ -302,6 +300,14 @@ umlCanvas(thiz, renderData){
 		});
 	})();
 	
+	/*节点内容变动时，重置连线*/
+	THIS.UMLCANVAS.delegate(".node", "DOMNodeInserted DOMCharacterDataModified", function(e){
+		var target = $(this);
+		var relatedLines 	= THIS.findRelatedLines(target.attr("id"));
+		/*改变连线*/
+		THIS.resetLines(target, relatedLines.outLines, relatedLines.inLines);
+	});
+	
 	/*点击鼠标添加节点*/
 	THIS.UMLCANVAS.delegate("svg", "mousedown", function(e){
 		if(THIS.CURTOOL.type == "node"){
@@ -312,14 +318,10 @@ umlCanvas(thiz, renderData){
 				};
 			var type = THIS.CURTOOL.name;
 			
-			var node = $("#node-template ."+type.toLowerCase()).clone().css({
-				left : position.x,
-				top  : position.y
-			});
 			var id = commonTool.guid();
 			var modelName = getName(type.toLowerCase(), getNodeNameSpace(THIS.MODELS)).firstUpcase();
 			
-			var model;
+			var model = null;
 			if(type == "ENTITY"){
 				model 		= new EntityShape(id, THIS.CHARTID, modelName, position, type, "", false, false);
 			} else if(type == "INTERFACE"){
@@ -375,14 +377,6 @@ umlCanvas(thiz, renderData){
 		swichTool($(this).attr("name").toLowerCase(), THIS);
 	});
 	
-	/** 
-	 * 编辑节点名字 
-	 */
-	THIS.UMLCANVAS.delegate(".name", "dblclick", function(e){
-		var node 	= $(this).parents(".node"),
-			dmodel 	= node.data("data");
-	});
-	
 	/*工具栏切换*/
 	THIS.TOOLBAR.find(".swich_tool_view").click(function(){
 		var thiz = $(this);
@@ -398,7 +392,7 @@ umlCanvas(thiz, renderData){
 	/*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓右键功能↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 	/*右键添加属性或行为或枚举项等等*/
 	THIS.UMLCANVAS.delegate(".node", "contextmenu", function(e){
-		var thiz = $(this), selector;
+		var thiz = $(this), selector = null;
 		
 		if(thiz.is(".entity")){ 			//右键实体，添加属性和行为
 			selector = "entity";
@@ -431,14 +425,14 @@ umlCanvas(thiz, renderData){
 		option : ".option",
 		seleted : ".selected",
 		optionList : "<div class='option_list'><div class='option'>1</div><div class='option'>Set</div><div class='option'>List</div></div>",
-		target : ".property_type",
+		target : ".multiplicity_type",
 		width:"auto",
 		format : function(target, option){
 			var value = option.html();
 			var lineId = target.parents(".line:first").attr("id");
 			var line = THIS.LINES[lineId];
 			
-			var model;
+			var model = null;
 			if(target.parents(".line_info:first").is(".end")){
 				model = THIS.MODELS[line.fromShapeId];
 				line.multiplicity.end.mapping = value;
@@ -447,7 +441,7 @@ umlCanvas(thiz, renderData){
 				line.multiplicity.start.mapping = value;
 			}
 			
-			var property;
+			var property = null;
 			for(var i in model.properties){
 				property = model.properties[i];
 				if(property.autoBy && property.autoBy == lineId){
@@ -466,9 +460,7 @@ umlCanvas(thiz, renderData){
 					property.type = value;
 				}
 			}
-			
-			
-			
+
 			return value;
 		}
 	});
@@ -499,7 +491,7 @@ umlCanvas.prototype = {
 		
 		/*反向生成节点*/
 		$.each(models, function(i, model){
-			addNode(canvas, model);
+			modelDom = addNode(canvas, model);
 		});
 		
 		/*方向生成线条*/
@@ -525,8 +517,8 @@ umlCanvas.prototype = {
 				start.css(line.multiplicity.start.position);
 				end.css(line.multiplicity.end.position);
 				
-				start.find(".property_type").html(line.multiplicity.start.mapping);
-				end.find(".property_type").html(line.multiplicity.end.mapping);
+				start.find(".multiplicity_type").html(line.multiplicity.start.mapping);
+				end.find(".multiplicity_type").html(line.multiplicity.end.mapping);
 			}
 			
 			canvas.SVGLINES.append(lineDom);
@@ -573,10 +565,9 @@ umlCanvas.prototype = {
 	 * @param ins 所有指向被拖动节点的箭头
 	 */
 	resetLines : function(node, outs, ins) {
-		var endpoints;
+		var endpoints = null;
 		//dy = DELTA left
 		//dx = DELTA top
-		var Deg, dx, dy,lineId;
 		
 		/*重画指出的线*/
 		if(outs)
@@ -590,6 +581,7 @@ umlCanvas.prototype = {
 				var points = this.LINEDOMS[outs[i].lineId].children("polyline").attr("points").split(" ");
 				points[0] = endpoints.start.join();
 				this.LINEDOMS[outs[i].lineId].children("polyline").attr("points", points.join(" "));
+				outs[i].points = points.join(" ");
 			}
 			
 			this.resetLineInfo(outs[i], endpoints, "start");
@@ -607,6 +599,7 @@ umlCanvas.prototype = {
 				var points = this.LINEDOMS[ins[i].lineId].children("polyline").attr("points").split(" ");
 				points[2] = endpoints.end.join();
 				this.LINEDOMS[ins[i].lineId].children("polyline").attr("points", points.join(" "));
+				ins[i].points = points.join(" ");
 			}
 			
 			this.resetLineInfo(ins[i], endpoints, "end");
@@ -736,11 +729,9 @@ umlCanvas.prototype = {
 	 * @returns 移动后线条的点
 	 */
 	moveLine : function(line, start, end, turningPoint){
-		return line.children("polyline").attr("points", 
-			start[0] 	+ "," + start[1] 	+ " " +
-			end[0] 		+ "," + end[1] 		+ " ").attr("points");
-		
-		
+		var points = start[0] + "," + start[1] 	+ " " + end[0] + "," + end[1] + " ";
+		line.children("polyline").attr("points",points);
+		return  points;
 	},
 	
 	/**
@@ -918,7 +909,7 @@ $("#add_nodes").delegate(".contextmenu_item", "click", function(e){
 	var id = commonTool.guid();
 	var modelName = getName(type.toLowerCase(), getNodeNameSpace(canvas.MODELS)).firstUpcase();
 	
-	var model;
+	var model = null;
 	if(type == "ENTITY"){
 		model 		= new EntityShape(id, canvas.CHARTID, modelName, position, type, "", false, false);
 	} else if(type == "INTERFACE"){

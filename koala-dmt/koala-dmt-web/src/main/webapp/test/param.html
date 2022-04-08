@@ -4,14 +4,30 @@
 		<meta charset="utf-8">
 		<title></title>
 		<style>
-			select{
-				padding:2px;
+			.param{
+				
+			}
+			.param_type{
+				
+			}
+			.genericity{
+				min-width:20px;
+			}
+			
+			.genericity:before{
+				content:"<";
+				padding-right:1px;
+			}
+			.genericity:after{
+				content:">";
+				padding-left:1px;
 			}
 		</style>
 	</head>
 	<body>
-		<select>
-			<option value="test">文字</option>
-		</select>
+		<span class="param_type common">
+			<span>List</span>
+			<span class="genericity">String</span>
+		</span>
 	</body>
 </html>

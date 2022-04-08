@@ -24,7 +24,6 @@ function ZOOM(t,canvas){
  */
 function showContextmenu(target, e, menuName, selector, canvas){
 	e.preventDefault();
-	var position = commonTool.mousePosition(e);
 	
 	$("#"+menuName)
 	.css({ top : e.pageY, left : e.pageX})
@@ -91,14 +90,7 @@ function addNode(canvas, model){
  * @param isAddToModel
  */
 function addProperty(target, propertyData, isAddToModel) {
-	var dmodel = target.data("data"),
-		name = getName("property",(function(){
-			var namespace = [];
-			$.each(dmodel.properties, function(i,p){
-				namespace.push(p.name);
-			});
-			return namespace;
-		})());
+	var dmodel = target.data("data");
 		
 		if(isAddToModel) dmodel.properties.push(propertyData);
 		
@@ -108,8 +100,8 @@ function addProperty(target, propertyData, isAddToModel) {
 	 */
 	if(!propertyData.autoBy) {
 		propertyDom = $("#node-template .property").clone();
-		propertyDom.find(".propertyType").html(propertyData.type)
-		propertyDom.find(".propertyName").html(propertyData.name)
+		propertyDom.find(".propertyType").html(propertyData.type);
+		propertyDom.find(".propertyName").html(propertyData.name);
 		
 		target.find(".properties").append(propertyDom);
 		
@@ -133,7 +125,7 @@ function addProperty(target, propertyData, isAddToModel) {
  * @param target
  * @param actionData
  */
-function addAction(target, actionData){
+function addAction(target, actionData, isAddToModel){
 	var dmodel = target.data("data");
 	var action = new Action("action","void");
 	var actDom = $("#node-template .action").clone();
@@ -193,10 +185,9 @@ function updateNodeName(node, input, canvas){
 	var inAout 	= commonTool.findRelatedLines(node.attr("id"),canvas.LINES),
 		newName = input.val(),
 		data	= node.data("data"),
-		ins 	= inAout.inLines,
-		outs 	= inAout.outLines;
+		ins 	= inAout.inLines;
 	
-	var node,model; //node and domainmodel
+	var model; //node and domainmodel
 	$.each(ins,function(i, line){
 		line = ins[i];
 		node = $("#"+line.fromShapeId);
@@ -437,8 +428,7 @@ function deleteLines(lines,canvas){
 			case "compose" 	: {
 				var from = canvas.MODELS[line.fromShapeId];
 				if(from){
-					var to 			= canvas.MODELS[line.toShapeId],
-						fromNode 	= canvas.NODEDOMS[from.shapeId],
+					var fromNode 	= canvas.NODEDOMS[from.shapeId],
 						properties 	= from.properties,
 						propertyDom = fromNode.find("."+id);
 						

@@ -104,7 +104,7 @@ function Line(id, type, from, to, desc){
 	this.description	= desc;
 	this.lineType		= "line_of_centers";
 	/*后续操作赋值*/
-	this.points			= [];
+	this.points			= "";
 	this.turningPoint;
 }
 
@@ -126,7 +126,16 @@ function AssociatedLine(id, type, from, to, desc, startPosition, endPosition){
 	};
 }
 
-/*节点数据结构*/
+
+/**
+ * 节点数据结构
+ * @param id 
+ * @param charid
+ * @param name
+ * @param position
+ * @param type
+ * @param desc
+ */
 function DomainShape(id, charid, name, position, type, desc){
 	this.shapeId		= id;
 	this.position 		= position;
