@@ -19,7 +19,7 @@ function showContextmenu(target,e,menuName,selector,canvas){
 	.css({ top : e.pageY, left : e.pageX})
 	.data("target",target)
 	.data("canvas",canvas)
-	.removeClass(function(index,clazz){return clazz.split(" ")[1];})
+	.removeClass(function(index, clazz){return clazz.split(" ")[1];})
 	.addClass(selector)
 	.slideDown().focus();
 }

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="../tree/css/style.css" />
+		<style>
+			.text_combobox{
+				border:1px solid #66CC00;
+				padding:4px;
+			}
+			
+			#imgs img{
+				cursor:pointer;
+			}
+			
+			#imgs img:hover{
+				outline:1px solid #6666CC;
+			}
+			
+			.img_select{
+				float:left;
+				margin:10px;
+				height:49px;
+				width:49px;
+				text-align:center;
+				line-height:0;
+				border:1px solid #66CC00;
+			}
+		</style>
+	</head>
+	<body>
+		<input class="text_combobox" type="text"/>
+		<div class="img_combobox" style="margin-top:200px;">
+			<div class="img_select"></div>
+			<div class="img_select"></div>
+			<div class="img_select"></div>
+			<div class="img_select"></div>
+			<div class="img_select"></div>
+		</div>
+		
+		<div id="imgs" style="display:none;">
+			<img src="../../img/5577/1.png"/>
+			<img src="../../img/5577/10.png"/>
+			<img src="../../img/5577/12.png"/>
+			<img src="../../img/5577/14.png"/>
+			<img src="../../img/5577/16.png"/>
+			<img src="../../img/5577/18.png"/>
+			<img src="../../img/5577/2.png"/>
+			<img src="../../img/5577/20.png"/>
+			<img src="../../img/5577/22.png"/>
+			<img src="../../img/5577/26.png"/>
+			<img src="../../img/5577/8.png"/>
+			<img src="../../img/5577/24.png"/>
+			<img src="../../img/5577/28.png"/>
+		</div>
+	</body>
+	
+	<script type="text/javascript" src="../../lib/require.js"></script>
+	<script type="text/javascript">
+		require.config({
+			paths: {
+				jquery 	: '../../lib/jquery-1.8.3.min',
+				tree 	: "../tree/tree"
+			}
+		});
+		
+		
+		require(["comboBox","tree"],function(){
+			var treeSetting = {
+				data : [{
+				    name: "我的电脑",
+				    children: [{
+				        name: "系统盘"
+				    },{
+				        name: "学习与工作",
+				        children: [{
+				            name: "我的工程",
+				            children: [{
+				                name: "mint_ui"
+				            },{
+				                name: "myMvc"
+				            }]
+				        },{
+				            name: "工作",
+				            children: {}
+				        }]
+				    }]
+				}]
+			};
+			
+			/*
+			 * combobox 采用抽象的设计方法，
+			 * 抽象概念包括：option,selected
+			 * 这些概念借用自select标签
+			 */
+			var setting = {
+				option 		: ".node_info" ,
+				selected 	: "active" ,
+				/**
+				 * 在“option”被点击是触发的回调函数
+				 */
+				onSelect 	: function(target,option){
+					//target.val(option.html());
+				},
+				
+				/**
+				 * 对选中的“option”进行格式化，
+				 * 如果有返回值，将被视作最终的值
+				 */
+				format 		: function(target, option){
+					return option.find(".node_name").html();
+				},
+				
+				refresh 	: function(target, combobox){
+					
+				},
+				
+				/**
+				 * 用以每次打开下拉框时渲染下拉框新的内容
+				 * 改回调函数
+				 */
+				render 		: function(target, combobox){
+					var tree = $("<div/>");
+					tree.tree(treeSetting).openAll();
+					combobox.html(tree);
+				}
+			};
+			
+			var img_combobox = {
+				option 		: "img" ,
+				selected 	: "active" ,
+				optionList 	: $("#imgs"),
+				target 		: ".img_select",
+				width 		: "300px", 
+				/**
+				 * 在“option”被点击是触发的回调函数
+				 * 对选中的“option”进行格式化，
+				 * 如果有返回值，将被视作最终的值
+				 */
+				format 		: function(target, option){
+					return option.clone();
+				},
+				
+				/**
+				 * 用以每次打开下拉框时渲染下拉框新的内容
+				 * 改回调函数
+				 */
+				render 		: function(target, combobox){
+					$.ajax({
+						url 		: "ajaxdata.html",
+						dataType 	: "text",
+						success 	: function(data){
+							combobox.html(data);
+						}
+					});
+				}
+			}
+			
+			var combobox = $(".text_combobox").comboBox(setting);
+			$(".img_combobox").comboBox(img_combobox);
+		});
+	</script>
+	
+</html>

@@ -74,32 +74,32 @@
         }
     }
     
-    svg {
+    svg{
         /*线条的样式*/
         .uml_lines {
             cursor:hand;
-            polyline {
-                stroke-linecap:round;
-                stroke-width:2px;
-                stroke:#5890c1;
-                fill:none;
-                cursor:pointer;
-                transition: 0.3s stroke-width;
-                stroke-linejoin:round;
-            }
-            
-           .line-info{
-                height:40px;
-                width:40px;
-                position:absolute;
-                background:red;
-            }
-            
-            .active[not(.draging)] polyline{
-                stroke-width:3px;
+            .line{
+                polyline {
+                    stroke-linejoin:round;
+                    stroke-linecap:round;
+                    stroke-width:2px;
+                    stroke:#5890c1;
+                    fill:none;
+                    cursor:pointer;
+                    transition: 0.3s stroke-width;
+                }
+               .line_info{
+                    position:absolute;
+                    z-index:10;
+                }
+                
+                &.templine .line_info{
+                    display:none;
+                }
             }
         }
     }
+    
     #template{
         display:none;
     }
@@ -216,7 +216,7 @@
     
     .action {
         div{
-            display : inline;
+            display:inline;
         }
         
         .parameters{
@@ -255,4 +255,4 @@
             }
         }
     }
-} 
+}

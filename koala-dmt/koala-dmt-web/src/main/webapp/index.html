@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="lib/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
 		<link rel="stylesheet" href="lib/dialog/style.css" type="text/css">
 		<link rel="stylesheet" href="lib/tab/css/style.css" type="text/css"/>
+		<link rel="stylesheet" href="lib/comboBox/css/style.css" type="text/css"/>
  		<style>
 			.label{
 				display:inline-block;
@@ -49,6 +50,32 @@
 			}
 			.dialog_buttons button:active{
 				background:#5A94FF;
+			}
+			
+			.option_list div{
+				cursor:pointer;
+				text-align:center;
+			}
+			
+			.option_list div:hover{
+				background:#ffebbf;
+			}
+			
+			.option_list .selected{
+				background:#ccc;
+			}
+			
+			.multiplicity{
+				display: inline-block;
+				text-align: center;
+				width:20px;
+				background:white;
+				border:1px solid #ccc;
+				cursor:pointer;
+			}
+			
+			.multiplicity:hover{
+				background:#ffebbf;
 			}
 		</style>
 	</head>
@@ -258,27 +285,52 @@
 			<!-- 线条模板 -->
 			<svg id="line-template">
 				<!-- 继承关系连线模板 -->
-				<g class="line extends templine">
+				<g class="line extends templine" relationType="extends">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1)"></polyline>
-					<foreignobject>
-						<div class="start line-info" style="left:400px;top:300px;"></div>
-						<div class="end line-info" style="left:400px;top:300px;"></div>
-					</foreignobject>
 				</g>
+				
 				<!-- 实现关系连线模板 -->
-				<g class="line implements templine">
+				<g class="line implements templine" relationType="implements">
 					<polyline points="0,0 0,0" style="marker-end:url(#arrow1);stroke-dasharray:5"></polyline>
 				</g>
+				
 				<!-- 聚合关系连线模板 -->
-				<g class="line aggregate templine">
+				<g class="line aggregate templine" relationType="aggregate">
+					<foreignobject>
+						<div class="start line_info">
+							<span class="multiplicity">*</span>
+						</div>
+						<div class="end line_info">
+							<span class="multiplicity">*</span>
+						</div>
+					</foreignobject>
 					<polyline points="0,0 0,0" style="marker-start:url(#arrow2)"></polyline>
 				</g>
+				
 				<!-- 组合关系连线模板  -->
-				<g class="line compose templine">
+				<g class="line compose templine" relationType="compose">
+					<foreignobject>
+						<div class="start line_info">
+							<span class="multiplicity">*</span>
+						</div>
+						<div class="end line_info">
+							<span class="multiplicity">*</span>
+						</div>
+					</foreignobject>
 					<polyline points="0,0 0,0" style="marker-start:url(#arrow3)"></polyline>
 				</g>
 				<!-- 关联关系连线模板  -->
-				<g class="line associate templine"><polyline points="0,0 0,0"></polyline></g>
+				<g class="line associate templine" relationType="associate">
+					<foreignobject>
+						<div class="start line_info">
+							<span class="multiplicity">*</span>
+						</div>
+						<div class="end line_info">
+							<span class="multiplicity">*</span>
+						</div>
+					</foreignobject>
+					<polyline points="0,0 0,0"></polyline>
+				</g>
 			</svg>
 			
 			<!-- 节点模板 -->
@@ -393,6 +445,7 @@
 		<script type="text/javascript" src="lib/dialog/dialog.js"></script>
 		<script type="text/javascript" src="lib/tab/tab.js"></script>
 		<script type="text/javascript" src="lib/zTree_v3/js/jquery.ztree.core-3.5.min.js"></script>
+		<script type="text/javascript" src="lib/comboBox/comboBox.js"></script>
 		<!-- 项目js -->
 		<script type="text/javascript" src="js/jqueryUmlCanvas.js" ></script>
 		<script type="text/javascript" src="js/editDialog.js"></script>
