@@ -82,7 +82,7 @@ public abstract class DomainShape extends AbstractEntity {
 		this.description = description;
 	}
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "domainShape", fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "domainShape")
 	public List<Action> getActions() {
 		return actions;
 	}
