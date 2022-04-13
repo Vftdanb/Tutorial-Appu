@@ -343,7 +343,7 @@ umlCanvas(thiz, renderData){
 	THIS.UMLCANVAS.contextmenu(function(e){
 		var target = $(e.target);
 		if(target.is("svg")){
-			showContextmenu(target, e, "add_nodes", null, THIS);
+			THIS.showContextmenu(target, e, "add_nodes", null, THIS);
 		}
 	});
 	
@@ -363,7 +363,16 @@ umlCanvas(thiz, renderData){
 			
 			addProperty(node, property, true);
 		} else if(THIS.CURTOOL.name == "action"){ 	//添加行为
-			addAction(node);
+			/*自动获取不重复的命名*/
+			var actionName = getName("action", (function(){
+				var namespace = [];
+				$.each(node.data("data").actions, function(i, a){
+					namespace.push(a.name);
+				});
+				return namespace;
+			})());
+			var action = new Action(actionName, "void");
+			addAction(node, action, true);
 		} 
 		var relatedLines = THIS.findRelatedLines(node.attr("id"));
 		THIS.resetLines(node, relatedLines.outLines, relatedLines.inLines);
@@ -402,12 +411,12 @@ umlCanvas(thiz, renderData){
 			selector = "enum";
 		}
 		
-		showContextmenu(thiz, e, "add_members", selector, THIS);
+		THIS.showContextmenu(thiz, e, "add_members", selector, THIS);
 	});
 	
 	/*编辑线条的右键菜单*/
 	THIS.SVGLINES.delegate(".line","contextmenu", function(e){
-		showContextmenu($(this), e, "edit_lines", null, THIS);
+		THIS.showContextmenu($(this), e, "edit_lines", null, THIS);
 	});
 	/*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑右键功能↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 	
@@ -548,13 +557,12 @@ umlCanvas.prototype = {
 	},
 	
 	/**
-	 * 重置指定的箭头，级联更改数据
+	 * 重置指定的箭头，级联更改线条的控制数据
 	 * @param line
 	 */
 	resetLine : function(line){
 		var lineData = this.LINES[line.attr("id")];
 		var node = $("#"+lineData.toShapeId);
-		
 		this.resetLines(node, null, [lineData]);
 	},
 	
@@ -869,6 +877,25 @@ umlCanvas.prototype = {
 		}
 		
 		return lines;
+	},
+	
+	/**
+	 * 显示右键菜单
+	 * @param target
+	 * @param e
+	 * @param menuName
+	 * @param selector
+	 * @param canvas
+	 */
+	showContextmenu : function(target, e, menuName, selector, canvas){
+		e.preventDefault();
+		$("#"+menuName)
+		.css({ top : e.pageY, left : e.pageX})
+		.data("target",target)
+		.data("canvas",canvas)
+		.removeClass(function(index, clazz){return clazz.split(" ")[1];})
+		.addClass(selector)
+		.slideDown().focus();
 	}
 };
 
@@ -944,7 +971,16 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 		
 		
 	} else if(thiz.is(".add_action")){
-		addAction(target);
+		/*自动获取不重复的命名*/
+		var actionName = getName("action", (function(){
+			var namespace = [];
+			$.each(target.data("data").actions, function(i, a){
+				namespace.push(a.name);
+			});
+			return namespace;
+		})());
+		var action = new Action(actionName, "void");
+		addAction(target, action, true);
 	} else if(thiz.is(".add_enumItem")){
 		var name = getName("ENUMITEM",(function(){
 				var namespace = [];
@@ -963,14 +999,19 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 	thiz.parent(".contextmenu").blur();
 });
 
-/*右键编辑 */
-$("#edit_lines").delegate(".contextmenu_item","click",function(){
+/*右键编辑线段 */
+$("#edit_lines").delegate(".contextmenu_item", "click", function(){
 	var thiz = $(this),
 		target = thiz.parent().data("target"),
 		canvas = thiz.parent().data("canvas"),
 		line = canvas.LINES[target.attr("id")];
+		
 	if(thiz.is(".delete")){
-		deleteLines([line],canvas);
+		deleteLines([line], canvas);
+	} else if(thiz.is(".line_of_centers")){
+		line.turningPoint = null;
+		line.lineType = "line_of_centers";
+		canvas.resetLine(target);
 	}
 	thiz.parent(".contextmenu").blur();
 });

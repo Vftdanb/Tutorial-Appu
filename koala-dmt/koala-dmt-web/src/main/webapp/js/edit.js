@@ -14,27 +14,6 @@ function ZOOM(t,canvas){
 	canvas.UMLCANVAS.css("transform","scale("+value+")");
 }
 
-/*显示右键菜单*/
-/**
- * @param target
- * @param e
- * @param menuName
- * @param selector
- * @param canvas
- */
-function showContextmenu(target, e, menuName, selector, canvas){
-	e.preventDefault();
-	
-	$("#"+menuName)
-	.css({ top : e.pageY, left : e.pageX})
-	.data("target",target)
-	.data("canvas",canvas)
-	.removeClass(function(index, clazz){return clazz.split(" ")[1];})
-	.addClass(selector)
-	.slideDown().focus();
-}
-
-
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓对模型的编辑↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
 /**
  * @param canvas
@@ -127,12 +106,32 @@ function addProperty(target, propertyData, isAddToModel) {
  */
 function addAction(target, actionData, isAddToModel){
 	var dmodel = target.data("data");
-	var action = new Action("action","void");
 	var actDom = $("#node-template .action").clone();
-	
-	dmodel.actions.push(action);
+	dmodel.actions.push(actionData);
+	console.log(dmodel);
 	target.find(".actions").append(actDom);
-	actDom.data("data",action);
+	actDom.data("data",actionData);
+	actDom.find(".actionName").html(actionData.name);
+	actDom.find(".returnType").html(actionData.returnType);
+}
+
+/**
+ * 
+ * @param target
+ * @param parameterData
+ * @param isAddToModel 当反向生成图时，不需要把
+ */
+function addActionParameter(target, parameterData, isAddToModel){
+	var paramDom = $("#node-template").children(".action_parameter");
+	
+	paramDom.children(".parameterName").html(parameterData.name);
+	paramDom.children(".parameterType").html(parameterData.type);
+	target.children(".paramters").append(paramDom);
+	
+	if(isAddToModel){
+		var action = target.data("data");
+		action.parameters.push(prameterData);
+	}
 }
 
 /*添加枚举项*/
@@ -230,9 +229,6 @@ function updateNodeName(node, input, canvas){
 			};
 		}
 	});
-	
-	for(var i in ins){
-	}
 	
 	data.name 	= newName;
 	node.find(".name").html(newName);

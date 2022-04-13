@@ -164,23 +164,14 @@ function EntityShape(id,charid,name,position,type,desc,isAbstract,isMapped){
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	
 	this.properties 		= []; 			//属性数组（属性对象数组）
+	this.actions			= [];
 	this.entityType 		= "ENTITY";
-}
-
-/*值对象*/
-function ValueObject(id,charid,name,position,type,desc){
-	DomainShape.call(this, id,charid,name,position,type,desc);
-	this.parentName			= null;			//父类
-	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
-	
-	this.properties 		= []; 			//属性数组（属性对象数组）
-	this.entityType 		= "VALUEOBJECT";
 }
 
 /*接口类*/
 function InterfaceShape(id,charid,name,position,type,desc){
 	DomainShape.call(this, id,charid,name,position,type,desc);
-//	this.actions 	= [];	//
+	this.actions 	= [];
 }
 
 /*枚举*/
@@ -188,8 +179,6 @@ function EnumShape(id,charid,name,position,type,desc){
 	DomainShape.call(this, id,charid,name,position,type,desc);
 	this.enumItems = [];
 }
-
-
 
 /****************************二级数据结构****************************/
 /*属性类*/
@@ -215,7 +204,7 @@ function Constant(name ,type){
 /*行为类*/
 function Action(name ,returnType){
 	this.name = name;
-	this.type = returnType;
+	this.returnType = returnType;
 	this.parameters = [];
 }
 
@@ -229,7 +218,6 @@ function EnumItem(name){
 function Parameter(name ,type){
 	this.name 	= name;
 	this.type 	= type;
-	this.number = null;
 }
 
 /*工程类*/
