@@ -23,7 +23,7 @@ $("#dialog_container").delegate(".property", "click", function(){
 	$("#dialog_container .properties .active").removeClass("active");
 	property.addClass("active");
 	editDialog.initPropertyForm(form, property.data("data"));
-})
+});
 
 $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", function(){
 	var enumItem = $(this);
@@ -42,7 +42,6 @@ $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", fu
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
 editDialog = {
 	initDialog : function(node, UMLCANVAS){
-		var dialog = null;
 		if(node.is(".node")){
 			dialog = this.initEntityDialog(node, UMLCANVAS);
 		} else if(node.is(".line")) {

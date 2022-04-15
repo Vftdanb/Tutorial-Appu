@@ -4,16 +4,17 @@
 		<meta charset="utf-8">
 		<title></title>
 		<link rel="stylesheet" href="../lib/comboBox/css/style.css" type="text/css"/>
+		<link rel="stylesheet" href="dialog/style.css" type="text/css"/>
 		<style>
 			.dialog_body{
 				font-size:0;
+				border:1px solid #ccc;
+				padding:10px;
 			}
 			
 			.left, .middle, .right{
-				height:200px;
 				display:inline-block;
 				font-size:14px;
-				border:1px solid #ccc;
 				vertical-align:middle;
 			}
 			
@@ -22,7 +23,7 @@
 			}
 			
 			.middle{
-				width:50px;
+				width:65px;
 				text-align:center;
 			}
 			
@@ -62,62 +63,86 @@
 			.role.selected{
 				background:#99CC66;
 			}
+			tr{
+				cursor:pointer;
+			}
 		</style>
 	</head>
 	<body>
-		<div class="dialog_body">
+		<button id="show">授权</button>
+		<div style="display:none;" class="dialog_body">
 			<div class="left">
-				<h4 style="text-align: center;">已授角色</h4>
-				<div class="role">
-					<span class="role_name">角色1</span>
-					<span class="departments">
-						<span class="department">部门1</span>
-						<span class="department">部门1</span>
-						<span class="department">部门1</span>
-					</span>
-				</div>
-				<div class="role">
-					<span class="role_name">角色1</span>
-					<span class="departments">
-						<span class="department">部门1</span>
-						<span class="department">部门1</span>
-						<span class="department">部门1</span>
-					</span>
-				</div>
-				<div class="role">
-					<span class="role_name">角色1</span>
-					<span class="departments">
-						<span class="department">部门1</span>
-					</span>
-				</div>
-				<div class="role">
-					<span class="role_name">角色1</span>
-					<span class="departments">
-						<span class="department">部门1</span>
-					</span>
-				</div>
+				<table border="1" cellspacing="0" cellpadding="2" bordercolor="#ccc" width="100%">
+					<tr><th colspan="2">已授角色</th></tr>
+					<tr>
+						<th>角色</th>
+						<th>部门</th>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+				</table>
 			</div>
 			<div class="middle">
-				<button class="aaa">授权</button>
-				<button class="bbb">撤权</button>
+				<button class="aaa">&lt;授权</button><br/>
+				<button class="bbb">撤权&gt;</button>
 			</div>
 			<div class="right">
-				<h4 style="text-align: center;">未授角色</h4>
+				<table border="1" cellspacing="0" cellpadding="2" bordercolor="#ccc" width="100%">
+					<tr><th colspan="2">未授角色</th></tr>
+					<tr>
+						<th>角色</th>
+						<th>部门</th>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+					<tr class="role">
+						<td>角色1</td>
+						<td><span class="department">部门1</span></td>
+					</tr>
+				</table>
 			</div>
 		</div>
 		<div class="select" style="display:none;">
-			<div class="option"><span>拓展部</span></div>
-			<div class="option"><span>研发部</span></div>
-			<div class="option"><span>工程部</span></div>
-			<div class="option"><span>学院部</span></div>
-			<div class="button" style="background:#66CCFF;padding:2px;display:inline-block;cursor:pointer;margin:2px;">确定</div>
+			<div class="option">拓展部</div>
+			<div class="option">研发部</div>
+			<div class="option">工程部</div>
+			<div class="option">学院部</div>
 		</div>
 		<script type="text/javascript" src="../lib/jquery-2.1.0.min.js" ></script>
 		<script type="text/javascript" src="../lib/comboBox/comboBox.js"></script>
+		<script type="text/javascript" src="dialog/dialog.js"></script>
 		<script>
 			/*g*/
 			$(".left,.right").delegate(".role", "click", function(e){
-				if($(e.target).is(".role_name"))
+				if($(e.target).is("td"))
 				var role = $(this);
 				if(role.is(".selected")){
 					role.removeClass("selected");
@@ -128,32 +153,37 @@
 			
 			
 			$(".bbb").click(function(){
-				$(".right").append($(".left .role.selected"));
+				$(".right table").append($(".left .role.selected"));
 			});
 			
 			$(".aaa").click(function(){
-				$(".left").append($(".right .role.selected"));
+				$(".left table").append($(".right .role.selected"));
 			});
 			
-			$(".left,.right").comboBox({
-				option : ".button",
-				target : ".departments",
+			$(".left").comboBox({
+				option : ".option",
+				target : ".department",
+				selected:"selected",
+				width:"auto",
 				format : function(target, option){
 					var value = option.html();
-					
 					return value;
 				},
 				render : function(target, cb){
 					cb.html($(".select").clone().html());
 					cb.delegate(".option", "click", function(){
 						var option = $(this);
-						if(option.is(".selected")){
-							option.removeClass("selected");
-						} else {
-							option.addClass("selected");
-						}
 					});
 				}
+			});
+			
+			var dialog = $().dialog({
+				title : "授权",
+				content:$(".dialog_body").show()
+			});
+			
+			$("#show").click(function(){
+				dialog.show();
 			});
 	</script>
 	</body>

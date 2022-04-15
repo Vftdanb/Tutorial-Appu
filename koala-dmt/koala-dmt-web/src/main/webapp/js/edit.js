@@ -71,7 +71,7 @@ function addNode(canvas, model){
 function addProperty(target, propertyData, isAddToModel) {
 	var dmodel = target.data("data");
 		
-		if(isAddToModel) dmodel.properties.push(propertyData);
+	if(isAddToModel) dmodel.properties.push(propertyData);
 		
 	/*
 	 * 如果属性由连线时自动生成，则记录生成属性对应的线段
@@ -113,10 +113,20 @@ function addAction(target, actionData, isAddToModel){
 	actDom.data("data",actionData);
 	actDom.find(".actionName").html(actionData.name);
 	actDom.find(".returnType").html(actionData.returnType);
+	
+	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
+	var dialog = $("#" + target.attr("dialogId"));
+	if(dialog.length == 1){
+		var copy = actDom.clone().data("data", propertyDom);
+		actDom.data("copy", copy);
+		dialog.find(".actions").append(copy);
+		copy.click(); //设置为当前编辑项
+		copy.data("data",propertyDom).addClass("active");
+	}
 }
 
 /**
- * 
+ * 为方法添加参数
  * @param target
  * @param parameterData
  * @param isAddToModel 当反向生成图时，不需要把
@@ -332,9 +342,9 @@ function updateEnumName(enumDom, val){
 	var copy = enumDom.data("copy"),
 		enumItem = enumDom.data("data");
 		
-		enumItem.name = val;
-		copy ? copy.html(val) : "";
-		enumDom.html(val);
+	enumItem.name = val;
+	copy ? copy.html(val) : "";
+	enumDom.html(val);
 }
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 

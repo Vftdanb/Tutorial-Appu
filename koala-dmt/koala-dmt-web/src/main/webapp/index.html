@@ -75,6 +75,7 @@
 			</div>
 			<div id="container">
 				<div class="left">
+					<!-- 工程窗口 -->
 					<div class="project_tree project_explorer" id="projectExplorer">
 						<div class="panel-heading">
 							<span>项目列表</span>
@@ -96,12 +97,11 @@
 								<div class="panel entity_panel active">
 									<div>
 										<span class="label">实体名</span>
-										<input class="name" name="name" type="text" 
-											oninput="var thiz=$(this),dialog=thiz.parents('.dialog'); updateNodeName(dialog.data('node'), thiz, dialog.data('canvas'))"/>
+										<input class="name" name="name" type="text" oninput="var thiz=$(this),dialog=thiz.parents('.dialog'); updateNodeName(dialog.data('node'), thiz, dialog.data('canvas'))"/>
 									</div>
 									<div>
 										<span class="label">实体类型</span>
-										<select class="entityType" name="entityType" style="height:22px;" oninput="updateEntityType($(this).parents('.dialog').data('node'),$(this).val())">
+										<select class="entityType" name="entityType" oninput="updateEntityType($(this).parents('.dialog').data('node'),$(this).val())">
 											<option value="ENTITY">Entity</option>
 											<option value="ABSTRACT_ENTITY">AbstractEntity</option>
 											<option value="VALUE_OBJECT">ValueObject</option>
@@ -153,18 +153,43 @@
 								
 								<!-- 行为面板 -->
 								<div class="panel action_panel">
-									<div>
-										<span class="label">行为名</span>
-										<input class="actionName" type="text"/>
-									</div>
-									<div>
-										<span class="label">作用范围</span>
-										<select class="actionScope" style="height:22px;">
-											<option value="public">public</option>
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="package">package</option>
-										</select>
+									<ul class="action_list" style="list-style:none;padding:4px;border:1px solid #ccc;margin:4px;">
+										<li>
+											<div class="action"></div>
+											<span>
+												<a href="javascript:void(0);">编辑</a>
+												<a href="javascript:void(0);">删除</a>
+											</span>
+										</li>
+										<li>
+											<div class="action"></div>
+											<span>
+												<a href="javascript:void(0);">编辑</a>
+												<a href="javascript:void(0);">删除</a>
+											</span>
+										</li>
+										<li>
+											<div class="action"></div>
+											<span>
+												<a href="javascript:void(0);">编辑</a>
+												<a href="javascript:void(0);">删除</a>
+											</span>
+										</li>
+									</ul>
+									
+									<div class="edit_action" style="display:none;">
+										<div>
+											<span class="label">行为名</span> <input class="actionName" type="text"/>
+										</div>
+										<div>
+											<span class="label">作用范围</span>
+											<select class="actionScope">
+												<option value="public">public</option>
+												<option value="private">private</option>
+												<option value="protected">protected</option>
+												<option value="package">package</option>
+											</select>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -185,7 +210,7 @@
 									</div>
 									<div>
 										<span class="label">实体范围</span>
-										<select class="scope" name="entityScope" style="height:22px;" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
+										<select class="scope" name="entityScope" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
 											<option value="public">public</option>
 											<option value="private">private</option>
 											<option value="protected">protected</option>
@@ -204,7 +229,7 @@
 									</div>
 									<div>
 										<span class="label">作用范围</span>
-										<select class="actionScope" style="height:22px;">
+										<select class="actionScope">
 											<option value="public">public</option>
 											<option value="private">private</option>
 											<option value="protected">protected</option>
@@ -227,7 +252,7 @@
 									</div>
 									<div>
 										<span class="label">枚举范围</span>
-										<select class="scope" name="entityScope" style="height:22px;" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
+										<select class="scope" name="entityScope" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
 											<option value="public">public</option>
 											<option value="private">private</option>
 											<option value="protected">protected</option>
