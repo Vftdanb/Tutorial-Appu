@@ -22,6 +22,13 @@
 				content:">";
 				padding-left:1px;
 			}
+			
+			.action_list, .action_edit{
+				padding:4px;
+				border:1px solid #ccc;
+				width:250px;
+				margin:10px 0;
+			}
 		</style>
 	</head>
 	<body>
@@ -29,5 +36,64 @@
 			<span>List</span>
 			<span class="genericity">String</span>
 		</span>
+		
+		<div class="panel">
+			<div class="action_list">
+				<div>
+					<span class="action_name">+login</span>
+					<span class="action_paramters">(String name)</span>
+					<span class="action_returnType">:void</span>
+					<span style="float:right;">
+						<a href="javascript:editAction($(this));">编辑</a>
+						<a href="javascript:void(0);">删除</a>
+					</span>
+				</div>
+				<div>
+					<span class="action_name">+login</span>
+					<span class="action_paramters">(String name)</span>
+					<span class="action_returnType">:void</span>
+					<span style="float:right;">
+						<a href="javascript:editAction($(this));">编辑</a>
+						<a href="javascript:void(0);">删除</a>
+					</span>
+				</div>
+				<div>
+					<span class="action_name">+login</span>
+					<span class="action_paramters">(String name)</span>
+					<span class="action_returnType">:void</span>
+					<span style="float:right;">
+						<a href="javascript:editAction($(this));">编辑</a>
+						<a href="javascript:void(0);">删除</a>
+					</span>
+				</div>
+				<div></div>
+			</div>
+			
+			<div class="action_edit">
+				<div><a href="javascript:returnToList($(this));">返回方法列表</a></div>
+				<div><label>方法名:</label><input type="text" value="login"/></div>
+				<div><label>返回值:</label><input type="text" value="void"/></div>
+				<div>作用域:<input type="text" value="public"/></div>
+				<fieldset style="border:1px solid #ccc;">
+					 <legend style="font-size:14px;">参数列表</legend>
+					 <div class="paramter_list">
+						 <div>username:String</div>
+						 <div>password:String</div>
+					 </div>
+				</fieldset>
+			</div>
+		</div>
 	</body>
+	<script src="../lib/jquery-2.1.0.min.js"></script>
+	<script>
+		function editAction(action){
+			$(".action_list").slideUp();
+			$(".action_edit").slideDown();
+		}
+		
+		function returnToList(){
+			$(".action_list").slideDown();
+			$(".action_edit").slideUp();
+		}
+	</script>
 </html>
