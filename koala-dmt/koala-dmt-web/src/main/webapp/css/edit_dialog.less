@@ -1,0 +1,132 @@
+﻿/*颜色、圆角、边框的定义*/
+@import "theme.less";
+
+/*编辑对话框*/
+.dialog_container {
+    margin:4px;
+    border:solid 3px @assistantColor1;    
+    .tabs{
+         background:@assistantColor1;
+    }
+    
+    .panel > div{
+        margin:10px;
+    }
+    
+    .dialog{
+        display:none;
+    }
+    
+    .active_dialog{
+        display:block;
+    }
+    
+    .property_panel{
+        .property_form{
+            padding:10px;
+        }
+    }
+    
+    .action_panel{
+        .action_arguments{
+            &:before{
+                content:"(";
+            }
+            &:after{
+                content:")";
+            }
+        }
+        
+        .action_returnType:before{
+            content:":";
+        }
+        .parameter_type:before{
+            content:":";
+        }
+        .genericity{
+            min-width:30px;
+        }
+        
+        .action_modifier.public:before{
+            content:"+";
+        }
+        
+        .action_modifier.private:before{
+            content:"-";
+        }
+        .action_modifier.protected:before{
+            content:"#";
+        }
+        
+        .genericity:before{
+            content:"<";
+            padding-right:1px;
+        }
+        .genericity:after{
+            content:">";
+            padding-left:1px;
+        }
+        
+        .action_list, .edit_action_detail{
+            padding:4px;
+            margin:10px 0;
+        }
+        fieldset{
+            border:1px solid #ccc;
+            padding:4px;
+            margin:0;               
+        }
+        label{
+            padding:2px 0;
+        }
+        input,select{
+            padding:2px;
+            outline:none;
+        }
+        .add_element{
+            background:#99CCFF;
+            border:1px solid #ccc;
+            font-weight:600;
+            font-size:18px;
+            text-align:center;
+            margin-top:8px;
+            cursor:pointer;
+        }
+        
+        
+        .action_set{
+            .action_item{
+                position:relative;
+                font-size:0;
+                
+                .action_detail{
+                    margin-right:60px;
+                }
+                
+                .edit_option{
+                    position:absolute;
+                    font-size:14px;
+                    top:0;
+                    right:0;
+                }
+            }
+        }
+        
+        .edit_action_detail{
+            display:none;
+        }
+        
+        .parameter_detail, .action_detail{
+            font-size:0;
+        }
+        .parameter_name,.parameter_type,.genericity,.action_name,.action_arguments,.action_returnType{
+            font-size:14px;
+        }
+        .parameter_detail_option{
+            float:right;
+        }
+        .parameter_detail_option{
+            font-size:14px;
+        }
+    }
+}

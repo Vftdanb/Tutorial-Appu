@@ -4,14 +4,31 @@
 		<meta charset="utf-8">
 		<title></title>
 		<style>
-			.param{
-				
+			.action_parameters:before{
+				content:"(";
 			}
-			.param_type{
-				
+			.action_parameters:after{
+				content:")";
+			}
+			.action_returnType:before{
+				content:":";
+			}
+			.parameter_type:before{
+				content:":";
 			}
 			.genericity{
-				min-width:20px;
+				min-width:30px;
+			}
+			
+			.action_modifier.public:before{
+				content:"+"
+			}
+			
+			.action_modifier.private:before{
+				content:"-";
+			}
+			.action_modifier.protected:before{
+				content:"#";
 			}
 			
 			.genericity:before{
@@ -23,63 +40,73 @@
 				padding-left:1px;
 			}
 			
-			.action_list, .action_edit{
+			.action_list, .action_detail{
 				padding:4px;
 				border:1px solid #ccc;
 				width:250px;
 				margin:10px 0;
 			}
+			fieldset{
+				border:1px solid #ccc;
+				padding:4px;
+				margin:0;				
+			}
+			label{
+				padding:2px 0;
+			}
+			input,select{
+				padding:2px;
+				outline:none;
+			}
+			.add_element{
+				background:#99CCFF;
+				border:1px solid #ccc;
+				font-weight:600;
+				font-size:18px;
+				text-align:center;
+				margin-top:8px;
+				cursor:pointer;
+			}
+			.parameter_detail, .method_detail{
+				font-size:0;
+				float:left;
+			}
+			.parameter_name,.parameter_type,.genericity,.action_name,.action_parameters,.action_returnType{
+				font-size:14px;
+			}
+			.parameter_detail_option,.edit_option{
+				float:right;
+			}
+			.parameter_detail_option,.edit_option{
+				font-size:14px;
+			}
 		</style>
 	</head>
 	<body>
-		<span class="param_type common">
-			<span>List</span>
-			<span class="genericity">String</span>
-		</span>
-		
 		<div class="panel">
 			<div class="action_list">
-				<div>
-					<span class="action_name">+login</span>
-					<span class="action_paramters">(String name)</span>
-					<span class="action_returnType">:void</span>
-					<span style="float:right;">
-						<a href="javascript:editAction($(this));">编辑</a>
-						<a href="javascript:void(0);">删除</a>
-					</span>
-				</div>
-				<div>
-					<span class="action_name">+login</span>
-					<span class="action_paramters">(String name)</span>
-					<span class="action_returnType">:void</span>
-					<span style="float:right;">
-						<a href="javascript:editAction($(this));">编辑</a>
-						<a href="javascript:void(0);">删除</a>
-					</span>
-				</div>
-				<div>
-					<span class="action_name">+login</span>
-					<span class="action_paramters">(String name)</span>
-					<span class="action_returnType">:void</span>
-					<span style="float:right;">
-						<a href="javascript:editAction($(this));">编辑</a>
-						<a href="javascript:void(0);">删除</a>
-					</span>
-				</div>
-				<div></div>
+				<fieldset>
+					<legend style="font-size:14px;">方法列表</legend>
+					<div class="action_set"></div>
+				</fieldset>
+				<div class="add_element">+添加方法</div>
 			</div>
 			
-			<div class="action_edit">
-				<div><a href="javascript:returnToList($(this));">返回方法列表</a></div>
+			<div class="action_detail">
+				<div><a href="javascript:returnToList($(this));" title="放回方法列表">返回</a></div>
 				<div><label>方法名:</label><input type="text" value="login"/></div>
 				<div><label>返回值:</label><input type="text" value="void"/></div>
-				<div>作用域:<input type="text" value="public"/></div>
-				<fieldset style="border:1px solid #ccc;">
-					 <legend style="font-size:14px;">参数列表</legend>
-					 <div class="paramter_list">
-						 <div>username:String</div>
-						 <div>password:String</div>
-					 </div>
+				<div>
+					<label>作用域:</label><select>
+						<option value="public">public</option>
+						<option value="private">private</option>
+						<option vlaue="protected">protected</option>
+					</select>
+				</div>
+				<fieldset class="action_parameter_set" style="margin-top:10px;">
+					<legend style="font-size:14px;">参数列表</legend>
+					<div class="parameter_set"></div>
+					<div class="add_element">+添加方法</div>
 				</fieldset>
 			</div>
 		</div>
@@ -88,12 +115,12 @@
 	<script>
 		function editAction(action){
 			$(".action_list").slideUp();
-			$(".action_edit").slideDown();
+			$(".action_detail").slideDown();
 		}
 		
 		function returnToList(){
 			$(".action_list").slideDown();
-			$(".action_edit").slideUp();
+			$(".action_detail").slideUp();
 		}
 	</script>
 </html>

@@ -5,6 +5,7 @@
 		<title>领域建模工具</title>
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/umlCanvas.css" />
+		<link rel="stylesheet" href="css/edit_dialog.css" />
 		<link rel="stylesheet" href="css/index.css" />
 		<link rel="stylesheet" href="lib/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
 		<link rel="stylesheet" href="lib/dialog/style.css" type="text/css">
@@ -116,7 +117,7 @@
 								
 								<!-- 属性面板 -->
 								<div class="panel property_panel">
-									<form>
+									<form class="property_form">
 										<div>
 											<span class="label">属性名</span>
 											<input type="text" class="propertyName" name="name" 
@@ -153,43 +154,30 @@
 								
 								<!-- 行为面板 -->
 								<div class="panel action_panel">
-									<ul class="action_list" style="list-style:none;padding:4px;border:1px solid #ccc;margin:4px;">
-										<li>
-											<div class="action"></div>
-											<span>
-												<a href="javascript:void(0);">编辑</a>
-												<a href="javascript:void(0);">删除</a>
-											</span>
-										</li>
-										<li>
-											<div class="action"></div>
-											<span>
-												<a href="javascript:void(0);">编辑</a>
-												<a href="javascript:void(0);">删除</a>
-											</span>
-										</li>
-										<li>
-											<div class="action"></div>
-											<span>
-												<a href="javascript:void(0);">编辑</a>
-												<a href="javascript:void(0);">删除</a>
-											</span>
-										</li>
-									</ul>
+									<div class="action_list">
+										<fieldset>
+											<legend style="font-size:14px;">方法列表</legend>
+											<div class="action_set"></div>
+											<div class="add_element">+添加方法</div>
+										</fieldset>
+									</div>
 									
-									<div class="edit_action" style="display:none;">
+									<div class="edit_action_detail">
+										<div><a href="javascript:void(0);" class="back_to_actionlist" title="放回方法列表">返回</a></div>
+										<div><label>方法名:</label><input name="action_name" type="text" value="login"/></div>
+										<div><label>返回值:</label><input name="action_returntype" type="text" value="void"/></div>
 										<div>
-											<span class="label">行为名</span> <input class="actionName" type="text"/>
-										</div>
-										<div>
-											<span class="label">作用范围</span>
-											<select class="actionScope">
+											<label>作用域:</label><select name="action_modifier">
 												<option value="public">public</option>
 												<option value="private">private</option>
-												<option value="protected">protected</option>
-												<option value="package">package</option>
+												<option vlaue="protected">protected</option>
 											</select>
 										</div>
+										<fieldset class="action_parameter_set" style="margin-top:10px;">
+											<legend style="font-size:14px;">参数列表</legend>
+											<div class="parameter_set"></div>
+											<div class="add_element">+添加参数</div>
+										</fieldset>
 									</div>
 								</div>
 							</div>
@@ -399,7 +387,7 @@
 				<!-- 行为模板 -->
 				<div class="action public">
 					<span class="actionName"></span>
-					<div class="parameters"></div>
+					<div class="arguments"></div>
 					<span class="returnType">void</span>
 				</div>
 				
@@ -409,6 +397,32 @@
 					<span class="parameterName"></span>
 				</div>
 			</div>
+			
+			<div id="dialog_template">
+				<!-- -->
+				<div class="action_item">
+					<div class="action_detail">
+						<span class="action_name public"></span>
+						<span class="action_arguments"></span>
+						<span class="action_returnType"></span>
+					</div>
+					<div  class="edit_option">
+						<a href="javascript:void(0);" class="edit_action">编辑</a>
+						<a href="javascript:void(0);" class="delete_action">删除</a>
+					</div>
+				</div>
+				<!-- -->
+				<div class="parameter_item">
+					<div class="parameter_detail">
+					 	<span class="parameter_name"></span>
+					 	<span class="parameter_type"></span>
+					 	<span class="genericity"></span>
+					</div>
+					<div class="parameter_detail_option">
+						<a href="javascript:void();">删除</a>
+					</div>
+				</div>
+			</div>			
 		</div>
 		<!-- 以下内在多个画板时的情况下可以共用 ，包括图形的模板、右键菜单等元素-->
 		<!-- uml元素模板 -->

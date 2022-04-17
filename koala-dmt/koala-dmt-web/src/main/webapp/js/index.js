@@ -81,7 +81,7 @@ $.ajax({
 		projectTree.addNodes(null, data);
 	},
 	error : function(){
-		alert("获取工程出错");
+		//alert("获取工程出错");
 	}
 });
 

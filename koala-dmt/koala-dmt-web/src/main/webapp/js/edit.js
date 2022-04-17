@@ -140,7 +140,7 @@ function addActionParameter(target, parameterData, isAddToModel){
 	
 	if(isAddToModel){
 		var action = target.data("data");
-		action.parameters.push(prameterData);
+		action.arguments.push(prameterData);
 	}
 }
 

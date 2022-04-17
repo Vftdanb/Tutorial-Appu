@@ -1,3 +1,4 @@
+/*颜色、圆角、边框的定义*/
 .canvas {
   height: 500px;
 }
@@ -22,7 +23,7 @@
   height: 17px;
 }
 .canvas .tools.folder div span {
-  display: none !important;
+  display: none!important;
 }
 .canvas .tools .cursor {
   background: url("../images/icons/cursor.png") no-repeat 0 1px;
@@ -85,10 +86,11 @@
   border-radius: 0px;
   border: 1px solid #5890c1;
   font-size: 14px;
-  font-size: 13px;
   background: rgba(255, 255, 255, 0.5);
 }
-/*线条的样式*/
+.canvas svg {
+  /*线条的样式*/
+}
 .canvas svg .uml_lines {
   cursor: hand;
 }
@@ -135,7 +137,9 @@
 .canvas #template {
   display: none;
 }
-/*属性、行为、枚举项、常量的右键菜单的显示控制*/
+.canvas #edit_contextmenus {
+  /*属性、行为、枚举项、常量的右键菜单的显示控制*/
+}
 .canvas #edit_contextmenus .add_property div {
   background-image: url("../images/icons/property.png");
 }
@@ -165,7 +169,12 @@
 .canvas #edit_contextmenus .add_enum div {
   background-image: url("../images/icons/enum.png");
 }
-/*泛型的展示效果，如果是集合类型则显示泛型*/
+.node,
+#dialog_container {
+  /*泛型的展示效果，如果是集合类型则显示泛型*/
+  /*合法操作*/
+  /*非法操作*/
+}
 .node .collection_type .genericity,
 #dialog_container .collection_type .genericity {
   display: inline-block;
@@ -185,21 +194,19 @@
   content: ">";
   padding-left: 1px;
 }
-/*合法操作*/
 .node.legal,
 #dialog_container.legal {
-  background: #CCFFCC !important;
+  background: #CCFFCC!important;
   border-color: #009933;
-  cursor: crosshair !important;
+  cursor: crosshair!important;
 }
 .node.legal .header,
 #dialog_container.legal .header {
-  cursor: crosshair !important;
+  cursor: crosshair!important;
 }
-/*非法操作*/
 .node.illegal,
 #dialog_container.illegal {
-  border-color: red !important;
+  border-color: red!important;
   cursor: not-allowed !important;
 }
 .node.illegal .header,
@@ -296,13 +303,13 @@
 #dialog_container .action div {
   display: inline;
 }
-.node .action .parameters:before,
-#dialog_container .action .parameters:before {
+.node .action .arguments:before,
+#dialog_container .action .arguments:before {
   padding-left: 2px;
   content: "(";
 }
-.node .action .parameters:after,
-#dialog_container .action .parameters:after {
+.node .action .arguments:after,
+#dialog_container .action .arguments:after {
   padding-left: 2px;
   content: ") : ";
 }
@@ -327,4 +334,3 @@
 #dialog_container .properties .property:hover {
   backgrund: #fefadd;
 }
-/*# sourceMappingURL=umlCanvas.css.map */

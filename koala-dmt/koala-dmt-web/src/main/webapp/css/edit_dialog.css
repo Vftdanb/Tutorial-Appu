@@ -1,0 +1,114 @@
+/*颜色、圆角、边框的定义*/
+/*编辑对话框*/
+.dialog_container {
+  margin: 4px;
+  border: solid 3px #ededed;
+}
+.dialog_container .tabs {
+  background: #ededed;
+}
+.dialog_container .panel > div {
+  margin: 10px;
+}
+.dialog_container .dialog {
+  display: none;
+}
+.dialog_container .active_dialog {
+  display: block;
+}
+.dialog_container .property_panel .property_form {
+  padding: 10px;
+}
+.dialog_container .action_panel .action_arguments:before {
+  content: "(";
+}
+.dialog_container .action_panel .action_arguments:after {
+  content: ")";
+}
+.dialog_container .action_panel .action_returnType:before {
+  content: ":";
+}
+.dialog_container .action_panel .parameter_type:before {
+  content: ":";
+}
+.dialog_container .action_panel .genericity {
+  min-width: 30px;
+}
+.dialog_container .action_panel .action_modifier.public:before {
+  content: "+";
+}
+.dialog_container .action_panel .action_modifier.private:before {
+  content: "-";
+}
+.dialog_container .action_panel .action_modifier.protected:before {
+  content: "#";
+}
+.dialog_container .action_panel .genericity:before {
+  content: "<";
+  padding-right: 1px;
+}
+.dialog_container .action_panel .genericity:after {
+  content: ">";
+  padding-left: 1px;
+}
+.dialog_container .action_panel .action_list,
+.dialog_container .action_panel .edit_action_detail {
+  padding: 4px;
+  margin: 10px 0;
+}
+.dialog_container .action_panel fieldset {
+  border: 1px solid #ccc;
+  padding: 4px;
+  margin: 0;
+}
+.dialog_container .action_panel label {
+  padding: 2px 0;
+}
+.dialog_container .action_panel input,
+.dialog_container .action_panel select {
+  padding: 2px;
+  outline: none;
+}
+.dialog_container .action_panel .add_element {
+  background: #99CCFF;
+  border: 1px solid #ccc;
+  font-weight: 600;
+  font-size: 18px;
+  text-align: center;
+  margin-top: 8px;
+  cursor: pointer;
+}
+.dialog_container .action_panel .action_set .action_item {
+  position: relative;
+  font-size: 0;
+}
+.dialog_container .action_panel .action_set .action_item .action_detail {
+  margin-right: 60px;
+}
+.dialog_container .action_panel .action_set .action_item .edit_option {
+  position: absolute;
+  font-size: 14px;
+  top: 0;
+  right: 0;
+}
+.dialog_container .action_panel .edit_action_detail {
+  display: none;
+}
+.dialog_container .action_panel .parameter_detail,
+.dialog_container .action_panel .action_detail {
+  font-size: 0;
+}
+.dialog_container .action_panel .parameter_name,
+.dialog_container .action_panel .parameter_type,
+.dialog_container .action_panel .genericity,
+.dialog_container .action_panel .action_name,
+.dialog_container .action_panel .action_arguments,
+.dialog_container .action_panel .action_returnType {
+  font-size: 14px;
+}
+.dialog_container .action_panel .parameter_detail_option {
+  float: right;
+}
+.dialog_container .action_panel .parameter_detail_option {
+  font-size: 14px;
+}

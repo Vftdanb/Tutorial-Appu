@@ -202,10 +202,11 @@ function Constant(name ,type){
 }
 
 /*行为类*/
-function Action(name ,returnType){
+function Action(name){
 	this.name = name;
-	this.returnType = returnType;
-	this.parameters = [];
+	this.returnType = "void";
+	this.modifier = "public";
+	this.arguments = [];
 }
 
 /*枚举项类*/

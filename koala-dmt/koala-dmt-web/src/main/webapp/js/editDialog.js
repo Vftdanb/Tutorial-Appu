@@ -39,6 +39,23 @@ $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", fu
 	$(this).removeAttr("contenteditable");
 });
 
+
+$("#dialog_container").find(".action_panel:first").delegate(".edit_action", "click", function(){
+	var btn = $(this);
+	var action = btn.parents(".action_item:first");
+	var actionData = action.data("data");
+	console.log(actionData);
+	
+	var editForm = btn.parents(".action_list:first").slideUp().next(".edit_action_detail").slideDown();
+	editDialog.initActionForm(editForm, actionData);
+}).delegate(".delete_action", "click", function(){
+	var btn = $(this);
+	var action = btn.parents(".action_item:first");
+	var actionData = action.data("data");
+}).delegate(".back_to_actionlist","click", function(){
+	$(this).parents(".edit_action_detail:first").slideUp().prev(".action_list").slideDown();
+});
+
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
 editDialog = {
 	initDialog : function(node, UMLCANVAS){
@@ -73,8 +90,10 @@ editDialog = {
 		if(node.is(".entity")){
 			this.initClassPanel(dialog, data, node);
 			this.initPropertyPanel(dialog, node);
+			this.initActionPanel(dialog, node);
 		} else if(node.is(".interface")){
 			this.initInterfacePanel(dialog ,data ,node);
+			this.initActionPanel(dialog, node);
 		} else if(node.is(".enum")){
 			this.initEnumPanel(dialog, data, node);
 		}
@@ -123,7 +142,7 @@ editDialog = {
 	},
 	
 	/*初始化属性编辑窗口*/
-	initPropertyPanel : function(dialog,node){
+	initPropertyPanel : function(dialog, node){
 		var properties = node.find(".property");
 		var panel = dialog.find(".property_panel");
 		
@@ -137,6 +156,7 @@ editDialog = {
 			var propertyDom = panel.find(".properties"),
 				property,
 				copy;	//property 元素的副本
+				
 			$.each(properties, function(i, p){
 				property = $(p);
 				copy = property.clone().data("data",property);
@@ -165,7 +185,32 @@ editDialog = {
 		}
 	},
 	
-	initActionPanel : function(dialog,as){
+	/**
+	 * 
+	 */
+	initActionPanel : function(dialog, node){
+		var actionSet = dialog.find(".action_set:first").empty();
+		var actions = node.children(".actions").children(".action");
+		
+		var actionData, actionDom, actionDetail;
+		$.each(actions, function(i, action){
+			actionData = $(action).data('data');
+			actionDom = $("#dialog_template").children(".action_item").clone();
+			actionSet.append(actionDom);
+			
+			actionDetail = actionDom.children(".action_detail");
+			actionDetail.children(".action_name").html(actionData.name).attr("title",actionData.name);
+			actionDetail.children(".action_returnType").html(actionData.returnType).attr("title",actionData.returnType);
+			
+			actionDom.data("data", actionData);
+		});
+	},
+	
+	initActionForm : function(editForm, actionData){
+		editForm.find("input[name='action_name']").val(actionData.name);
+		editForm.find("input[name='action_returntype']").val(actionData.returnType);
+		editForm.find("select[nam='action_modifier']").select(actionData);
+		
 		
 	},
 	
