@@ -16,13 +16,12 @@
 })($);
 
 $("#dialog_container").delegate(".property", "click", function(){
-	var property = $(this),
-		form = property.parent().parent().find("form");
+	var property = $(this);
 	
 	/*选中的样式*/
 	$("#dialog_container .properties .active").removeClass("active");
-	property.addClass("active");
-	editDialog.initPropertyForm(form, property.data("data"));
+	property.parents(".property_item").addClass("active");
+	editDialog.initPropertyForm(property.parents("fieldset:first").prev(), property.data("data"));
 });
 
 $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", function(){
@@ -40,18 +39,21 @@ $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", fu
 });
 
 
+/*
+ * 编辑方法
+ */
 $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "click", function(){
 	var btn = $(this);
-	var action = btn.parents(".action_item:first");
-	var actionData = action.data("data");
-	console.log(actionData);
-	
+	var actionData = btn.parents(".action_item:first").data("data");
 	var editForm = btn.parents(".action_list:first").slideUp().next(".edit_action_detail").slideDown();
 	editDialog.initActionForm(editForm, actionData);
+	
 }).delegate(".delete_action", "click", function(){
 	var btn = $(this);
 	var action = btn.parents(".action_item:first");
 	var actionData = action.data("data");
+	
+	
 }).delegate(".back_to_actionlist","click", function(){
 	$(this).parents(".edit_action_detail:first").slideUp().prev(".action_list").slideDown();
 });
@@ -60,42 +62,43 @@ $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "cli
 editDialog = {
 	initDialog : function(node, UMLCANVAS){
 		if(node.is(".node")){
-			dialog = this.initEntityDialog(node, UMLCANVAS);
+			this.initEntityDialog(node, UMLCANVAS);
 		} else if(node.is(".line")) {
 			
 		}
 	},
 	
 	initEntityDialog : function(node, UMLCANVAS){
-		var data	= node.data("data");
+		var entityData	= node.data("data");
 		
 		/*隐藏上一个对话框*/
 		$("#dialog_container>.active_dialog").removeClass("active_dialog");
-		var dialog = $("."+data.shapeType.toLowerCase()+"_dialog").addClass("active_dialog");
+		var dialog = $("."+entityData.shapeType.toLowerCase()+"_dialog").addClass("active_dialog");
 		
 		if(dialog.attr("id") && (dialog.attr("id") == node.attr("dialogid"))){
 			return null;
 		}
 		
+		/*每个被编辑的对象都持有对应窗口的id，id随机获取*/
 		var dialogId = commonTool.guid();
 		/*将在对话框中要用到的数据进行缓存，减少查找成本*/
 		dialog
 			.data("data",node.data("data"))	//被编辑的模型对象
 			.data("node",node)				//被编辑的节点对象
 			.data("canvas", UMLCANVAS)		//画布对象
-			.attr("id",dialogId)
+			.attr("id",dialogId);
 		
 		node.attr("dialogId", dialogId);
 		
 		if(node.is(".entity")){
-			this.initClassPanel(dialog, data, node);
-			this.initPropertyPanel(dialog, node);
-			this.initActionPanel(dialog, node);
+			this.initClassPanel(dialog, entityData);
+			this.initPropertyPanel(dialog, entityData.properties);
+			this.initActionPanel(dialog, entityData.actions);
 		} else if(node.is(".interface")){
-			this.initInterfacePanel(dialog ,data ,node);
-			this.initActionPanel(dialog, node);
+			this.initInterfacePanel(dialog ,entityData ,node);
+			this.initActionPanel(dialog, entityData.actions);
 		} else if(node.is(".enum")){
-			this.initEnumPanel(dialog, data, node);
+			this.initEnumPanel(dialog, entityData, node);
 		}
 		
 		return dialog;
@@ -142,8 +145,7 @@ editDialog = {
 	},
 	
 	/*初始化属性编辑窗口*/
-	initPropertyPanel : function(dialog, node){
-		var properties = node.find(".property");
+	initPropertyPanel : function(dialog, properties){
 		var panel = dialog.find(".property_panel");
 		
 		/*@TODO 防止误编辑上一个属性*/
@@ -151,35 +153,26 @@ editDialog = {
 		panel.find(".properties").empty();
 		
 		if(properties.length > 0){
-			this.initPropertyForm(panel.find("form"),$(properties[0]));
-			
-			var propertyDom = panel.find(".properties"),
-				property,
-				copy;	//property 元素的副本
-				
-			$.each(properties, function(i, p){
-				property = $(p);
-				copy = property.clone().data("data",property);
-				
-				property.data("copy", copy); //互相持有引用，方便数据更新时同步显示
-				propertyDom.append(copy);
+			this.initPropertyForm(panel.find("form"),properties[0]);
+			var propertyDom = panel.find(".properties");	
+			$.each(properties, function(i, property){
+				//property 元素的副本
+				var copy = $("#"+property.id).clone().data("data",property).removeAttr("id");
+				$("#"+property.id).data("copy", copy);
+				propertyDom.append($("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>'));
 			});
-			
-			propertyDom.find(".property:first").click();
 		}
 	},
 	
 	/*初始化编辑对话框中的 编辑属性的 表单*/
 	initPropertyForm : function(form, property){
-		var data = property.data("data");
-		
-		form.data("data",property);
+		form.data("data", property);
 		form[0].reset();
-		form.find("input[name='name']").val(data.name);
-		form.find("input[name='type']").val(data.type);
-		form.find("select[name='scope']").select(data.scope);
-		if(data.genericity){
-			form.find(".genericity_input").show().find("input").val(data.genericity);
+		form.find("input[name='name']").val(property.name);
+		form.find("input[name='type']").val(property.type);
+		form.find("select[name='scope']").select(property.scope);
+		if(property.genericity){
+			form.find(".genericity_input").show().find("input").val(property.genericity);
 		} else {
 			form.find(".genericity_input").hide();
 		}
@@ -188,33 +181,50 @@ editDialog = {
 	/**
 	 * 
 	 */
-	initActionPanel : function(dialog, node){
+	initActionPanel : function(dialog, actions){
 		var actionSet = dialog.find(".action_set:first").empty();
-		var actions = node.children(".actions").children(".action");
+		var actionDom;
 		
-		var actionData, actionDom, actionDetail;
+		console.log(actions);
+		
 		$.each(actions, function(i, action){
-			actionData = $(action).data('data');
-			actionDom = $("#dialog_template").children(".action_item").clone();
+			var copy = $("#"+action.id).clone().removeAttr("id");
+			$("#"+action.id).data("copy", copy);
+			actionDom = $('<div class="action_item"/>').append(copy).append('<div class="edit_option"><a href="javascript:void(0);" class="edit_action">编辑</a><a href="javascript:void(0);" class="delete_action">删除</a></div>');
 			actionSet.append(actionDom);
-			
-			actionDetail = actionDom.children(".action_detail");
-			actionDetail.children(".action_name").html(actionData.name).attr("title",actionData.name);
-			actionDetail.children(".action_returnType").html(actionData.returnType).attr("title",actionData.returnType);
-			
-			actionDom.data("data", actionData);
+			actionDom.data("data", action);
 		});
 	},
 	
-	initActionForm : function(editForm, actionData){
-		editForm.find("input[name='action_name']").val(actionData.name);
-		editForm.find("input[name='action_returntype']").val(actionData.returnType);
-		editForm.find("select[nam='action_modifier']").select(actionData);
+	/**
+	 * 初始化方法编辑框
+	 * @param editForm
+	 * @param actionData
+	 */
+	initActionForm : function(editForm, action){
+		editForm.find("input[name='action_name']").val(action.name);
+		editForm.find("input[name='action_returntype']").val(action.returnType);
+		editForm.find("select[nam='action_modifier']").select(action);
 		
-		
+		var temp = $("#dialog_template").children("parameter_item:first");
+		/*
+		 * 初始化方法参数
+		 */
+		$.each(action.arguments, function(i, argument){
+			var paramDom = temp.clone();
+			
+			paramDom.children(".parameter_detail:first")
+				.children(".parameter_name").html(argument.name).end()
+				.children(".parameter_type").html(argument.type).end()
+				.children(".genericity").html(argument.genericity);
+		});
 	},
 	
-	/*激活对话框*/
+	/**
+	 *激活对话框 
+	 * @param name
+	 * @returns
+	 */
 	activeDialog : function(name){
 		$("#dialog_container>.active_dialog").removeClass("active_dialog");
 		return $("."+name).addClass("active_dialog");
@@ -225,4 +235,4 @@ dialog = {
 	deleteNode : function(n){
 		deleteNode();
 	}
-}
+};

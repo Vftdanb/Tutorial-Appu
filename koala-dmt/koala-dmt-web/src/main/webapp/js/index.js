@@ -45,7 +45,7 @@ var setting = {
 									tab.addClass("tab_"+treeData.id);
 									$.get('pages/template.html').done(function(data) {
 										panel.html(data);
-										panel.find('#canvas').umlCanvas(chartData);
+										panel.find('#canvas').umlCanvas();
 										
 										/*将project和chart缓存在工具栏上，以待后续操作用到*/
 										panel.find(".tools_bar:first").data("project", treeData.getParentNode());
@@ -64,8 +64,8 @@ var setting = {
 
 /*常用的三个变量*/
 var projectTree = $.fn.zTree.init($("#projectTree"), setting, []); //工程树
-var mainTab = $(".main_panel").tab(); //右边tab
-var dialog = $().dialog({});		  //页面对话框
+var mainTab = $(".main_panel").tab(); 	//右边tab
+var dialog = $().dialog();		  		//页面对话框
 
 $.ajax({
 	url : "project/find-all-projects",

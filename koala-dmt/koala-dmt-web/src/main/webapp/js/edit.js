@@ -43,9 +43,9 @@ function addNode(canvas, model){
 		});
 	
 	node.find(".name").html(model.name);
-	node.attr("id", model.shapeId).data("data", model); //把对应领域模型缓存在dom节点上，方便查找
-	canvas.MODELS[model.shapeId]	= model; //节点的控制数据（前端用）
-	canvas.NODEDOMS[model.shapeId] = node;
+	node.attr("id", model.id).data("data", model); //把对应领域模型缓存在dom节点上，方便查找
+	canvas.MODELS[model.id]	= model; //节点的控制数据（前端用）
+	canvas.NODEDOMS[model.id] = node;
 	
 	canvas.UMLCANVAS.append(node);
 	
@@ -64,12 +64,12 @@ function addNode(canvas, model){
  * autoBy:指定该属性是否由于连线而自动生成
  */
 /**
- * @param target
+ * @param targetNode
  * @param propertyData
  * @param isAddToModel
  */
-function addProperty(target, propertyData, isAddToModel) {
-	var dmodel = target.data("data");
+function addProperty(targetNode, propertyData, isAddToModel) {
+	var dmodel = targetNode.data("data");
 		
 	if(isAddToModel) dmodel.properties.push(propertyData);
 		
@@ -82,77 +82,87 @@ function addProperty(target, propertyData, isAddToModel) {
 		propertyDom.find(".propertyType").html(propertyData.type);
 		propertyDom.find(".propertyName").html(propertyData.name);
 		
-		target.find(".properties").append(propertyDom);
+		targetNode.find(".properties").append(propertyDom);
+		propertyDom.attr("id", propertyData.id);
 		
 		/*把对应的属性对象缓存到dom节点上，方便查找*/
 		propertyDom.data("data", propertyData);
 		
 		/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
-		var dialog = $("#" + target.attr("dialogId"));
+		var dialog = $("#" + targetNode.attr("dialogId"));
 		if(dialog.length == 1){
-			var copy = propertyDom.clone().data("data", propertyDom);
+			var copy = propertyDom.clone().data("data", propertyData).removeAttr("id");
 			propertyDom.data("copy", copy);
-			dialog.find(".properties").append(copy);
+			dialog.find(".properties").append($("<div class='property_item active'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>'));
 			copy.click(); //设置为当前编辑项
-			copy.data("data",propertyDom).addClass("active");
 		}
 	}
 }
 
 /*添加行为*/
 /**
- * @param target
+ * @param targetNode
  * @param actionData
  */
-function addAction(target, actionData, isAddToModel){
-	var dmodel = target.data("data");
+function addAction(targetNode, actionData, isAddToModel){
+	var dmodel = targetNode.data("data");
 	var actDom = $("#node-template .action").clone();
 	dmodel.actions.push(actionData);
 	console.log(dmodel);
-	target.find(".actions").append(actDom);
-	actDom.data("data",actionData);
+	targetNode.find(".actions").append(actDom);
 	actDom.find(".actionName").html(actionData.name);
 	actDom.find(".returnType").html(actionData.returnType);
 	
+	actDom.attr("id", actionData.id);
+	
+	/*把对应的属性对象缓存到dom节点上，方便查找*/
+	actDom.data("data",actionData);
+	
 	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
-	var dialog = $("#" + target.attr("dialogId"));
+	var dialog = $("#" + targetNode.attr("dialogId"));
 	if(dialog.length == 1){
-		var copy = actDom.clone().data("data", propertyDom);
+		var copy = actDom.clone().data("data", actDom);
 		actDom.data("copy", copy);
 		dialog.find(".actions").append(copy);
 		copy.click(); //设置为当前编辑项
-		copy.data("data",propertyDom).addClass("active");
+		copy.data("data",actDom).addClass("active");
 	}
 }
 
 /**
  * 为方法添加参数
- * @param target
+ * @param targetNode
  * @param parameterData
  * @param isAddToModel 当反向生成图时，不需要把
  */
-function addActionParameter(target, parameterData, isAddToModel){
+function addActionParameter(targetNode, parameterData, isAddToModel){
 	var paramDom = $("#node-template").children(".action_parameter");
 	
 	paramDom.children(".parameterName").html(parameterData.name);
 	paramDom.children(".parameterType").html(parameterData.type);
-	target.children(".paramters").append(paramDom);
+	targetNode.children(".paramters").append(paramDom);
+	
+	paramDom.attr("id", parameterData.id);
+	
+	/*把对应的参数对象缓存到dom节点上，方便查找*/
+	paramDom.data("data", parameterData);
 	
 	if(isAddToModel){
-		var action = target.data("data");
+		var action = targetNode.data("data");
 		action.arguments.push(prameterData);
 	}
 }
 
 /*添加枚举项*/
 /**
- * @param target
+ * TODO
+ * @param targetNode
  * @param itemData
  * @param isAddToModel
  */
-function addEnumItem(target, itemData, isAddToModel){
+function addEnumItem(targetNode, itemData, isAddToModel){
 	var enumDom = $("#node-template .enumItem").clone(),
-		dmodel = target.data("data"),
+		dmodel = targetNode.data("data"),
 		name = getName("ENUMITEM",(function(){
 			var namespace = [];
 			$.each(dmodel.enumItems,function(i,p){
@@ -161,7 +171,7 @@ function addEnumItem(target, itemData, isAddToModel){
 			return namespace;
 		})());
 		
-	target.find(".enumItems").append(enumDom);
+	targetNode.find(".enumItems").append(enumDom);
 	enumDom.html(name);
 
 	var enumItem = new EnumItem(name);
@@ -170,7 +180,7 @@ function addEnumItem(target, itemData, isAddToModel){
 		dmodel.enumItems.push(enumItem);
 	}
 	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
-	var dialog = $("#" + target.attr("dialogId"));
+	var dialog = $("#" + targetNode.attr("dialogId"));
 	if(dialog.length == 1){
 		var copy = enumDom.clone();
 		enumDom.data("copy",copy);
@@ -231,7 +241,7 @@ function updateNodeName(node, input, canvas){
 			case "aggregate" :
 			case "associate" :
 			case "compose"   : {
-				var propertyNode 	= node.find("." + line.lineId);
+				var propertyNode 	= node.find("." + line.id);
 				var property = propertyNode.data("data");
 				propertyNode.find(".genericity").html(newName);
 				property.name = newName;
@@ -246,22 +256,22 @@ function updateNodeName(node, input, canvas){
 
 /*更新实体类型*/
 /**
- * @param target
+ * @param targetNode
  * @param type
  */
-function updateEntityType(target, type){
-	var data = target.data("data");
-	target.find(".entityType").html(type);
+function updateEntityType(targetNode, type){
+	var data = targetNode.data("data");
+	targetNode.find(".entityType").html(type);
 	data.entityType = type;
 }
 
 /*编辑元素的描述信息*/
 /**
- * @param target
+ * @param targetNode
  * @param val
  */
-function updateDescription(target, val){
-	var data = target.data("data");
+function updateDescription(targetNode, val){
+	var data = targetNode.data("data");
 	data.description = val;
 }
 
@@ -270,12 +280,11 @@ function updateDescription(target, val){
  * @param propertyDom
  * @param val
  */
-function updatePropertyName(propertyDom, val){
-	if(!propertyDom) return;
+function updatePropertyName(property, val){
+	if(!property) return;
 	
-	var copy = propertyDom.data("copy"),
-		property = propertyDom.data("data");
-		
+	var propertyDom = $("#"+property.id);
+	var copy = propertyDom.data("copy");		
 		property.name = val;
 		copy ? copy.find(".propertyName").html(val) : "";
 		propertyDom.find(".propertyName").html(val);
@@ -287,12 +296,11 @@ function updatePropertyName(propertyDom, val){
  * @param val
  * @param form
  */
-function updatePropertyType(propertyDom, val, form){
+function updatePropertyType(property, val, form){
+	var propertyDom = $("#"+property.id);
 	if(!propertyDom) return;
 	
-	var copy = propertyDom.data("copy"),
-		property = propertyDom.data("data");
-		
+	var copy = propertyDom.data("copy");
 		/*处理泛型*/
 		if(!($.inArray(val, ["Set", "HashSet", "List", "ArrayList", "Hashtable", "Vector"]) < 0)){
 			propertyDom.addClass("collection_type");
@@ -315,17 +323,18 @@ function updatePropertyType(propertyDom, val, form){
 
 /*更改属性的泛型*/
 /**
- * @param propertyDom
+ * @param property
  * @param val
  */
-function updatePropertyGenericity(propertyDom, val){
-	if(!propertyDom) return;
+function updatePropertyGenericity(property, val){
+	if(!property) return;
+	
+	var propertyDom = $("#"+property.id);
 	
 	var copy = propertyDom.data("copy"),
 		property = propertyDom.data("data");
 	
 	if(val == "") val = "?";
-	
 	property.genericity = val;
 	propertyDom.find(".genericity").html(val);
 	copy ? copy.find(".genericity").html(val) : "";
@@ -360,7 +369,7 @@ function checkNodeName(node, name, canvas){
 		model	= node.data("data");
 		
 	for(var i in models){
-		if(val == models[i].name && models[i].shapeId != model.shapeId){
+		if(val == models[i].name && models[i].id != model.id){
 			name.addClass("duplication_name"); /*重名*/
 			return;
 		}
@@ -401,7 +410,7 @@ function deleteNode(node, canvas){
 function deleteLines(lines,canvas){
 	var ldom,id;
 	$.each(lines,function(i,line){
-		id		= line.lineId;
+		id		= line.id;
 		ldom 	= canvas.LINEDOMS[id];
 		switch(line.relationType){
 			/*如果*/
@@ -434,7 +443,7 @@ function deleteLines(lines,canvas){
 			case "compose" 	: {
 				var from = canvas.MODELS[line.fromShapeId];
 				if(from){
-					var fromNode 	= canvas.NODEDOMS[from.shapeId],
+					var fromNode 	= canvas.NODEDOMS[from.id],
 						properties 	= from.properties,
 						propertyDom = fromNode.find("."+id);
 						

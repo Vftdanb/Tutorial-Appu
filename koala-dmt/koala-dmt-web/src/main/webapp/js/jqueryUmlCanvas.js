@@ -38,7 +38,7 @@ umlCanvas(thiz, renderData){
 	 	line = {
 			description: null
 			domainsChartId: 0
-			lineId: "8607e7185d7664254f149e80a48c593d"
+			id: "8607e7185d7664254f149e80a48c593d"
 			relationType: "extends"
 			fromShapeId: "527cc94f46ee1a4ff4b63a4b27a62027"
 			toShapeId: "0ad536ac6e3166cf7c283fd28f30a2fb"
@@ -71,8 +71,6 @@ umlCanvas(thiz, renderData){
 			offset 	= THIS.UMLCANVAS.offset();
 			startP 	= [e.pageX - offset.left, e.pageY - offset.top];
 			line 	= THIS.drawLine(startP, [e.pageX - offset.left, e.pageY - offset.top], THIS.CURTOOL.name);
-			
-			line.attr("id", commonTool.guid());
 			THIS.SVGLINES.append(line);
 		})
 		.delegate(".node","mouseenter",function(e){ 	//结束节点的获取
@@ -136,7 +134,7 @@ umlCanvas(thiz, renderData){
 				}
 				THIS.moveLine(line, endpoints.start , endpoints.end);
 			}
-		}).mouseup(function(e){						//划线成功效果
+		}).mouseup(function(e){					//划线成功效果
 			if((drawing && node2 == null)){
 				line.remove();
 			} else if(node2 != null && drawing){
@@ -171,17 +169,18 @@ umlCanvas(thiz, renderData){
 					addProperty(node2, property2, true);
 				}
 				
-				var lineId 	= line.attr("id");
 				var type = line.attr("relationType");
-
+				var lineData = null;
 				if(line.is(".aggregate,.compose,.associate")){
-					THIS.LINES[lineId] = new AssociatedLine(lineId, type, node1.attr("id"), node2.attr("id"), null);
+					lineData = new AssociatedLine(type, node1.attr("id"), node2.attr("id"), null);
 				} else {
-					THIS.LINES[lineId] = new Line(lineId, type, node1.attr("id"), node2.attr("id"), null);
+					lineData = new Line(type, node1.attr("id"), node2.attr("id"), null);
 				}
 				
+				var lineId = lineData.id;
+				THIS.LINES[lineId] = lineData;
 				THIS.LINEDOMS[lineId] = line;	//把新增的连线缓存起来
-				line.attr("class", line.attr("class").replace("templine", ""));
+				line.attr("class", line.attr("class").replace("templine", "")).attr("id", lineId);
 				THIS.resetLine(line);
 				
 				if(line.is(".aggregate,.compose,.associate")){
@@ -318,16 +317,15 @@ umlCanvas(thiz, renderData){
 				};
 			var type = THIS.CURTOOL.name;
 			
-			var id = commonTool.guid();
 			var modelName = getName(type.toLowerCase(), getNodeNameSpace(THIS.MODELS)).firstUpcase();
 			
 			var model = null;
 			if(type == "ENTITY"){
-				model 		= new EntityShape(id, THIS.CHARTID, modelName, position, type, "", false, false);
+				model = new EntityShape(THIS.CHARTID, modelName, position, type, "", false, false);
 			} else if(type == "INTERFACE"){
-				model 		= new InterfaceShape(id, THIS.CHARTID, modelName, position, type, "");
+				model = new InterfaceShape(THIS.CHARTID, modelName, position, type, "");
 			} else if(type == "ENUM"){
-				model 		= new EnumShape(id, THIS.CHARTID, modelName, position, type, "");
+				model = new EnumShape(THIS.CHARTID, modelName, position, type, "");
 			}
 			
 			addNode(THIS, model);
@@ -335,7 +333,7 @@ umlCanvas(thiz, renderData){
 		
 		/*当画布被点击一次时，如果当前不是线条工具，将工具切换回鼠标工具*/
 		if(THIS.CURTOOL.type != "line"){
-			swichTool("cursor",THIS);
+			swichTool("cursor", THIS);
 		}
 		//return false;
 	});
@@ -371,7 +369,7 @@ umlCanvas(thiz, renderData){
 				});
 				return namespace;
 			})());
-			var action = new Action(actionName, "void");
+			var action = new Action(actionName);
 			addAction(node, action, true);
 		} 
 		var relatedLines = THIS.findRelatedLines(node.attr("id"));
@@ -494,6 +492,8 @@ umlCanvas.prototype = {
 	 * @param data 源数据，包括箭头数据和节点数据
 	 */
 	render : function(data){
+		if(!data) return;
+		
 		var lines = JSON.parse(data.lineInfo);
 		var models = JSON.parse(data.modelInfo);
 		var canvas = this;
@@ -508,14 +508,14 @@ umlCanvas.prototype = {
 		$.each(lines, function(i, line){
 			lineDom = $("#line-template ." + line.relationType)
 					.clone()
-					.attr("id", line.lineId);
+					.attr("id", line.id);
 			
 			lineDom.attr("class", lineDom.attr("class").replace("templine"), "");
 			
 			polyline = lineDom.children("polyline");
 			polyline.attr("points",line.points);
-			canvas.LINEDOMS[line.lineId] = lineDom;
-			canvas.LINES[line.lineId] = line;
+			canvas.LINEDOMS[line.id] = lineDom;
+			canvas.LINES[line.id] = line;
 			
 			if(line.relationType == "aggregate" ||
 			line.relationType == "associate" ||
@@ -580,15 +580,15 @@ umlCanvas.prototype = {
 		/*重画指出的线*/
 		if(outs)
 		for(var i=outs.length-1 ; i>=0 ; i--) {
-			lineId = outs[i].lineId;
+			lineId = outs[i].id;
 			if(outs[i].lineType == "line_of_centers"){//连心线
 				endpoints = this.getEndpoints(node, this.NODEDOMS[outs[i].toShapeId]);
-				outs[i].points = this.moveLine(this.LINEDOMS[outs[i].lineId], endpoints.start, endpoints.end);
+				outs[i].points = this.moveLine(this.LINEDOMS[outs[i].id], endpoints.start, endpoints.end);
 			} else if(outs[i].lineType == "turning_line"){ //手动折线
 				endpoints = this.getEndpoints(node, outs[i].turningPoint);
-				var points = this.LINEDOMS[outs[i].lineId].children("polyline").attr("points").split(" ");
+				var points = this.LINEDOMS[outs[i].id].children("polyline").attr("points").split(" ");
 				points[0] = endpoints.start.join();
-				this.LINEDOMS[outs[i].lineId].children("polyline").attr("points", points.join(" "));
+				this.LINEDOMS[outs[i].id].children("polyline").attr("points", points.join(" "));
 				outs[i].points = points.join(" ");
 			}
 			
@@ -598,15 +598,15 @@ umlCanvas.prototype = {
 		/*重画指入的线*/
 		if(ins)
 		for(var i=ins.length-1; i>=0; i--){
-			lineId = ins[i].lineId;
+			lineId = ins[i].id;
 			if(ins[i].lineType == "line_of_centers"){//连心线
 				endpoints = this.getEndpoints(this.NODEDOMS[ins[i].fromShapeId], node);
-				ins[i].points = this.moveLine(this.LINEDOMS[ins[i].lineId], endpoints.start, endpoints.end);
+				ins[i].points = this.moveLine(this.LINEDOMS[ins[i].id], endpoints.start, endpoints.end);
 			} else if(ins[i].lineType == "turning_line"){ //手动折线
 				endpoints = this.getEndpoints(ins[i].turningPoint, node);
-				var points = this.LINEDOMS[ins[i].lineId].children("polyline").attr("points").split(" ");
+				var points = this.LINEDOMS[ins[i].id].children("polyline").attr("points").split(" ");
 				points[2] = endpoints.end.join();
-				this.LINEDOMS[ins[i].lineId].children("polyline").attr("points", points.join(" "));
+				this.LINEDOMS[ins[i].id].children("polyline").attr("points", points.join(" "));
 				ins[i].points = points.join(" ");
 			}
 			
@@ -626,7 +626,7 @@ umlCanvas.prototype = {
 			if(lineData.lineType != "turning_line" || endOrStart == "start"){
 				dy = Math.sin(Deg+7*Math.PI/4)*30-10;
 				dx = Math.cos(Deg+7*Math.PI/4)*30-10;
-				$("#"+lineData.lineId+" .start").css({
+				$("#"+lineData.id+" .start").css({
 					top:endpoints.start[1] + dy,
 					left:endpoints.start[0] + dx
 				});
@@ -640,7 +640,7 @@ umlCanvas.prototype = {
 			if(lineData.lineType != "turning_line" || endOrStart == "end"){
 				dy = Math.sin(Deg+5*Math.PI/4)*30 - 10;
 				dx = Math.cos(Deg+5*Math.PI/4)*30 - 10;
-				$("#"+lineData.lineId+" .end").css({
+				$("#"+lineData.id+" .end").css({
 					top:endpoints.end[1] + dy,
 					left : endpoints.end[0] + dx
 				});
@@ -933,16 +933,15 @@ $("#add_nodes").delegate(".contextmenu_item", "click", function(e){
 			y:e.pageY - offset.top
 		};
 	
-	var id = commonTool.guid();
 	var modelName = getName(type.toLowerCase(), getNodeNameSpace(canvas.MODELS)).firstUpcase();
 	
 	var model = null;
 	if(type == "ENTITY"){
-		model 		= new EntityShape(id, canvas.CHARTID, modelName, position, type, "", false, false);
+		model 		= new EntityShape(canvas.CHARTID, modelName, position, type, "", false, false);
 	} else if(type == "INTERFACE"){
-		model 		= new InterfaceShape(id, canvas.CHARTID, modelName, position, type, "");
+		model 		= new InterfaceShape(canvas.CHARTID, modelName, position, type, "");
 	} else if(type == "ENUM"){
-		model 		= new EnumShape(id, canvas.CHARTID, modelName, position, type, "");
+		model 		= new EnumShape(canvas.CHARTID, modelName, position, type, "");
 	}
 	
 	addNode(canvas, model);
@@ -979,7 +978,7 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 			});
 			return namespace;
 		})());
-		var action = new Action(actionName, "void");
+		var action = new Action(actionName);
 		addAction(target, action, true);
 	} else if(thiz.is(".add_enumItem")){
 		var name = getName("ENUMITEM",(function(){

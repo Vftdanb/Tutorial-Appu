@@ -37,7 +37,7 @@ commonTool = {
 	},
 	
 	/*找出和某个节点连接的所有线条（分连出和连入两种）*/
-	findRelatedLines : function(nodeId,lines){
+	findRelatedLines : function(nodeId, lines){
 		var outLines = [], inLines = [];
 		for(var i in lines){
 			if(lines[i].toShapeId == nodeId){
@@ -96,8 +96,8 @@ function DomainChar(name){
  * @param to 线条的结束节点
  * @param desc 线条描述
  */
-function Line(id, type, from, to, desc){
-	this.lineId			= id;
+function Line(type, from, to, desc){
+	this.id 			= commonTool.guid();
 	this.fromShapeId 	= from;
 	this.toShapeId		= to;
 	this.relationType 	= type;
@@ -109,8 +109,8 @@ function Line(id, type, from, to, desc){
 }
 
 /*关联箭头*/
-function AssociatedLine(id, type, from, to, desc, startPosition, endPosition){
-	Line.call(this, id, type, from, to, desc);
+function AssociatedLine(type, from, to, desc, startPosition, endPosition){
+	Line.call(this, type, from, to, desc);
 	
 	this.multiplicity	= {
 		start:{
@@ -136,8 +136,8 @@ function AssociatedLine(id, type, from, to, desc, startPosition, endPosition){
  * @param type
  * @param desc
  */
-function DomainShape(id, charid, name, position, type, desc){
-	this.shapeId		= id;
+function DomainShape(charid, name, position, type, desc){
+	this.id				= commonTool.guid();
 	this.position 		= position;
 	this.shapeType		= type;
 	this.name			= name;
@@ -157,8 +157,8 @@ function DomainShape(id, charid, name, position, type, desc){
  * @param isAbstract
  * @param isMapped
  */
-function EntityShape(id,charid,name,position,type,desc,isAbstract,isMapped){
-	DomainShape.call(this, id,charid,name,position,type,desc); 		//继承DomainShap
+function EntityShape(charid,name,position,type,desc,isAbstract,isMapped){
+	DomainShape.call(this, charid, name, position, type, desc); 		//继承DomainShap
 	
 	this.parentName			= null;			//父类
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
@@ -169,20 +169,21 @@ function EntityShape(id,charid,name,position,type,desc,isAbstract,isMapped){
 }
 
 /*接口类*/
-function InterfaceShape(id,charid,name,position,type,desc){
-	DomainShape.call(this, id,charid,name,position,type,desc);
+function InterfaceShape(charid, name, position, type, desc){
+	DomainShape.call(this, charid, name, position, type, desc);
 	this.actions 	= [];
 }
 
 /*枚举*/
-function EnumShape(id,charid,name,position,type,desc){
-	DomainShape.call(this, id,charid,name,position,type,desc);
+function EnumShape(charid, name, position, type, desc){
+	DomainShape.call(this, charid, name, position, type, desc);
 	this.enumItems = [];
 }
 
 /****************************二级数据结构****************************/
 /*属性类*/
 function Property(name, type, autoBy){
+	this.id				= commonTool.guid();
 	this.name 			= name;
 	this.type 			= type;
 	this.genericity		= null;
@@ -194,29 +195,25 @@ function Property(name, type, autoBy){
 	this.relation		= null;		//manytonone,manytomany...
 }
 
-/*常量类*/
-function Constant(name ,type){
-	this.name 	= name;
-	this.type 	= type;
-	this.value 	= null;
-}
-
 /*行为类*/
 function Action(name){
-	this.name = name;
+	this.id			= commonTool.guid();
+	this.name 		= name;
 	this.returnType = "void";
-	this.modifier = "public";
-	this.arguments = [];
+	this.modifier 	= "public";
+	this.arguments 	= [];
 }
 
 /*枚举项类*/
 function EnumItem(name){
-	this.name = name;
+	this.id		= commonTool.guid();
+	this.name 	= name;
 }
 
 /****************************三级级数据结构****************************/
 /*行为参数类*/
 function Parameter(name ,type){
+	this.id		= commonTool.guid();
 	this.name 	= name;
 	this.type 	= type;
 }

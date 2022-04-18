@@ -10,7 +10,7 @@
 		setting =  $.extend(defaultSetting, setting);
 		var mask = $(
 				'<div class="dialog_mask close">\
-					<div class="dialog">\
+					<div class="mint_dialog">\
 						<div class="head">\
 							<div class="title"></div>\
 							<span class="close_btn" title="关闭"></span>\
@@ -69,5 +69,5 @@
 		}
 		
 		return out;
-	}
+	};
 })($);

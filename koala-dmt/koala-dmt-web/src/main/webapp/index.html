@@ -121,18 +121,18 @@
 										<div>
 											<span class="label">属性名</span>
 											<input type="text" class="propertyName" name="name" 
-												oninput="updatePropertyName($(this).parent().parent().data('data'),$(this).val());"
+												oninput="updatePropertyName($(this).parents('form:first').data('data'),$(this).val());"
 												onchange=""/><!-- 检查属性名 @TODO -->
 										</div>
 										<div>
 											<span class="label">类型</span>
 											<input type="text" class="propertyType" name="type" list="property_type_tip" 
-												oninput="updatePropertyType($(this).parents('form').data('data'),$(this).val(), $(this).parents('form'));"/>
+												oninput="updatePropertyType($(this).parents('form:first').data('data'), $(this).val(), $(this).parents('form:first'));"/>
 										</div>
 										<div class="genericity_input">
 											<span class="label">泛型</span>
 											<input type="text" class="propertyGenericity" name="genericity" 
-												oninput="updatePropertyGenericity($(this).parent().parent().data('data'),$(this).val());"/>
+												oninput="updatePropertyGenericity($(this).parents('form:first').data('data'),$(this).val());"/>
 										</div>
 										<div>
 											<table style="font-size:14px">
@@ -149,7 +149,10 @@
 											</table>
 										</div>
 									</form>
-									<div class="properties"></div>
+									<fieldset class="properties_set" style="margin-top:10px;">
+										<legend>属性列表</legend>
+										<div class="properties"></div>
+									</fieldset>
 								</div>
 								
 								<!-- 行为面板 -->
