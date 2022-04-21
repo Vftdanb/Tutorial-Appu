@@ -15,15 +15,6 @@
 	};
 })($);
 
-$("#dialog_container").delegate(".property", "click", function(){
-	var property = $(this);
-	
-	/*选中的样式*/
-	$("#dialog_container .properties .active").removeClass("active");
-	property.parents(".property_item").addClass("active");
-	editDialog.initPropertyForm(property.parents("fieldset:first").prev(), property.data("data"));
-});
-
 $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", function(){
 	var enumItem = $(this);
 	if(enumItem.attr("contenteditable") == undefined){
@@ -38,6 +29,25 @@ $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", fu
 	$(this).removeAttr("contenteditable");
 });
 
+/*
+ * 编辑属性
+ */
+$("#dialog_container").find(".property_panel:first").delegate(".property", "click", function(){
+	var property = $(this);
+	/*选中的样式*/
+	$("#dialog_container .properties .active").removeClass("active");
+	property.parents(".property_item").addClass("active");
+	editDialog.initPropertyForm(property.data("data"));
+}).delegate(".delete_property","click", function(){
+	var btn = $(this);
+	var entity = btn.parents(".dialog").data("data");
+	var propertyDom = btn.parents(".property_item:first");
+	var property = propertyDom.data("data");
+	
+	entity.properties.removeByEquals(property);
+	propertyDom.remove();
+	$("#"+property.id).remove();
+});
 
 /*
  * 编辑方法
@@ -45,15 +55,17 @@ $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", fu
 $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "click", function(){
 	var btn = $(this);
 	var actionData = btn.parents(".action_item:first").data("data");
-	var editForm = btn.parents(".action_list:first").slideUp().next(".edit_action_detail").slideDown();
-	editDialog.initActionForm(editForm, actionData);
-	
+	btn.parents(".action_list:first").slideUp().next(".edit_action_detail").slideDown();
+	editDialog.initActionForm(actionData);
 }).delegate(".delete_action", "click", function(){
 	var btn = $(this);
-	var action = btn.parents(".action_item:first");
-	var actionData = action.data("data");
+	var entity = btn.parents(".dialog").data("data");
+	var actionDom = btn.parents(".action_item:first");
+	var action = actionDom.data("data");
 	
-	
+	entity.actions.removeByEquals(action);
+	$("#"+action.id).remove();
+	actionDom.remove();
 }).delegate(".back_to_actionlist","click", function(){
 	$(this).parents(".edit_action_detail:first").slideUp().prev(".action_list").slideDown();
 });
@@ -153,19 +165,23 @@ editDialog = {
 		panel.find(".properties").empty();
 		
 		if(properties.length > 0){
-			this.initPropertyForm(panel.find("form"),properties[0]);
+			this.initPropertyForm(properties[0]);
 			var propertyDom = panel.find(".properties");	
 			$.each(properties, function(i, property){
 				//property 元素的副本
 				var copy = $("#"+property.id).clone().data("data",property).removeAttr("id");
+				var propertyItem = $("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>');
+				
 				$("#"+property.id).data("copy", copy);
-				propertyDom.append($("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>'));
+				propertyItem.data("data", property);
+				propertyDom.append(propertyItem);
 			});
 		}
 	},
 	
 	/*初始化编辑对话框中的 编辑属性的 表单*/
-	initPropertyForm : function(form, property){
+	initPropertyForm : function(property){
+		var form = $("#editPropertyDetailForm");
 		form.data("data", property);
 		form[0].reset();
 		form.find("input[name='name']").val(property.name);
@@ -185,8 +201,6 @@ editDialog = {
 		var actionSet = dialog.find(".action_set:first").empty();
 		var actionDom;
 		
-		console.log(actions);
-		
 		$.each(actions, function(i, action){
 			var copy = $("#"+action.id).clone().removeAttr("id");
 			$("#"+action.id).data("copy", copy);
@@ -201,7 +215,10 @@ editDialog = {
 	 * @param editForm
 	 * @param actionData
 	 */
-	initActionForm : function(editForm, action){
+	initActionForm : function(action){
+		var editForm = $("#editActionDetailForm");
+		editForm.data("data", action);
+		
 		editForm.find("input[name='action_name']").val(action.name);
 		editForm.find("input[name='action_returntype']").val(action.returnType);
 		editForm.find("select[nam='action_modifier']").select(action);

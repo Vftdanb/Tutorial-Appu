@@ -93,7 +93,10 @@ function addProperty(targetNode, propertyData, isAddToModel) {
 		if(dialog.length == 1){
 			var copy = propertyDom.clone().data("data", propertyData).removeAttr("id");
 			propertyDom.data("copy", copy);
-			dialog.find(".properties").append($("<div class='property_item active'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>'));
+			
+			var propertyItem = $("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>');
+			propertyItem.data("data", propertyData);
+			dialog.find(".properties").append(propertyItem);
 			copy.click(); //设置为当前编辑项
 		}
 	}
@@ -108,7 +111,6 @@ function addAction(targetNode, actionData, isAddToModel){
 	var dmodel = targetNode.data("data");
 	var actDom = $("#node-template .action").clone();
 	dmodel.actions.push(actionData);
-	console.log(dmodel);
 	targetNode.find(".actions").append(actDom);
 	actDom.find(".actionName").html(actionData.name);
 	actDom.find(".returnType").html(actionData.returnType);
@@ -121,11 +123,18 @@ function addAction(targetNode, actionData, isAddToModel){
 	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
 	var dialog = $("#" + targetNode.attr("dialogId"));
 	if(dialog.length == 1){
+		console.log(2323);
 		var copy = actDom.clone().data("data", actDom);
 		actDom.data("copy", copy);
 		dialog.find(".actions").append(copy);
 		copy.click(); //设置为当前编辑项
 		copy.data("data",actDom).addClass("active");
+	}
+	
+	if(actionData.arguments){
+		$.each(actionData.arguments, function(i, argument){
+			addActionArguments(actDom, argument, false);
+		});
 	}
 }
 
@@ -135,7 +144,7 @@ function addAction(targetNode, actionData, isAddToModel){
  * @param parameterData
  * @param isAddToModel 当反向生成图时，不需要把
  */
-function addActionParameter(targetNode, parameterData, isAddToModel){
+function addActionArguments(targetNode, parameterData, isAddToModel){
 	var paramDom = $("#node-template").children(".action_parameter");
 	
 	paramDom.children(".parameterName").html(parameterData.name);
@@ -143,7 +152,6 @@ function addActionParameter(targetNode, parameterData, isAddToModel){
 	targetNode.children(".paramters").append(paramDom);
 	
 	paramDom.attr("id", parameterData.id);
-	
 	/*把对应的参数对象缓存到dom节点上，方便查找*/
 	paramDom.data("data", parameterData);
 	
@@ -275,8 +283,8 @@ function updateDescription(targetNode, val){
 	data.description = val;
 }
 
-/*更改属性的名字*/
 /**
+ * 更改属性的名字
  * @param propertyDom
  * @param val
  */
@@ -288,6 +296,53 @@ function updatePropertyName(property, val){
 		property.name = val;
 		copy ? copy.find(".propertyName").html(val) : "";
 		propertyDom.find(".propertyName").html(val);
+}
+
+/**
+ * 更改方法的名字
+ * @param action
+ * @param val
+ */
+function updateActionName(action, val){
+	if(!action) return;
+	
+	var actionDom = $("#"+action.id);
+	var copy = actionDom.data("copy");
+	
+	action.name = val;
+	copy ? copy.find(".actionName").html(val):"";
+	actionDom.find(".actionName").html(val);
+}
+
+/**
+ * 更改方法返回值
+ * @param action
+ * @param val
+ */
+function updateActionReturnType(action, val){
+	if(!action) return;
+	
+	var actionDom = $("#"+action.id);
+	var copy = actionDom.data("copy");
+	action.returnType = val;
+	copy ? copy.find(".returnType").html(val):"";
+	actionDom.find(".returnType").html(val);
+}
+
+/**
+ * 更改方法修饰符
+ * @param action
+ * @param val
+ */
+function updateActionModifier(action, val){
+	if(!action) return;
+	
+	var actionDom = $("#"+action.id);
+	var copy = actionDom.data("copy");
+	action.modifier = val;
+	
+	copy ? copy.removeClass("public private protected").addClass(val):"";
+	actionDom.removeClass("public private protected").addClass(val);
 }
 
 /*更改属性的类型*/

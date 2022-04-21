@@ -117,7 +117,7 @@
 								
 								<!-- 属性面板 -->
 								<div class="panel property_panel">
-									<form class="property_form">
+									<form class="property_form" id="editPropertyDetailForm">
 										<div>
 											<span class="label">属性名</span>
 											<input type="text" class="propertyName" name="name" 
@@ -154,7 +154,6 @@
 										<div class="properties"></div>
 									</fieldset>
 								</div>
-								
 								<!-- 行为面板 -->
 								<div class="panel action_panel">
 									<div class="action_list">
@@ -165,12 +164,12 @@
 										</fieldset>
 									</div>
 									
-									<div class="edit_action_detail">
+									<div class="edit_action_detail" id="editActionDetailForm">
 										<div><a href="javascript:void(0);" class="back_to_actionlist" title="放回方法列表">返回</a></div>
-										<div><label>方法名:</label><input name="action_name" type="text" value="login"/></div>
-										<div><label>返回值:</label><input name="action_returntype" type="text" value="void"/></div>
+										<div><label>方法名:</label><input name="action_name" type="text" oninput="updateActionName($(this).parents('.edit_action_detail:first').data('data'),$(this).val());"/></div>
+										<div><label>返回值:</label><input name="action_returntype" type="text" oninput="updateActionReturnType($(this).parents('.edit_action_detail:first').data('data'),$(this).val())"/></div>
 										<div>
-											<label>作用域:</label><select name="action_modifier">
+											<label>作用域:</label><select name="action_modifier" onchange="updateActionModifier($(this).parents('.edit_action_detail:first').data('data'),$(this).val())">
 												<option value="public">public</option>
 												<option value="private">private</option>
 												<option vlaue="protected">protected</option>
