@@ -151,18 +151,17 @@
 									</form>
 									<fieldset class="properties_set" style="margin-top:10px;">
 										<legend>属性列表</legend>
-										<div class="properties"></div>
+										<div class="properties" id="property_set"></div>
+										<div class="add_element add_property">+添加属性</div>
 									</fieldset>
 								</div>
 								<!-- 行为面板 -->
 								<div class="panel action_panel">
-									<div class="action_list">
-										<fieldset>
-											<legend style="font-size:14px;">方法列表</legend>
-											<div class="action_set"></div>
-											<div class="add_element">+添加方法</div>
-										</fieldset>
-									</div>
+									<fieldset class="action_list">
+										<legend style="font-size:14px;">方法列表</legend>
+										<div class="action_set" id="dialogActionSet"></div>
+										<div class="add_element add_action">+添加方法</div>
+									</fieldset>
 									
 									<div class="edit_action_detail" id="editActionDetailForm">
 										<div><a href="javascript:void(0);" class="back_to_actionlist" title="放回方法列表">返回</a></div>
@@ -178,7 +177,7 @@
 										<fieldset class="action_parameter_set" style="margin-top:10px;">
 											<legend style="font-size:14px;">参数列表</legend>
 											<div class="parameter_set"></div>
-											<div class="add_element">+添加参数</div>
+											<div class="add_element add_argument">+添加参数</div>
 										</fieldset>
 									</div>
 								</div>

@@ -29,80 +29,81 @@
     .active_dialog{
         display:block;
     }
-    
-    /*属性面板*/
-    .property_panel{
-        .property_form{
-        }
-        .properties{
-        	border:none!important;
-        	.property_item{
-        		padding:2px;
-        		cursor:pointer;
-        		position:relative;
-        		&.active{
-        			background:@dottingColor;
-        		}
-	        	.property{
-	        		margin-right:30px;
+    .panel{
+		.add_element {
+			background: #9cf;
+			border: 1px solid #ccc;
+			font-weight: 600;
+			font-size: 18px;
+			text-align: center;
+			margin-top: 8px;
+			cursor: pointer;
+		}
+		    
+	    /*属性面板*/
+	    &.property_panel{
+	        .property_form{
+	        }
+	        .properties{
+	        	border:none!important;
+	        	.property_item{
+	        		padding:2px;
+	        		cursor:pointer;
+	        		position:relative;
+	        		&.active{
+	        			background:@dottingColor;
+	        		}
+		        	.property{
+		        		margin-right:30px;
+		        	}
+		        	.delete_property{
+		        		position:absolute;
+		        		right:2px;
+		        		top:2px;
+		        	}
 	        	}
-	        	.delete_property{
-	        		position:absolute;
-	        		right:2px;
-	        		top:2px;
+	        }
+	    }
+	    
+	    /*方法面板*/
+	    &.action_panel{
+	        .action_arguments{
+	            &:before{
+	                content:"(";
+	            }
+	            &:after{
+	                content:")";
+	            }
+	        }
+	        
+	        .action_set{
+	        	.action_item{
+	        		position:relative;
+	        		padding:2px;
+	        		.action{
+	        			font-size:0;
+	        			margin-right:80px;
+	        			*{
+	        				font-size:14px;
+	        			}
+	        		}
+	        		
+	        		.edit_option{
+	        			position:absolute;
+	        			top:2px;
+	        			right:2px;
+	        			
+	        			.delete_action{
+	        				display:inline-block;
+	        				margin-left:5px;
+	        			}
+	        		}
 	        	}
-        	}
-        }
-    }
-    
-    /*方法面板*/
-    .action_panel{
-        .action_arguments{
-            &:before{
-                content:"(";
-            }
-            &:after{
-                content:")";
-            }
-        }
-        
-        .add_element{
-            background:#99CCFF;
-            border:1px solid #ccc;
-            font-weight:600;
-            font-size:18px;
-            text-align:center;
-            margin-top:8px;
-            cursor:pointer;
-        }
-        
-        .action_set{
-        	.action_item{
-        		position:relative;
-        		padding:2px;
-        		.action{
-        			font-size:0;
-        			margin-right:80px;
-        			*{
-        				font-size:14px;
-        			}
-        		}
-        		
-        		.edit_option{
-        			position:absolute;
-        			top:2px;
-        			right:2px;
-        			
-        			.delete_action{
-        				display:inline-block;
-        				margin-left:5px;
-        			}
-        		}
-        	}
-        }
-        
-        .edit_action_detail{
-            display:none;
-        }
+	        }
+	        
+	        .edit_action_detail{
+	            display:none;
+	        }
+	    }
     }
 }

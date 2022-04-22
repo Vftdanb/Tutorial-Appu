@@ -165,8 +165,8 @@ umlCanvas(thiz, renderData){
 					})());
 					var property2 = new Property(name, model1.name, line.attr("id"));
 					
-					addProperty(node1, property1, true);
-					addProperty(node2, property2, true);
+					addProperty(model1, property1, true);
+					addProperty(model2, property2, true);
 				}
 				
 				var type = line.attr("relationType");
@@ -359,7 +359,7 @@ umlCanvas(thiz, renderData){
 			
 			var property = new Property(name, "String");
 			
-			addProperty(node, property, true);
+			addProperty(node.data("data"), property, true);
 		} else if(THIS.CURTOOL.name == "action"){ 	//添加行为
 			/*自动获取不重复的命名*/
 			var actionName = getName("action", (function(){
@@ -370,7 +370,7 @@ umlCanvas(thiz, renderData){
 				return namespace;
 			})());
 			var action = new Action(actionName);
-			addAction(node, action, true);
+			addAction(node.data("data"), action, true);
 		} 
 		var relatedLines = THIS.findRelatedLines(node.attr("id"));
 		THIS.resetLines(node, relatedLines.outLines, relatedLines.inLines);
@@ -953,9 +953,9 @@ $("#add_nodes").delegate(".contextmenu_item", "click", function(e){
 $("#add_members").delegate(".contextmenu_item","click",function(e){
 	var thiz  	= $(this) ,
 		target 	= thiz.parent().data("target"),
-		canvas	= thiz.parent().data("canvas");
+		canvas	= thiz.parent().data("canvas"),
+		model = target.data("data");
 	if(thiz.is(".add_property")){
-			var model = target.data("data");
 			/*自动获取不重复的命名*/
 			var name = getName("property", (function(){
 				var namespace = [];
@@ -966,7 +966,7 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 			})());
 			var property = new Property(name, "String");
 		
-		addProperty(target,property,true);
+		addProperty(model, property, true);
 		
 		
 	} else if(thiz.is(".add_action")){
@@ -979,7 +979,7 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 			return namespace;
 		})());
 		var action = new Action(actionName);
-		addAction(target, action, true);
+		addAction(model, action, true);
 	} else if(thiz.is(".add_enumItem")){
 		var name = getName("ENUMITEM",(function(){
 				var namespace = [];

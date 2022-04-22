@@ -51,7 +51,7 @@ function addNode(canvas, model){
 	
 	if(model.properties){
 		$.each(model.properties, function(i, property){
-			addProperty(node, property, false);
+			addProperty(model, property, false);
 		});
 	}
 	
@@ -64,14 +64,14 @@ function addNode(canvas, model){
  * autoBy:指定该属性是否由于连线而自动生成
  */
 /**
- * @param targetNode
+ * @param entity
  * @param propertyData
  * @param isAddToModel
  */
-function addProperty(targetNode, propertyData, isAddToModel) {
-	var dmodel = targetNode.data("data");
-		
-	if(isAddToModel) dmodel.properties.push(propertyData);
+function addProperty(entity, propertyData, isAddToModel) {
+	var targetNode = $("#"+entity.id);
+		console.log(entity);
+	if(isAddToModel) entity.properties.push(propertyData);
 		
 	/*
 	 * 如果属性由连线时自动生成，则记录生成属性对应的线段
@@ -91,13 +91,8 @@ function addProperty(targetNode, propertyData, isAddToModel) {
 		/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
 		var dialog = $("#" + targetNode.attr("dialogId"));
 		if(dialog.length == 1){
-			var copy = propertyDom.clone().data("data", propertyData).removeAttr("id");
-			propertyDom.data("copy", copy);
-			
-			var propertyItem = $("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>');
-			propertyItem.data("data", propertyData);
-			dialog.find(".properties").append(propertyItem);
-			copy.click(); //设置为当前编辑项
+			editDialog.addPropertyToEdit(propertyData);
+			propertyDom.data("copy").click(); //设置为当前编辑项
 		}
 	}
 }
@@ -107,10 +102,10 @@ function addProperty(targetNode, propertyData, isAddToModel) {
  * @param targetNode
  * @param actionData
  */
-function addAction(targetNode, actionData, isAddToModel){
-	var dmodel = targetNode.data("data");
+function addAction(model, actionData, isAddToModel){
+	var targetNode = $("#"+model.id);
 	var actDom = $("#node-template .action").clone();
-	dmodel.actions.push(actionData);
+	model.actions.push(actionData);
 	targetNode.find(".actions").append(actDom);
 	actDom.find(".actionName").html(actionData.name);
 	actDom.find(".returnType").html(actionData.returnType);
@@ -123,12 +118,7 @@ function addAction(targetNode, actionData, isAddToModel){
 	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
 	var dialog = $("#" + targetNode.attr("dialogId"));
 	if(dialog.length == 1){
-		console.log(2323);
-		var copy = actDom.clone().data("data", actDom);
-		actDom.data("copy", copy);
-		dialog.find(".actions").append(copy);
-		copy.click(); //设置为当前编辑项
-		copy.data("data",actDom).addClass("active");
+		editDialog.addActionToEdit(actionData);
 	}
 	
 	if(actionData.arguments){

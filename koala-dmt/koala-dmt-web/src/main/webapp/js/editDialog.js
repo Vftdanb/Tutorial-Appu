@@ -47,6 +47,18 @@ $("#dialog_container").find(".property_panel:first").delegate(".property", "clic
 	entity.properties.removeByEquals(property);
 	propertyDom.remove();
 	$("#"+property.id).remove();
+}).delegate(".add_property", "click", function(){
+	var entity = $(this).parents(".dialog").data("data");
+	/*自动获取不重复的命名*/
+	var propertyName = getName("property", (function(){
+		var namespace = [];
+		$.each(entity.properties, function(i,p){
+			namespace.push(p.name);
+		});
+		return namespace;
+	})());
+	var property = new Property(propertyName, "String");
+	addProperty(entity, property, true);
 });
 
 /*
@@ -68,6 +80,24 @@ $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "cli
 	actionDom.remove();
 }).delegate(".back_to_actionlist","click", function(){
 	$(this).parents(".edit_action_detail:first").slideUp().prev(".action_list").slideDown();
+}).delegate(".add_action", "click", function(){
+	var entity = $(this).parents(".dialog").data("data");
+	
+	/*自动获取不重复的命名*/
+	var actionName = getName("action", (function(){
+		var namespace = [];
+		$.each(entity.actions, function(i, a){
+			namespace.push(a.name);
+		});
+		return namespace;
+	})());
+	
+	var action = new Action(actionName);
+	addAction(entity, action, true);
+}).delegate(".add_argument", "click", function(){
+	var action = $(this).parents("#editActionDetailForm:first").data("data");
+	console.log(action);
+	return false;
 });
 
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
@@ -166,17 +196,24 @@ editDialog = {
 		
 		if(properties.length > 0){
 			this.initPropertyForm(properties[0]);
-			var propertyDom = panel.find(".properties");	
 			$.each(properties, function(i, property){
 				//property 元素的副本
-				var copy = $("#"+property.id).clone().data("data",property).removeAttr("id");
-				var propertyItem = $("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>');
-				
-				$("#"+property.id).data("copy", copy);
-				propertyItem.data("data", property);
-				propertyDom.append(propertyItem);
+				editDialog.addPropertyToEdit(property);
 			});
 		}
+	},
+	
+
+	/**
+	 * 将一个属性添加到编辑窗口
+	 * @param action
+	 */
+	addPropertyToEdit : function(property){
+		var copy = $("#"+property.id).clone().data("data",property).removeAttr("id");
+		var propertyItem = $("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>');
+		$("#"+property.id).data("copy", copy);
+		propertyItem.data("data", property);
+		$("#property_set").append(propertyItem);
 	},
 	
 	/*初始化编辑对话框中的 编辑属性的 表单*/
@@ -198,16 +235,13 @@ editDialog = {
 	 * 
 	 */
 	initActionPanel : function(dialog, actions){
-		var actionSet = dialog.find(".action_set:first").empty();
-		var actionDom;
-		
+		dialog.find("#dialogActionSet").empty().show();
+
 		$.each(actions, function(i, action){
-			var copy = $("#"+action.id).clone().removeAttr("id");
-			$("#"+action.id).data("copy", copy);
-			actionDom = $('<div class="action_item"/>').append(copy).append('<div class="edit_option"><a href="javascript:void(0);" class="edit_action">编辑</a><a href="javascript:void(0);" class="delete_action">删除</a></div>');
-			actionSet.append(actionDom);
-			actionDom.data("data", action);
+			editDialog.addActionToEdit(action);
 		});
+		
+		$("#editActionDetailForm").hide();
 	},
 	
 	/**
@@ -235,6 +269,18 @@ editDialog = {
 				.children(".parameter_type").html(argument.type).end()
 				.children(".genericity").html(argument.genericity);
 		});
+	},
+	
+	/**
+	 * 将一个方法添加到编辑窗口
+	 * @param action
+	 */
+	addActionToEdit : function(action){
+		var copy = $("#"+action.id).clone().removeAttr("id");
+		$("#"+action.id).data("copy", copy);
+		actionDom = $('<div class="action_item"/>').append(copy).append('<div class="edit_option"><a href="javascript:void(0);" class="edit_action">编辑</a><a href="javascript:void(0);" class="delete_action">删除</a></div>');
+		$("#dialogActionSet").append(actionDom);
+		actionDom.data("data", action);
 	},
 	
 	/**
