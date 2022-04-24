@@ -24,7 +24,7 @@ $("#dialog_container").find(".enumitem_panel").delegate(".enumItem", "click", fu
 	}
 }).delegate(".enumItem", "input", function(){
 	var enumItem = $(this);
-	updateEnumName(enumItem.data("data"), enumItem.text());
+	updateEnumItemName(enumItem.data("data"), enumItem.text());
 }).delegate(".enumItem", "blur", function(){
 	$(this).removeAttr("contenteditable");
 });
@@ -96,7 +96,17 @@ $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "cli
 	addAction(entity, action, true);
 }).delegate(".add_argument", "click", function(){
 	var action = $(this).parents("#editActionDetailForm:first").data("data");
-	console.log(action);
+	/*自动获取不重复的命名*/
+	var argumentName = getName("argument", (function(){
+		var namespace = [];
+		$.each(action.arguments, function(i, a){
+			namespace.push(a.name);
+		});
+		return namespace;
+	})());
+	
+	var argument = new Argument(argumentName, "String");
+	addActionArguments(action, argument, true);
 	return false;
 });
 
@@ -257,16 +267,16 @@ editDialog = {
 		editForm.find("input[name='action_returntype']").val(action.returnType);
 		editForm.find("select[nam='action_modifier']").select(action);
 		
-		var temp = $("#dialog_template").children("parameter_item:first");
+		var temp = $("#dialog_template").children("argument_item:first");
 		/*
 		 * 初始化方法参数
 		 */
 		$.each(action.arguments, function(i, argument){
 			var paramDom = temp.clone();
 			
-			paramDom.children(".parameter_detail:first")
-				.children(".parameter_name").html(argument.name).end()
-				.children(".parameter_type").html(argument.type).end()
+			paramDom.children(".argument_detail:first")
+				.children(".argument_name").html(argument.name).end()
+				.children(".argument_type").html(argument.type).end()
 				.children(".genericity").html(argument.genericity);
 		});
 	},

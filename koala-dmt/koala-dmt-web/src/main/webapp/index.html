@@ -98,11 +98,11 @@
 								<div class="panel entity_panel active">
 									<div>
 										<span class="label">实体名</span>
-										<input class="name" name="name" type="text" oninput="var thiz=$(this),dialog=thiz.parents('.dialog'); updateNodeName(dialog.data('node'), thiz, dialog.data('canvas'))"/>
+										<input class="name" name="name" type="text" oninput="var thiz=$(this),dialog=thiz.parents('.dialog'); updateModelName(dialog.data('data'), thiz, dialog.data('canvas'))"/>
 									</div>
 									<div>
 										<span class="label">实体类型</span>
-										<select class="entityType" name="entityType" oninput="updateEntityType($(this).parents('.dialog').data('node'),$(this).val())">
+										<select class="entityType" name="entityType" oninput="updateEntityType($(this).parents('.dialog').data('data'),$(this).val())">
 											<option value="ENTITY">Entity</option>
 											<option value="ABSTRACT_ENTITY">AbstractEntity</option>
 											<option value="VALUE_OBJECT">ValueObject</option>
@@ -111,7 +111,7 @@
 									</div>
 									<div>
 										<span class="label" style="vertical-align:top;">备注</span>
-										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('data'),$(this).val())"></textarea>
 									</div>
 								</div>
 								
@@ -162,7 +162,6 @@
 										<div class="action_set" id="dialogActionSet"></div>
 										<div class="add_element add_action">+添加方法</div>
 									</fieldset>
-									
 									<div class="edit_action_detail" id="editActionDetailForm">
 										<div><a href="javascript:void(0);" class="back_to_actionlist" title="放回方法列表">返回</a></div>
 										<div><label>方法名:</label><input name="action_name" type="text" oninput="updateActionName($(this).parents('.edit_action_detail:first').data('data'),$(this).val());"/></div>
@@ -174,9 +173,9 @@
 												<option vlaue="protected">protected</option>
 											</select>
 										</div>
-										<fieldset class="action_parameter_set" style="margin-top:10px;">
+										<fieldset class="action_argument_set" style="margin-top:10px;">
 											<legend style="font-size:14px;">参数列表</legend>
-											<div class="parameter_set"></div>
+											<div class="argument_set" id="dialogArgumentSet"></div>
 											<div class="add_element add_argument">+添加参数</div>
 										</fieldset>
 									</div>
@@ -195,7 +194,7 @@
 								<div class="panel interface_panel active">
 									<div>
 										<span class="label">实体名</span>
-										<input name="name" type="text" oninput="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
+										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
 									</div>
 									<div>
 										<span class="label">实体范围</span>
@@ -208,7 +207,7 @@
 									</div>
 									<div>
 										<span class="label" style="vertical-align:top;">备注</span>
-										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('data'),$(this).val())"></textarea>
 									</div>
 								</div>
 								<div class="panel action_panel">
@@ -237,7 +236,7 @@
 								<div class="panel enum_panel active">
 									<div>
 										<span class="label">枚举名</span>
-										<input name="name" type="text" oninput="updateNodeName($(this).parents('.dialog').data('node'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
+										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
 									</div>
 									<div>
 										<span class="label">枚举范围</span>
@@ -250,7 +249,7 @@
 									</div>
 									<div>
 										<span class="label" style="vertical-align:top;">备注</span>
-										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('node'),$(this).val())"></textarea>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('data'),$(this).val())"></textarea>
 									</div>
 								</div>
 								
@@ -393,9 +392,9 @@
 				</div>
 				
 				<!-- 行为的参数模板 -->				
-				<div class="action_parameter">
-					<span class="parameterType"></span>
-					<span class="parameterName"></span>
+				<div class="action_argument">
+					<span class="argumentType"></span>
+					<span class="argumentGenericity genericity"></span>
 				</div>
 			</div>
 			
@@ -413,13 +412,13 @@
 					</div>
 				</div>
 				<!-- -->
-				<div class="parameter_item">
-					<div class="parameter_detail">
-					 	<span class="parameter_name"></span>
-					 	<span class="parameter_type"></span>
-					 	<span class="genericity"></span>
+				<div class="argument_item">
+					<div class="argument_detail">
+					 	<span class="argument_name"></span>
+					 	<span class="argument_type"></span>
+					 	<span class="genericity" style="display:none;"></span>
 					</div>
-					<div class="parameter_detail_option">
+					<div class="argument_detail_option">
 						<a href="javascript:void();">删除</a>
 					</div>
 				</div>

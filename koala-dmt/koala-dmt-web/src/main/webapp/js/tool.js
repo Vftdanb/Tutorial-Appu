@@ -212,10 +212,11 @@ function EnumItem(name){
 
 /****************************三级级数据结构****************************/
 /*行为参数类*/
-function Parameter(name ,type){
-	this.id		= commonTool.guid();
-	this.name 	= name;
-	this.type 	= type;
+function Argument(name ,type){
+	this.id			= commonTool.guid();
+	this.name 		= name;
+	this.type 		= type;
+	this.genericity = null;
 }
 
 /*工程类*/

@@ -123,47 +123,46 @@ function addAction(model, actionData, isAddToModel){
 	
 	if(actionData.arguments){
 		$.each(actionData.arguments, function(i, argument){
-			addActionArguments(actDom, argument, false);
+			addActionArguments(action, argument, false);
 		});
 	}
 }
 
 /**
  * 为方法添加参数
- * @param targetNode
- * @param parameterData
+ * @param action
+ * @param argument
  * @param isAddToModel 当反向生成图时，不需要把
  */
-function addActionArguments(targetNode, parameterData, isAddToModel){
-	var paramDom = $("#node-template").children(".action_parameter");
+function addActionArguments(action, argument, isAddToModel){
+	var argumentDom = $("#node-template").children(".action_argument").clone();
 	
-	paramDom.children(".parameterName").html(parameterData.name);
-	paramDom.children(".parameterType").html(parameterData.type);
-	targetNode.children(".paramters").append(paramDom);
-	
-	paramDom.attr("id", parameterData.id);
+	argumentDom.children(".parameterName").html(argument.name);
+	argumentDom.children(".parameterType").html(argument.type);
+	argumentDom.attr("id", argument.id);
 	/*把对应的参数对象缓存到dom节点上，方便查找*/
-	paramDom.data("data", parameterData);
-	
+	argumentDom.data("data", argument);
+	$("#"+action.id).children(".arguments:first").append(argumentDom);
+	$("#dialogArgumentSet").append(argumentDom.clone().removeAttr("id"));
 	if(isAddToModel){
-		var action = targetNode.data("data");
-		action.arguments.push(prameterData);
+		action.arguments.push(argument);
 	}
 }
 
-/*添加枚举项*/
 /**
- * TODO
+ *添加枚举项 TODO
  * @param targetNode
  * @param itemData
  * @param isAddToModel
  */
-function addEnumItem(targetNode, itemData, isAddToModel){
+function addEnumItem(model, itemData, isAddToModel){
+	var targetNode = $("#"+model.id);
+	
 	var enumDom = $("#node-template .enumItem").clone(),
-		dmodel = targetNode.data("data"),
+		model = targetNode.data("data"),
 		name = getName("ENUMITEM",(function(){
 			var namespace = [];
-			$.each(dmodel.enumItems,function(i,p){
+			$.each(model.enumItems,function(i,p){
 				namespace.push(p.name);
 			});
 			return namespace;
@@ -175,7 +174,7 @@ function addEnumItem(targetNode, itemData, isAddToModel){
 	var enumItem = new EnumItem(name);
 	enumDom.data("data",itemData);
 	if(isAddToModel){
-		dmodel.enumItems.push(enumItem);
+		model.enumItems.push(enumItem);
 	}
 	/*如果该target正在编辑框中被编辑，将新添的属性添入编辑系列*/
 	var dialog = $("#" + targetNode.attr("dialogId"));
@@ -195,7 +194,9 @@ function addEnumItem(targetNode, itemData, isAddToModel){
  * @param input
  * @param canvas
  */
-function updateNodeName(node, input, canvas){
+function updateModelName(model, input, canvas){
+	var node = $("#"+model.id);
+	
 	checkNodeName(node, input, canvas);
 	
 	/*该节点的所有连线*/
@@ -204,11 +205,9 @@ function updateNodeName(node, input, canvas){
 		data	= node.data("data"),
 		ins 	= inAout.inLines;
 	
-	var model; //node and domainmodel
 	$.each(ins,function(i, line){
 		line = ins[i];
 		node = $("#"+line.fromShapeId);
-		model = node.data("data");
 		
 		switch (line.relationType){
 			/**
@@ -254,28 +253,26 @@ function updateNodeName(node, input, canvas){
 
 /*更新实体类型*/
 /**
- * @param targetNode
+ * @param model
  * @param type
  */
-function updateEntityType(targetNode, type){
-	var data = targetNode.data("data");
-	targetNode.find(".entityType").html(type);
-	data.entityType = type;
+function updateEntityType(model, type){
+	$("#"+model.id).find(".entityType").html(type);
+	model.entityType = type;
 }
 
 /*编辑元素的描述信息*/
 /**
- * @param targetNode
+ * @param model
  * @param val
  */
-function updateDescription(targetNode, val){
-	var data = targetNode.data("data");
-	data.description = val;
+function updateDescription(model, val){
+	model.description = val;
 }
 
 /**
  * 更改属性的名字
- * @param propertyDom
+ * @param property
  * @param val
  */
 function updatePropertyName(property, val){
@@ -286,6 +283,53 @@ function updatePropertyName(property, val){
 		property.name = val;
 		copy ? copy.find(".propertyName").html(val) : "";
 		propertyDom.find(".propertyName").html(val);
+}
+
+/**
+ *更改属性的类型
+ * @param property
+ * @param val
+ * @param form
+ */
+function updatePropertyType(property, val, form){
+	var propertyDom = $("#"+property.id);
+	if(!propertyDom) return;
+	
+	var copy = propertyDom.data("copy");
+		/*处理泛型*/
+		if(!($.inArray(val, ["Set", "HashSet", "List", "ArrayList", "Hashtable", "Vector"]) < 0)){
+			propertyDom.addClass("collection_type");
+			copy.addClass("collection_type");
+			copy.find(".genericity").html("?");
+			propertyDom.find(".genericity_input").html("?");
+			property.genericity = "?";
+			form.find(".genericity_input").show();
+		} else {
+			propertyDom.removeClass("collection_type");
+			copy.removeClass("collection_type");
+			form.find(".genericity_input").hide();
+			property.genericity = null;
+		}
+		
+		property.type = val;
+		copy ? copy.find(".propertyType").html(val) : "";
+		propertyDom.find(".propertyType").html(val);
+}
+
+/**
+ *更改属性的泛型
+ * @param property
+ * @param val
+ */
+function updatePropertyGenericity(property, val){
+	if(!property) return;
+	var propertyDom = $("#"+property.id);
+	var copy = propertyDom.data("copy");
+	
+	if(val == "") val = "?";
+	property.genericity = val;
+	propertyDom.find(".genericity").html(val);
+	copy ? copy.find(".genericity").html(val) : "";
 }
 
 /**
@@ -335,67 +379,16 @@ function updateActionModifier(action, val){
 	actionDom.removeClass("public private protected").addClass(val);
 }
 
-/*更改属性的类型*/
 /**
- * @param propertyDom
- * @param val
- * @param form
- */
-function updatePropertyType(property, val, form){
-	var propertyDom = $("#"+property.id);
-	if(!propertyDom) return;
-	
-	var copy = propertyDom.data("copy");
-		/*处理泛型*/
-		if(!($.inArray(val, ["Set", "HashSet", "List", "ArrayList", "Hashtable", "Vector"]) < 0)){
-			propertyDom.addClass("collection_type");
-			copy.addClass("collection_type");
-			copy.find(".genericity").html("?");
-			propertyDom.find(".genericity_input").html("?");
-			property.genericity = "?";
-			form.find(".genericity_input").show();
-		} else {
-			propertyDom.removeClass("collection_type");
-			copy.removeClass("collection_type");
-			form.find(".genericity_input").hide();
-			property.genericity = null;
-		}
-		
-		property.type = val;
-		copy ? copy.find(".propertyType").html(val) : "";
-		propertyDom.find(".propertyType").html(val);
-}
-
-/*更改属性的泛型*/
-/**
- * @param property
+ * 更改枚举项的名字
+ * @param enumItem
  * @param val
  */
-function updatePropertyGenericity(property, val){
-	if(!property) return;
-	
-	var propertyDom = $("#"+property.id);
-	
-	var copy = propertyDom.data("copy"),
-		property = propertyDom.data("data");
-	
-	if(val == "") val = "?";
-	property.genericity = val;
-	propertyDom.find(".genericity").html(val);
-	copy ? copy.find(".genericity").html(val) : "";
-}
-
-/*更改枚举项的名字*/
-/**
- * @param enumDom
- * @param val
- */
-function updateEnumName(enumDom, val){
+function updateEnumItemName(enumItem, val){
+	var enumDom = $("#"+enumItem.id);
 	if(!enumDom) return;
 	
-	var copy = enumDom.data("copy"),
-		enumItem = enumDom.data("data");
-		
+	var copy = enumDom.data("copy");
 	enumItem.name = val;
 	copy ? copy.html(val) : "";
 	enumDom.html(val);
@@ -425,22 +418,22 @@ function checkNodeName(node, name, canvas){
 
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有删除操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
-/*删除节点*/
 /**
- * @param node
+ * 删除领域模型
+ * @param model
  * @param canvas
  */
-function deleteNode(node, canvas){
-	var id = node.attr("id");
-	var ls = commonTool.findRelatedLines(id,canvas.LINES);
+function deleteNode(model, canvas){
+	var node = $("#"+model.id);
+	var ls = commonTool.findRelatedLines(model.id, canvas.LINES);
 	
 	/*删除节点的连线*/
 	deleteLines(ls.inLines, canvas);
 	deleteLines(ls.outLines, canvas);
 	
 	/*删除节点*/
-	delete canvas.MODELS[id];
-	delete canvas.NODEDOMS[id];
+	delete canvas.MODELS[model.id];
+	delete canvas.NODEDOMS[model.id];
 	node.remove();
 }
 
@@ -452,9 +445,9 @@ function deleteNode(node, canvas){
  * @param lines
  * @param canvas
  */
-function deleteLines(lines,canvas){
+function deleteLines(lines, canvas){
 	var ldom,id;
-	$.each(lines,function(i,line){
+	$.each(lines, function(i,line){
 		id		= line.id;
 		ldom 	= canvas.LINEDOMS[id];
 		switch(line.relationType){

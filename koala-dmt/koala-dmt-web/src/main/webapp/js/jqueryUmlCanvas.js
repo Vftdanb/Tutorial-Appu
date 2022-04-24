@@ -967,8 +967,6 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 			var property = new Property(name, "String");
 		
 		addProperty(model, property, true);
-		
-		
 	} else if(thiz.is(".add_action")){
 		/*自动获取不重复的命名*/
 		var actionName = getName("action", (function(){
@@ -990,9 +988,9 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 			})());
 		
 		var enumItem = new EnumItem(name);
-		addEnumItem(target, enumItem);
+		addEnumItem(model, enumItem, true);
 	} else if(thiz.is(".delete")){
-		deleteNode(target,canvas);
+		deleteModel(model, canvas);
 	}
 	
 	thiz.parent(".contextmenu").blur();
