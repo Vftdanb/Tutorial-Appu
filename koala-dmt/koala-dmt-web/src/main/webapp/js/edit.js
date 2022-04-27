@@ -137,8 +137,8 @@ function addAction(model, actionData, isAddToModel){
 function addActionArguments(action, argument, isAddToModel){
 	var argumentDom = $("#node-template").children(".action_argument").clone();
 	
-	argumentDom.children(".parameterName").html(argument.name);
-	argumentDom.children(".parameterType").html(argument.type);
+	argumentDom.children(".argumentName").html(argument.name);
+	argumentDom.children(".argumentType").html(argument.type);
 	argumentDom.attr("id", argument.id);
 	/*把对应的参数对象缓存到dom节点上，方便查找*/
 	argumentDom.data("data", argument);
