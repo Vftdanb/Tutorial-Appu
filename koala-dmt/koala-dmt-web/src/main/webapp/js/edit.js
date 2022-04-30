@@ -143,7 +143,7 @@ function addActionArguments(action, argument, isAddToModel){
 	/*把对应的参数对象缓存到dom节点上，方便查找*/
 	argumentDom.data("data", argument);
 	$("#"+action.id).children(".arguments:first").append(argumentDom);
-	$("#dialogArgumentSet").append(argumentDom.clone().removeAttr("id"));
+	editDialog.addActionArgumentToEdit(argument);
 	if(isAddToModel){
 		action.arguments.push(argument);
 	}

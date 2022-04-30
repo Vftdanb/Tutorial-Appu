@@ -223,7 +223,7 @@ editDialog = {
 		var propertyItem = $("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>');
 		$("#"+property.id).data("copy", copy);
 		propertyItem.data("data", property);
-		$("#property_set").append(propertyItem);
+		$("#dialogPropertySet").append(propertyItem);
 	},
 	
 	/*初始化编辑对话框中的 编辑属性的 表单*/
@@ -242,10 +242,12 @@ editDialog = {
 	},
 	
 	/**
-	 * 
+	 * 初始化方法编辑面板
+	 * @param dialog
+	 * @param actions
 	 */
 	initActionPanel : function(dialog, actions){
-		dialog.find("#dialogActionSet").empty().show();
+		dialog.find("#dialogActionList").show().find("#dialogActionSet").empty();
 
 		$.each(actions, function(i, action){
 			editDialog.addActionToEdit(action);
@@ -266,18 +268,11 @@ editDialog = {
 		editForm.find("input[name='action_name']").val(action.name);
 		editForm.find("input[name='action_returntype']").val(action.returnType);
 		editForm.find("select[nam='action_modifier']").select(action);
-		
-		var temp = $("#dialog_template").children("argument_item:first");
 		/*
-		 * 初始化方法参数
+		 * 编辑方法参数
 		 */
 		$.each(action.arguments, function(i, argument){
-			var paramDom = temp.clone();
-			
-			paramDom.children(".argument_detail:first")
-				.children(".argument_name").html(argument.name).end()
-				.children(".argument_type").html(argument.type).end()
-				.children(".genericity").html(argument.genericity);
+			editDialog.addActionArgumentToEdit(argument);
 		});
 	},
 	
@@ -291,6 +286,23 @@ editDialog = {
 		actionDom = $('<div class="action_item"/>').append(copy).append('<div class="edit_option"><a href="javascript:void(0);" class="edit_action">编辑</a><a href="javascript:void(0);" class="delete_action">删除</a></div>');
 		$("#dialogActionSet").append(actionDom);
 		actionDom.data("data", action);
+	},
+	
+	/**
+	 * 将一个方法参数添加到编辑窗口
+	 * @param action
+	 */
+	addActionArgumentToEdit : function(argument){
+		var temp = $("#dialog_template").children(".argument_item:first").clone().data("data", argument);
+		var detail = temp.children(".argument_detail:first");
+		
+		detail.children(".argument_name").html(argument.name).end()
+			.children(".argument_type").html(argument.type);
+		
+		if(argument.genericity){
+			detail.children(".genericity").html(argument.genericity).show();
+		}
+		$("#dialogArgumentSet").append(temp);
 	},
 	
 	/**

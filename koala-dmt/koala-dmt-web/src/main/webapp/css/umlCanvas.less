@@ -251,12 +251,22 @@
         
         .arguments{
             &:before{
-            padding-left:2px;
-            content:"(";
+	            padding-left:2px;
+	            content:"(";
             }
             &:after{
                 padding-left:2px;
                 content:") : ";
+            }
+            
+            .action_argument{
+            	&:after{
+            		content:",";
+            	}
+            	
+            	&:last-child:after{
+            		content:"";
+            	}
             }
         }
     }

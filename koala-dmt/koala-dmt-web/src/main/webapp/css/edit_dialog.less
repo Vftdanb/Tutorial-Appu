@@ -1,5 +1,10 @@
 ﻿/*颜色、圆角、边框的定义*/
 @import "theme.less";
+.odd(@color:#EEE){
+	&:nth-child(odd){
+		background:@color;
+	}
+}
 
 /*编辑对话框*/
 .dialog_container {
@@ -103,6 +108,23 @@
 	        
 	        .edit_action_detail{
 	            display:none;
+	            
+	            .action_argument_set{
+	            	.argument_item{
+	            		padding:2px;
+	            		position:relative;
+	            		
+	            		.odd;
+	            		.argument_detail{
+	            			margin-right:40px;
+	            		}
+	            		.argument_detail_option{
+	            			position:absolute;
+	            			right:2px;
+	            			top:2px;
+	            		}
+	            	}
+	            }
 	        }
 	    }
     }
