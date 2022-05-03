@@ -85,12 +85,14 @@
 						</div>
 						<ul id="projectTree" class="ztree"></ul>
 					</div>
+					
 					<!-- 编辑对话框 -->
 					<div class="dialog_container" id="dialog_container">
-						<div class="dialog entity_dialog">
+						<div class="dialog entity_dialog interface_dialog edit_entity">
 							<div class="tabs">
-								<div class="tab active" for="entity_panel">实体</div>
-								<div class="tab" for="property_panel">属性</div>
+								<div class="tab active entity_tab" for="entity_panel">实体</div>
+								<div class="tab active interface_tab" for="interface_panel">实体</div>
+								<div class="tab property_tab" for="property_panel">属性</div>
 								<div class="tab" for="action_panel">行为</div>
 							</div>
 							<div class="panels">
@@ -112,6 +114,27 @@
 									<div>
 										<span class="label" style="vertical-align:top;">备注</span>
 										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" onchange="updateDescription($(this).parents('.dialog').data('data'),$(this).val())"></textarea>
+									</div>
+								</div>
+								
+								<!-- 接口面板 -->
+								<div class="panel interface_panel active">
+									<div>
+										<span class="label">实体名</span>
+										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
+									</div>
+									<div>
+										<span class="label">实体范围</span>
+										<select class="scope" name="entityScope" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
+											<option value="public">public</option>
+											<option value="private">private</option>
+											<option value="protected">protected</option>
+											<option value="package">package</option>
+										</select>
+									</div>
+									<div>
+										<span class="label" style="vertical-align:top;">备注</span>
+										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('data'),$(this).val())"></textarea>
 									</div>
 								</div>
 								
@@ -151,7 +174,7 @@
 									</form>
 									<fieldset class="properties_set" style="margin-top:10px;">
 										<legend>属性列表</legend>
-										<div class="properties" id="dialogPropertyet"></div>
+										<div class="properties" id="dialogPropertySet"></div>
 										<div class="add_element add_property">+添加属性</div>
 									</fieldset>
 								</div>
@@ -183,50 +206,6 @@
 							</div>
 						</div>
 						
-						<!-- 接口对话框 -->
-						<div class="dialog interface_dialog">
-							<div class="tabs">
-								<div class="tab active" for="interface_panel">实体</div>
-								<!--<div class="tab" for="property_panel">属性</div>-->
-								<div class="tab" for="action_panel">行为</div>
-							</div>
-							<div class="panels">
-								<div class="panel interface_panel active">
-									<div>
-										<span class="label">实体名</span>
-										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
-									</div>
-									<div>
-										<span class="label">实体范围</span>
-										<select class="scope" name="entityScope" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
-											<option value="public">public</option>
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="package">package</option>
-										</select>
-									</div>
-									<div>
-										<span class="label" style="vertical-align:top;">备注</span>
-										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('data'),$(this).val())"></textarea>
-									</div>
-								</div>
-								<div class="panel action_panel">
-									<div>
-										<span class="label">行为名</span>
-										<input class="actionName" type="text"/>
-									</div>
-									<div>
-										<span class="label">作用范围</span>
-										<select class="actionScope">
-											<option value="public">public</option>
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="package">package</option>
-										</select>
-									</div>
-								</div>
-							</div>
-						</div>
 						<div class="dialog enum_dialog">
 							<div class="tabs">
 								<div class="tab active" for="enum_panel">枚举</div>
@@ -412,14 +391,25 @@
 					</div>
 				</div>
 				<!-- -->
+				<script>
+					function checkKey(event){
+						var keyCode = event.keyCode; 
+						if(keyCode == 46 || keyCode==8){
+							return true; 
+						} else { 
+							return /^[A-Za-z0-9_]\b$/.test(String.fromCharCode(keyCode));
+						}
+					}
+				</script>
 				<div class="argument_item">
 					<div class="argument_detail">
-					 	<span class="argument_name"></span>
-					 	<span class="argument_type"></span>
-					 	<span class="genericity" style="display:none;"></span>
+					 	<span class="argument_name" contenteditable="true" onkeydown="return checkKey(event);" onblur='$(this).attr("title",$(this).text());updateActionArgumentName($(this).parents(".argument_item:first").data("data"), $(this).text());'></span>
+					 	<span style="padding:2px">:</span>
+					 	<span class="argument_type" contenteditable="true" onkeydown="return checkKey(event);" oninput='$(this).attr("title",$(this).text());updateActionArgumentType($(this).parents(".argument_item:first").data("data"), $(this));'></span>
+					 	<span class="genericity" contenteditable="true" onkeydown="return checkKey(event);" onblur='$(this).attr("title",$(this).text());updateActionArgumentGenericity($(this).parents(".argument_item:first").data("data"), $(this));' style="display:none;">?</span>
 					</div>
 					<div class="argument_detail_option">
-						<a href="javascript:void();">删除</a>
+						<a href="javascript:void(0);" class="delete_argument" >删除</a>
 					</div>
 				</div>
 			</div>			

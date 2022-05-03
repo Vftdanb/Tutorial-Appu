@@ -108,6 +108,16 @@ $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "cli
 	var argument = new Argument(argumentName, "String");
 	addActionArguments(action, argument, true);
 	return false;
+}).delegate(".delete_argument", "click", function(){
+	var btn = $(this);
+	var action = btn.parents("#editActionDetailForm:first").data("data");
+	var argument = btn.parents(".argument_item:first").data("data");
+	
+	action.arguments.removeByEquals(argument);
+	$("#"+argument.id).remove();
+	btn.parents(".argument_item:first").remove();
+	
+	console.log(action);
 });
 
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
@@ -143,10 +153,12 @@ editDialog = {
 		node.attr("dialogId", dialogId);
 		
 		if(node.is(".entity")){
+			dialog.removeClass("edit_interface").addClass("edit_entity");
 			this.initClassPanel(dialog, entityData);
 			this.initPropertyPanel(dialog, entityData.properties);
 			this.initActionPanel(dialog, entityData.actions);
 		} else if(node.is(".interface")){
+			dialog.removeClass("edit_entity").addClass("edit_interface");
 			this.initInterfacePanel(dialog ,entityData ,node);
 			this.initActionPanel(dialog, entityData.actions);
 		} else if(node.is(".enum")){
@@ -271,6 +283,7 @@ editDialog = {
 		/*
 		 * 编辑方法参数
 		 */
+		$("#dialogArgumentSet").empty();
 		$.each(action.arguments, function(i, argument){
 			editDialog.addActionArgumentToEdit(argument);
 		});

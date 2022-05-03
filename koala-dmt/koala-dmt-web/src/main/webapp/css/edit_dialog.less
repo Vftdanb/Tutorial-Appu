@@ -7,7 +7,7 @@
 }
 
 /*编辑对话框*/
-.dialog_container {
+#dialog_container {
     margin:4px;
     border:solid 3px @assistantColor1;    
     .tabs{
@@ -34,6 +34,26 @@
     .active_dialog{
         display:block;
     }
+    
+    .edit_entity{
+    	.interface_tab{
+    		display:none;
+    	}
+    	.interface_panel{
+    		display:none;
+    	}
+    }
+    
+    .edit_interface{
+    	.entity_tab,.property_tab{
+    		display:none;
+    	}
+    	
+    	.entity_panel,.property_panel{
+    		display:none;
+    	}
+    }
+    
     .panel{
 		.add_element {
 			background: #9cf;
@@ -116,7 +136,37 @@
 	            		
 	            		.odd;
 	            		.argument_detail{
+	            			font-size:0;
 	            			margin-right:40px;
+	            			
+	            			.argument_name,.argument_type,.genericity{
+		            			display:inline-block;
+		            			min-width:20px;
+		            			padding:2px 4px;
+		            			border:1px solid #ccc;
+		            			position:relative;
+		            			max-width:30%;
+		            			overflow:hidden;
+		            			white-space:nowrap;
+	            			}
+	            			
+	            			.genericity{
+	            				margin-left:4px;
+	            				&:before{
+	            					content:"<";
+	            				}
+	            				&:after{
+	            					content:">";
+	            				}
+	            			}
+	            			
+	            			span{
+	            				font-size:14px;
+	            				vertical-align:middle;
+		            			&:focus{
+		            				outline-width:2px;
+	            				}
+	            			}
 	            		}
 	            		.argument_detail_option{
 	            			position:absolute;

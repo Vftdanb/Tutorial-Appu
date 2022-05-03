@@ -201,7 +201,6 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 			
 			console.log(JSON.stringify(domainsChart));
 			
-			/*
 			$.ajax({
 				headers: { 
 			        'Content-Type': 'application/json' 
@@ -214,7 +213,7 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 				},
 				error : function(){
 				}
-			});*/
+			});
 		}
 	});
 	

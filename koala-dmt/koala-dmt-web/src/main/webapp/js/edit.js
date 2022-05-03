@@ -70,7 +70,6 @@ function addNode(canvas, model){
  */
 function addProperty(entity, propertyData, isAddToModel) {
 	var targetNode = $("#"+entity.id);
-		console.log(entity);
 	if(isAddToModel) entity.properties.push(propertyData);
 		
 	/*
@@ -143,6 +142,9 @@ function addActionArguments(action, argument, isAddToModel){
 	/*把对应的参数对象缓存到dom节点上，方便查找*/
 	argumentDom.data("data", argument);
 	$("#"+action.id).children(".arguments:first").append(argumentDom);
+	if($("#"+action.id).data("copy")){
+		$("#"+action.id).data("copy").children(".arguments:first").html("...");
+	}
 	editDialog.addActionArgumentToEdit(argument);
 	if(isAddToModel){
 		action.arguments.push(argument);
@@ -393,6 +395,48 @@ function updateEnumItemName(enumItem, val){
 	copy ? copy.html(val) : "";
 	enumDom.html(val);
 }
+
+/**
+ * 更新argument的名字
+ * @param argument
+ * @param val
+ */
+function updateActionArgumentName(argument, val){
+	argument.name = val;
+}
+
+/**
+ * 更新argument的类型
+ * @param argument
+ * @param input
+ */
+function updateActionArgumentType(argument, input){
+	var val = input.text();
+	
+	if(!($.inArray(val, ["Set", "HashSet", "List", "ArrayList", "Hashtable", "Vector"]) < 0) && argument.genericity == null){
+		input.next(".genericity").show().html("?");
+		argument.genericity = "?";
+	} else {
+		input.next(".genericity").hide();
+		argument.genericity = null;
+	}
+	argument.type = input.text();
+}
+
+/**
+ * 更新argument的泛型
+ * @param argument
+ * @param val
+ */
+function updateActionArgumentGenericity(argument, input){
+	val = input.text();
+	if(val == ""){
+		input.html("?");
+		argument.genericity = "?";
+	} else {
+		argument.genericity = val;
+	}
+}
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑所有更新操作↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
 
 /*↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓所有检查操作↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓*/
@@ -423,7 +467,7 @@ function checkNodeName(node, name, canvas){
  * @param model
  * @param canvas
  */
-function deleteNode(model, canvas){
+function deleteModel(model, canvas){
 	var node = $("#"+model.id);
 	var ls = commonTool.findRelatedLines(model.id, canvas.LINES);
 	

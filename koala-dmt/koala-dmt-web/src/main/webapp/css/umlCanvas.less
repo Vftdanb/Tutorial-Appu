@@ -260,13 +260,19 @@
             }
             
             .action_argument{
+            	font-size:0;
             	&:after{
             		content:",";
+            		font-size:14px;
+            		padding-right:4px;
             	}
-            	
             	&:last-child:after{
             		content:"";
+            		padding:0;
             	}
+            	span{
+	        		font-size:14px;
+	        	}
             }
         }
     }
