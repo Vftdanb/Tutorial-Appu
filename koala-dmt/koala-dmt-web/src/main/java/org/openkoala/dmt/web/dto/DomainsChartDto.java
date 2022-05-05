@@ -25,7 +25,9 @@ public class DomainsChartDto implements Dto {
 	private String name;
 	
 	private Set<DomainShapeDto> domainShapeDtos = new HashSet<DomainShapeDto>();
-	
+
+    private String domainShapeInfo;
+
 	private String lineInfo;
 	
 	public Long getId() {
@@ -68,7 +70,15 @@ public class DomainsChartDto implements Dto {
 		this.domainShapeDtos = domainShapeDtos;
 	}
 
-	public String getLineInfo() {
+    public String getDomainShapeInfo() {
+        return domainShapeInfo;
+    }
+
+    public void setDomainShapeInfo(String domainShapeInfo) {
+        this.domainShapeInfo = domainShapeInfo;
+    }
+
+    public String getLineInfo() {
 		return lineInfo;
 	}
 

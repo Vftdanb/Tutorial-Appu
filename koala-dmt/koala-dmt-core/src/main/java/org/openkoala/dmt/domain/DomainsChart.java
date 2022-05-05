@@ -30,6 +30,8 @@ public class DomainsChart extends AbstractEntity {
 	
 	private Set<DomainShape> domainShapes = new HashSet<DomainShape>();
 
+    private String domainShapeInfo;
+
 	private String lineInfo;
 	
 	@ManyToOne
@@ -59,7 +61,17 @@ public class DomainsChart extends AbstractEntity {
 		this.domainShapes = domainShapes;
 	}
 
-	@Column(name = "LINE_INFO")
+    @Column(name = "DOMAIN_SHAPE_INFO")
+    @Lob
+    public String getDomainShapeInfo() {
+        return domainShapeInfo;
+    }
+
+    public void setDomainShapeInfo(String domainShapeInfo) {
+        this.domainShapeInfo = domainShapeInfo;
+    }
+
+    @Column(name = "LINE_INFO")
 	@Lob
 	public String getLineInfo() {
 		return lineInfo;
@@ -77,7 +89,7 @@ public class DomainsChart extends AbstractEntity {
 
 	/**
 	 * 查找某个项目下的所有领域模型图
-	 * @param projectName
+	 * @param project
 	 * @return
 	 */
 	public static List<DomainsChart> findByProject(Project project) {
@@ -87,7 +99,7 @@ public class DomainsChart extends AbstractEntity {
 
 	/**
 	 * 查找某个项目下对应名称的领域模型图
-	 * @param projectName
+	 * @param project
 	 * @param name
 	 * @return
 	 */

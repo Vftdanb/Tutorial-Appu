@@ -7,13 +7,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.openkoala.dmt.domain.DomainShape;
-import org.openkoala.dmt.domain.EntityShape;
-import org.openkoala.dmt.domain.EntityType;
-import org.openkoala.dmt.domain.EnumShape;
-import org.openkoala.dmt.domain.InterfaceShape;
-import org.openkoala.dmt.domain.Position;
-import org.openkoala.dmt.domain.Property;
+import org.openkoala.dmt.domain.*;
 
 public class DomainShapeDto implements Dto {
 
@@ -54,7 +48,9 @@ public class DomainShapeDto implements Dto {
 	private Set<String> implementsNameSet = new HashSet<String>();
 	
 	private Long domainsChartId;
-	
+
+    private Set<Action> actions = new HashSet<Action>();
+
 	public Long getId() {
 		return id;
 	}
@@ -175,6 +171,14 @@ public class DomainShapeDto implements Dto {
 	public void setDomainsChartId(Long domainsChartId) {
 		this.domainsChartId = domainsChartId;
 	}
+
+    public Set<Action> getActions() {
+        return actions;
+    }
+
+    public void setActions(Set<Action> actions) {
+        this.actions = actions;
+    }
 
 	public DomainShape transformToDomainShape() {
 		if (ShapeType.ENTITY.equals(shapeType)) {

@@ -49,8 +49,7 @@ public class InterfaceGenerator implements ClassGenerator {
 	 * @return
 	 */
 	protected ClassOrInterfaceDeclaration createTypeDeclare() {
-		ClassOrInterfaceDeclaration result = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, false, domainClassInfo.getClassName());
-		result.setInterface(true);
+		ClassOrInterfaceDeclaration result = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, true, domainClassInfo.getClassName());
 		result.setJavaDoc(new JavadocComment(domainClassInfo.getEntityComment())); // 设置类文档注释
 		
 		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos());

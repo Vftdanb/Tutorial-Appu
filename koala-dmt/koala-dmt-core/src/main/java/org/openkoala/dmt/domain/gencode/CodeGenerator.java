@@ -39,6 +39,9 @@ public class CodeGenerator {
 	private static final String DOT_SYMBOL = ".";
 	
 	public CodeGenerator(DomainsChart domainsChart) {
+		if (domainsChart == null) {
+			throw new RuntimeException("Domains chart can not be null");
+		}
 		this.domainsChart = domainsChart;
 	}
 	
@@ -58,7 +61,7 @@ public class CodeGenerator {
 	}
 	
 	/**
-	 * 根据表相应信息描述生成实体类
+	 * 生成实体类
 	 * @param basePath 要生成文件的目录
 	 * @param fileName 要生成文件的名字
 	 * @param classContent 文件内容
@@ -69,10 +72,8 @@ public class CodeGenerator {
 		OutputStreamWriter out = null;
 		File file = new File(basePath, fileName + ".java");
 		if (file.exists() && (!isAllowOveride())) {
-//			getLog().info("File '" + file.getAbsolutePath() + "' existed, omitting...");
 			return;
 		}
-//		getLog().info("Generating file ->" + file.getAbsolutePath());
 		try {
 			out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
 			out.write(classContent);
