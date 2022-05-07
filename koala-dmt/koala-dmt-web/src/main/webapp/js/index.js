@@ -9,6 +9,9 @@ var setting = {
 		enable:true,
 		url : "domains-chart/find-by-project",
 		dataFilter : function(treeId, parentNode, responseData){
+			
+			console.log(responseData);
+			
 			$.each(responseData, function(i, chart){
 				chart.projectId = parentNode.id;
 				chart.isParent = true;
@@ -38,7 +41,6 @@ var setting = {
 						dataType:"json",
 						type:"post",
 						success:function(chartData){
-							
 							mainTab.addTab({
 								title : treeData.name,
 								afterAdd : function(tab, panel){
