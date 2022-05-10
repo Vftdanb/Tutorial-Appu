@@ -89,7 +89,6 @@ function DomainChar(name){
 
 /**
  * 线条数据结构
- * @param chartId
  * @param id 线条id
  * @param type 线条代表的关系（继承，实现，关联，聚合。。。）
  * @param from 线条的开始节点
@@ -130,13 +129,12 @@ function AssociatedLine(type, from, to, desc, startPosition, endPosition){
 /**
  * 节点数据结构
  * @param id 
- * @param charid
  * @param name
  * @param position
  * @param type
  * @param desc
  */
-function DomainShape(charid, name, position, type, desc){
+function DomainShape(name, position, type, desc){
 	this.id				= commonTool.guid();
 	this.position 		= position;
 	this.shapeType		= type;
@@ -149,7 +147,6 @@ function DomainShape(charid, name, position, type, desc){
 /**
  * 实体类
  * @param id
- * @param charid
  * @param name
  * @param position
  * @param type
@@ -157,8 +154,8 @@ function DomainShape(charid, name, position, type, desc){
  * @param isAbstract
  * @param isMapped
  */
-function EntityShape(charid,name,position,type,desc,isAbstract,isMapped){
-	DomainShape.call(this, charid, name, position, type, desc); 		//继承DomainShap
+function EntityShape(name,position,type,desc,isAbstract,isMapped){
+	DomainShape.call(this, name, position, type, desc); 		//继承DomainShap
 	
 	this.parentName			= null;			//父类
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
@@ -169,14 +166,14 @@ function EntityShape(charid,name,position,type,desc,isAbstract,isMapped){
 }
 
 /*接口类*/
-function InterfaceShape(charid, name, position, type, desc){
-	DomainShape.call(this, charid, name, position, type, desc);
+function InterfaceShape(name, position, type, desc){
+	DomainShape.call(this, name, position, type, desc);
 	this.actions 	= [];
 }
 
 /*枚举*/
-function EnumShape(charid, name, position, type, desc){
-	DomainShape.call(this, charid, name, position, type, desc);
+function EnumShape(name, position, type, desc){
+	DomainShape.call(this, name, position, type, desc);
 	this.enumItems = [];
 }
 
