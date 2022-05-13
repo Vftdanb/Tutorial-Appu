@@ -1,21 +1,16 @@
 package org.openkoala.dmt.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.dayatang.domain.ValueObject;
+
+import java.io.Serializable;
 
 /**
  * 属性
  * @author xmfang
  *
  */
-@Embeddable
-public class Property implements ValueObject {
+public class Property implements Serializable {
 
 	private static final long serialVersionUID = 641431639974605747L;
 
@@ -64,7 +59,6 @@ public class Property implements ValueObject {
 	 */
 	private String description;
 	
-	@Column(name = "PROP_NAME")
 	public String getName() {
 		return name;
 	}
@@ -105,7 +99,6 @@ public class Property implements ValueObject {
 		this.nullable = nullable;
 	}
 
-	@Column(name = "IS_UNIQUE")
 	public Boolean getIsUnique() {
 		return isUnique;
 	}
@@ -114,7 +107,6 @@ public class Property implements ValueObject {
 		this.isUnique = isUnique;
 	}
 
-	@Column(name = "TRANSIENT_PRO")
 	public Boolean getTransientPro() {
 		return transientPro;
 	}
@@ -123,7 +115,6 @@ public class Property implements ValueObject {
 		this.transientPro = transientPro;
 	}
 
-	@Enumerated(EnumType.STRING)
 	public DomainPropertyRelation getRelation() {
 		return relation;
 	}
@@ -132,7 +123,6 @@ public class Property implements ValueObject {
 		this.relation = relation;
 	}
 
-	@Column(name = "PROP_DES")
 	public String getDescription() {
 		return description;
 	}

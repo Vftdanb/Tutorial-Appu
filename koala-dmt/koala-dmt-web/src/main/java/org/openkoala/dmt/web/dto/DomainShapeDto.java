@@ -19,20 +19,10 @@ public class DomainShapeDto implements Dto {
 		ENUM
 	}
 
-	private Long id;
-	
-	private int version;
+	private String id;
 	
 	private ShapeType shapeType;
 
-	private String shapeId;
-	
-	private Position position;
-	
-	private Integer width;
-	
-	private Integer height;
-	
 	private String name;
 	
 	private EntityType entityType;
@@ -47,24 +37,14 @@ public class DomainShapeDto implements Dto {
 	
 	private Set<String> implementsNameSet = new HashSet<String>();
 	
-	private Long domainsChartId;
-
     private Set<Action> actions = new HashSet<Action>();
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
 	}
 
 	public ShapeType getShapeType() {
@@ -73,38 +53,6 @@ public class DomainShapeDto implements Dto {
 
 	public void setShapeType(ShapeType shapeType) {
 		this.shapeType = shapeType;
-	}
-
-	public String getShapeId() {
-		return shapeId;
-	}
-
-	public void setShapeId(String shapeId) {
-		this.shapeId = shapeId;
-	}
-
-	public Position getPosition() {
-		return position;
-	}
-
-	public void setPosition(Position position) {
-		this.position = position;
-	}
-
-	public Integer getWidth() {
-		return width;
-	}
-
-	public void setWidth(Integer width) {
-		this.width = width;
-	}
-
-	public Integer getHeight() {
-		return height;
-	}
-
-	public void setHeight(Integer height) {
-		this.height = height;
 	}
 
 	public String getName() {
@@ -164,14 +112,6 @@ public class DomainShapeDto implements Dto {
 		this.implementsNameSet = implementsNameSet;
 	}
 
-	public Long getDomainsChartId() {
-		return domainsChartId;
-	}
-
-	public void setDomainsChartId(Long domainsChartId) {
-		this.domainsChartId = domainsChartId;
-	}
-
     public Set<Action> getActions() {
         return actions;
     }
@@ -206,10 +146,7 @@ public class DomainShapeDto implements Dto {
 	
 	private <T extends DomainShape> void dealCommonsPropertiesValue(T domainShape) {
 		domainShape.setId(id);
-		domainShape.setVersion(version);
-		domainShape.setShapeId(shapeId);
 		domainShape.setName(name);
-		domainShape.setPosition(position);
 		domainShape.setDescription(description);
 	}
 	
@@ -229,13 +166,9 @@ public class DomainShapeDto implements Dto {
 	public static DomainShapeDto getInstance(DomainShape domainShape) {
 		DomainShapeDto result = new DomainShapeDto();
 		result.setId(domainShape.getId());
-		result.setVersion(domainShape.getVersion());
 		result.setName(domainShape.getName());
-		result.setShapeId(domainShape.getShapeId());
-		result.setPosition(domainShape.getPosition());
 		result.setDescription(domainShape.getDescription());
-		result.setDomainsChartId(domainShape.getDomainsChart().getId());
-		
+
 		if (domainShape instanceof EntityShape) {
 			EntityShape entityShape = (EntityShape) domainShape;
 			result.setShapeType(ShapeType.ENTITY);
@@ -268,14 +201,14 @@ public class DomainShapeDto implements Dto {
 			return false;
 		DomainShapeDto castOther = (DomainShapeDto) other;
 		return new EqualsBuilder()
-				.append(shapeId, castOther.shapeId)
+                .append(id, castOther.id)
 				.append(name, castOther.name)
-				.append(domainsChartId, castOther.domainsChartId).isEquals();
+				.isEquals();
 	}
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(shapeId).append(name).append(domainsChartId).toHashCode();
+		return new HashCodeBuilder(17, 37).append(id).append(name).toHashCode();
 	}
 
 }

@@ -52,12 +52,9 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		EntityShape entityShape = new EntityShape();
 		EnumShape enumShape = new EnumShape();
 		
-		interfaceShap.setDomainsChart(result);
 		interfaceShap.setName("Interface");
-		interfaceShap.setPosition(new Position(200, 100));
-		interfaceShap.setShapeId("interfaceshapeid");
-		interfaceShap.getEntityShapes().add(entityShape);
-		
+		interfaceShap.setId("interfaceshapeid");
+
 		List<Property> parameters = new ArrayList<Property>();
 		Property parameter = new Property();
 		parameter.setName("parameter");
@@ -73,21 +70,16 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		action.setParameters(parameters);
 		action.setDescription("action description");
 		action.setReturnValue(returnValue);
-		action.setDomainShape(entityShape);
 		actions.add(action);
 		
-		entityShape.setDomainsChart(result);
 		entityShape.setName("Entity");
-		entityShape.setPosition(new Position(100, 100));
-		entityShape.setShapeId("entityshapeid");
+		entityShape.setId("entityshapeid");
 		entityShape.setProperties(properties);
 		entityShape.getImplementsInterfaceShapes().add(interfaceShap);
 		entityShape.setActions(actions);
 		
-		enumShape.setDomainsChart(result);
 		enumShape.setName("Enum");
-		enumShape.setPosition(new Position(300, 100));
-		enumShape.setShapeId("enumshapeid");
+		enumShape.setId("enumshapeid");
 		
 		domainShapes.add(entityShape);
 		domainShapes.add(enumShape);

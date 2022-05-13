@@ -47,7 +47,7 @@
     </bean>
 
     <bean id="repository_dmt" class="org.dayatang.persistence.jpa.EntityRepositoryJpa">
-        <!-- <property name="entityManagerName" value="dmtEntityManager"/> -->
+         <constructor-arg name="entityManagerFactory" ref="entityManagerFactory_dmt"></constructor-arg>
     </bean>
 
     <!-- <bean id="queryChannel_dmt" class="org.dayatang.querychannel.impl.QueryChannelServiceImpl">

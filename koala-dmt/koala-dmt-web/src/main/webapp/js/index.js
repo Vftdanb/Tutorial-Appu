@@ -191,16 +191,23 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 				
 			var lines = canvas.getLines(),
 				models = canvas.getModels();
-				
+
+            $.each(models, function(i, model){
+                delete model.position;
+                delete model.domainsChartId;
+
+                console.log(model);
+            });
+
 			domainsChart.id 			= "";
 			domainsChart.version 		= "";
 			domainsChart.name			= chart.name;
 			domainsChart.project.id 	= project.id;
 			domainsChart.project.name	= project.name;
 			domainsChart.lineInfo		= JSON.stringify(lines);
-			domainsChart.modelInfo		= JSON.stringify(models);
+			domainsChart.domainShapeInfo = JSON.stringify(models);
 			domainsChart.domainShapeDtos = models;
-			
+
 			console.log(JSON.stringify(domainsChart));
 			
 			$.ajax({
@@ -261,7 +268,7 @@ mainTab.panels.delegate(".save", "click", function(){
 			console.log(data);
 		},
 		error :function(){
-			
+
 		}
 	});
-});
+})
