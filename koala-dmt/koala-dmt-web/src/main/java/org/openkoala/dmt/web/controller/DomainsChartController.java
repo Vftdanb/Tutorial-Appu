@@ -43,10 +43,10 @@ public class DomainsChartController extends BaseController {
 	
 	@ResponseBody
 	@RequestMapping("/get")
-	public DomainsChartDto getDomainsChart(Long projectId, String name) {
+	public DomainsChartDto getDomainsChart(Long projectId, Long domainChartId) {
 		Project project = new Project();
 		project.setId(projectId);
-		DomainsChart domainsChart = domainsChartApplication.getDomainsChart(project, name);
+		DomainsChart domainsChart = domainsChartApplication.getDomainsChart(project, domainChartId);
 		return DomainsChartDto.getInstance(domainsChart);
 	}
 	

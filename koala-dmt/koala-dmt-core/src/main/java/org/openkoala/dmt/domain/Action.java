@@ -1,25 +1,13 @@
 package org.openkoala.dmt.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.dayatang.domain.AbstractEntity;
-
-@Entity
-@Table(name = "ACTIONS")
-public class Action extends AbstractEntity {
+public class Action implements Serializable {
 
 	private static final long serialVersionUID = -5683932639335290666L;
 
@@ -31,9 +19,6 @@ public class Action extends AbstractEntity {
 
 	private String description;
 	
-	private DomainShape domainShape;
-	
-	@Column(name = "ACTION_NAME")
 	public String getName() {
 		return name;
 	}
@@ -42,8 +27,6 @@ public class Action extends AbstractEntity {
 		this.name = name;
 	}
 
-	@ElementCollection//TODO 不能eager的问题
-	@CollectionTable(name = "PARAMETERS", joinColumns = @JoinColumn(name = "ACTION_ID"))
 	public List<Property> getParameters() {
 		return parameters;
 	}
@@ -52,7 +35,6 @@ public class Action extends AbstractEntity {
 		this.parameters = parameters;
 	}
 
-	@Embedded
 	public Property getReturnValue() {
 		return returnValue;
 	}
@@ -61,28 +43,12 @@ public class Action extends AbstractEntity {
 		this.returnValue = returnValue;
 	}
 
-	@Column(name = "ACTION_DES")
 	public String getDescription() {
 		return description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	@ManyToOne
-	@JoinColumn(name = "DS_ID")
-	public DomainShape getDomainShape() {
-		return domainShape;
-	}
-
-	public void setDomainShape(DomainShape domainShape) {
-		this.domainShape = domainShape;
-	}
-
-	@Override
-	public String[] businessKeys() {
-		return null;
 	}
 
 	@Override

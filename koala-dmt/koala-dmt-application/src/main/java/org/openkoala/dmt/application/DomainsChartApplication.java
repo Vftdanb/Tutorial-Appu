@@ -18,11 +18,21 @@ public interface DomainsChartApplication {
 	 */
 	void saveDomainsChart(DomainsChart domainsChart);
 
-	/**
-	 * 获取领域图形
-	 * @param domainsChart
-	 */
+    /**
+     * 获取领域图形
+     * @param project
+     * @param name
+     * @return
+     */
 	DomainsChart getDomainsChart(Project project, String name);
+
+    /**
+     * 获取领域图形
+     * @param project
+     * @param id
+     * @return
+     */
+    DomainsChart getDomainsChart(Project project, Long id);
 
 	/**
 	 * 获取某个项目下的所有领域图形

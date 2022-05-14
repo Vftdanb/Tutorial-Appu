@@ -1,7 +1,5 @@
 package org.openkoala.dmt.domain;
 
-import javax.persistence.Embeddable;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.dayatang.domain.ValueObject;
@@ -11,7 +9,6 @@ import org.dayatang.domain.ValueObject;
  * @author xmfang
  *
  */
-@Embeddable
 public class Position implements ValueObject {
 
 	private static final long serialVersionUID = 125685375013186476L;

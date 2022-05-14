@@ -92,11 +92,11 @@ public class DomainsChartDto implements Dto {
 		result.setVersion(version);
 		result.setName(name);
 		result.setProject(project);
-		result.setLineInfo(lineInfo);
-		
+		result.setDomainShapeInfo(domainShapeInfo);
+        result.setLineInfo(lineInfo);
+
 		for (DomainShapeDto domainShapeDto : domainShapeDtos) {
 			DomainShape domainShape = domainShapeDto.transformToDomainShape();
-			domainShape.setDomainsChart(result);
 			result.getDomainShapes().add(domainShape);
 		}
 
@@ -112,7 +112,6 @@ public class DomainsChartDto implements Dto {
 					EntityShape entityShape = (EntityShape) getDomainShapeByName(domainsChart, domainShapeDto.getName());
 					InterfaceShape interfaceShape = (InterfaceShape) getDomainShapeByName(domainsChart, interfaceName);
 					entityShape.getImplementsInterfaceShapes().add(interfaceShape);
-					interfaceShape.getEntityShapes().add(entityShape);
 				}
 			}
 		}
@@ -143,6 +142,7 @@ public class DomainsChartDto implements Dto {
 		result.setProject(domainsChart.getProject());
 		result.setName(domainsChart.getName());
 		result.setLineInfo(domainsChart.getLineInfo());
+        result.setDomainShapeInfo(domainsChart.getDomainShapeInfo());
 		
 		for (DomainShape domainShape : domainsChart.getDomainShapes()) {
 			result.getDomainShapeDtos().add(DomainShapeDto.getInstance(domainShape));

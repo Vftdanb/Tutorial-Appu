@@ -4,38 +4,35 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.dayatang.domain.AbstractEntity;
 
 @Entity
-@Table(name = "KD_DOMAINS_CHART")
+@Table(name = "KD_DOMAINS_CHARTS")
 public class DomainsChart extends AbstractEntity {
 
 	private static final long serialVersionUID = 3043999013741427550L;
 
+    @ManyToOne
+    @JoinColumn(name = "PROJECT_ID")
 	private Project project;
 	
 	private String name;
-	
+
+    @Transient
 	private Set<DomainShape> domainShapes = new HashSet<DomainShape>();
 
+    @Column(name = "DOMAIN_SHAPE_INFO")
+    @Lob
     private String domainShapeInfo;
 
+    @Column(name = "LINE_INFO")
+    @Lob
 	private String lineInfo;
 	
-	@ManyToOne
-	@JoinColumn(name = "PROJECT_ID")
 	public Project getProject() {
 		return project;
 	}
@@ -52,7 +49,6 @@ public class DomainsChart extends AbstractEntity {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy = "domainsChart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	public Set<DomainShape> getDomainShapes() {
 		return domainShapes;
 	}
@@ -61,8 +57,6 @@ public class DomainsChart extends AbstractEntity {
 		this.domainShapes = domainShapes;
 	}
 
-    @Column(name = "DOMAIN_SHAPE_INFO")
-    @Lob
     public String getDomainShapeInfo() {
         return domainShapeInfo;
     }
@@ -71,8 +65,6 @@ public class DomainsChart extends AbstractEntity {
         this.domainShapeInfo = domainShapeInfo;
     }
 
-    @Column(name = "LINE_INFO")
-	@Lob
 	public String getLineInfo() {
 		return lineInfo;
 	}
@@ -108,7 +100,19 @@ public class DomainsChart extends AbstractEntity {
 				.eq("project", project)
 				.eq("name", name).singleResult();
 	}
-	
+
+    /**
+     * 查找某个项目下对应名称的领域模型图
+     * @param project
+     * @param id
+     * @return
+     */
+    public static DomainsChart getByProjectAndId(Project project, Long id) {
+        return getRepository().createCriteriaQuery(DomainsChart.class)
+                .eq("project", project)
+                .eq("id", id).singleResult();
+    }
+
 	@Override
 	public boolean equals(final Object other) {
 		if (this == other)

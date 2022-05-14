@@ -23,6 +23,11 @@ public class DomainsChartApplicationImpl implements DomainsChartApplication {
 		return DomainsChart.getByProjectAndName(project, name);
 	}
 
+    @Override
+    public DomainsChart getDomainsChart(Project project, Long id) {
+        return DomainsChart.getByProjectAndId(project, id);
+    }
+
 	@Override
 	public List<DomainsChart> findDomainsChartByProject(Project project) {
 		return DomainsChart.findByProject(project);

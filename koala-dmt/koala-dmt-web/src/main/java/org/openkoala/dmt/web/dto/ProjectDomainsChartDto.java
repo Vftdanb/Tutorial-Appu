@@ -79,5 +79,5 @@ public class ProjectDomainsChartDto implements Dto {
 	public int hashCode() {
 		return new HashCodeBuilder(17, 37).append(projectId).toHashCode();
 	}
-	
+
 }
