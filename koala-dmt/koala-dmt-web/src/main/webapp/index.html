@@ -3,10 +3,15 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>领域建模工具</title>
-		<link rel="stylesheet" href="css/base.css" />
-		<link rel="stylesheet" href="css/umlCanvas.css" />
-		<link rel="stylesheet" href="css/edit_dialog.css" />
-		<link rel="stylesheet" href="css/index.css" />
+		
+		<!-- 本项目less -->
+		<link rel="stylesheet/less" href="css/base.less" />
+		<link rel="stylesheet/less" href="css/umlCanvas.less" />
+		<link rel="stylesheet/less" href="css/edit_dialog.less" />
+		<link rel="stylesheet/less" href="css/index.less" />
+		<script type="text/javascript" src="lib/less-1.7.1.min.js"></script>
+		
+		<!-- 插件css -->
 		<link rel="stylesheet" href="lib/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
 		<link rel="stylesheet" href="lib/dialog/style.css" type="text/css">
 		<link rel="stylesheet" href="lib/tab/css/style.css" type="text/css"/>
@@ -93,7 +98,7 @@
 								<div class="tab active entity_tab" for="entity_panel">实体</div>
 								<div class="tab active interface_tab" for="interface_panel">实体</div>
 								<div class="tab property_tab" for="property_panel">属性</div>
-								<div class="tab" for="action_panel">行为</div>
+								<div class="tab action_tab" for="action_panel">行为</div>
 							</div>
 							<div class="panels">
 								<!-- 实体面板 -->
@@ -121,16 +126,7 @@
 								<div class="panel interface_panel active">
 									<div>
 										<span class="label">实体名</span>
-										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
-									</div>
-									<div>
-										<span class="label">实体范围</span>
-										<select class="scope" name="entityScope" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
-											<option value="public">public</option>
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="package">package</option>
-										</select>
+										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this),$(this).parents('.dialog').data('canvas'))"/> 
 									</div>
 									<div>
 										<span class="label" style="vertical-align:top;">备注</span>
@@ -156,20 +152,6 @@
 											<span class="label">泛型</span>
 											<input type="text" class="propertyGenericity" name="genericity" 
 												oninput="updatePropertyGenericity($(this).parents('form:first').data('data'),$(this).val());"/>
-										</div>
-										<div>
-											<table style="font-size:14px">
-												<tr>
-													<td><input type="checkbox" name="isUnique"/>isUnique</td>
-													<td><input type="checkbox" name="isStatic"/>isStatic</td>
-													<td><input type="checkbox" name="isOrdered"/>isOrdered<br/></td>
-												</tr>
-												<tr>
-													<td><input type="checkbox" name="isDerived"/>isDerived</td>
-													<td><input type="checkbox" name="isLeaf"/>isLeaf</td>
-													<td><input type="checkbox" name="isReadOnly"/>isReadOnly</td>
-												</tr>
-											</table>
 										</div>
 									</form>
 									<fieldset class="properties_set" style="margin-top:10px;">
@@ -215,25 +197,19 @@
 								<div class="panel enum_panel active">
 									<div>
 										<span class="label">枚举名</span>
-										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this).val(),$(this).parents('.dialog').data('canvas'))"/> 
-									</div>
-									<div>
-										<span class="label">枚举范围</span>
-										<select class="scope" name="entityScope" oninput="updateScope($(this).parents('.dialog').data('node'),$(this).val())">
-											<option value="public">public</option>
-											<option value="private">private</option>
-											<option value="protected">protected</option>
-											<option value="package">package</option>
-										</select>
+										<input name="name" type="text" oninput="updateModelName($(this).parents('.dialog').data('data'),$(this),$(this).parents('.dialog').data('canvas'))"/> 
 									</div>
 									<div>
 										<span class="label" style="vertical-align:top;">备注</span>
 										<textarea class="desc" name="description" style="height:100px;margin-top:2px;" oninput="updateDescription($(this).parents('.dialog').data('data'),$(this).val())"></textarea>
 									</div>
 								</div>
-								
 								<div class="panel enumitem_panel">
-									<div class="enumitems"></div>
+									<fieldset class="properties_set" style="margin-top:10px;">
+										<legend>枚举项列表</legend>
+										<div class="enumitems" id="dialogEnumitemsSet"></div>
+										<div class="add_element add_enumitems">+添加枚举项</div>
+									</fieldset>
 								</div>
 							</div>
 						</div>	
@@ -292,31 +268,35 @@
 				
 				<!-- 组合关系连线模板  -->
 				<g class="line compose templine" relationType="compose">
-					<div class="start line_info">
+					<foreignobject>
+						<div class="start line_info">
 							<div class="multiplicity">
-								<span class="multiplicity_type">Set</span>
+								<span class="multiplicity_type">1</span>
 							</div>
 						</div>
 						<div class="end line_info">
 							<div class="multiplicity">
-								<span class="multiplicity_type">Set</span>
+								<span class="multiplicity_type">1</span>
 							</div>
 						</div>
+					</foreignobject>
 					<polyline points="0,0 0,0"></polyline>
 				</g>
 				
 				<!--关联关系连线模板-->
 				<g class="line associate templine" relationType="associate">
-					<div class="start line_info">
+					<foreignobject>
+						<div class="start line_info">
 							<div class="multiplicity">
-								<span class="multiplicity_type">Set</span>
+								<span class="multiplicity_type">1</span>
 							</div>
 						</div>
 						<div class="end line_info">
 							<div class="multiplicity">
-								<span class="multiplicity_type">Set</span>
+								<span class="multiplicity_type">1</span>
 							</div>
 						</div>
+					</foreignobject>
 					<polyline points="0,0 0,0"></polyline>
 				</g>
 			</svg>

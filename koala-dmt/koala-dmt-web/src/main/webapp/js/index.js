@@ -9,9 +9,6 @@ var setting = {
 		enable:true,
 		url : "domains-chart/find-by-project",
 		dataFilter : function(treeId, parentNode, responseData){
-			
-			console.log(responseData);
-			
 			$.each(responseData, function(i, chart){
 				chart.projectId = parentNode.id;
 				chart.isParent = true;
@@ -35,39 +32,20 @@ var setting = {
 			} else {
 				$("#add_chart").hide();
 				if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
-					console.log(treeData);
-					var charId = treeData.id;
-					
-					$.ajax({
-						url : "js/chart.js",
-						dataType:"json",
-						type:"post",
-						success:function(chartData){
-							mainTab.addTab({
-								title : treeData.name,
-								afterAdd : function(tab, panel){
-									tab.addClass("tab_"+treeData.id);
-									$.get('pages/template.html').done(function(data) {
-										$.ajax({
-											url : "domains-chart/",
-											dataType:"json",
-											type:"post",
-											success:function(){
-												
-											}
-										});
-										
-										panel.html(data);
-										panel.find('#canvas').umlCanvas();
-										
-										/*将project和chart缓存在工具栏上，以待后续操作用到*/
-										panel.find(".tools_bar:first").data("project", treeData.getParentNode());
-										panel.find(".tools_bar:first").data("chart", treeData);
-									});
-								},
-								closeable : true
+					mainTab.addTab({
+						title : treeData.name,
+						afterAdd : function(tab, panel){
+							tab.addClass("tab_"+treeData.id);
+							$.get('pages/template.html').done(function(data) {
+								panel.html(data);
+								panel.find('#canvas').umlCanvas(treeData);
+								
+								/*将project和chart缓存在工具栏上，以待后续操作用到*/
+								panel.find(".tools_bar:first").data("project", treeData.getParentNode());
+								panel.find(".tools_bar:first").data("chart", treeData);
 							});
-						}
+						},
+						closeable : true
 					});
 				}
 			}
@@ -203,23 +181,21 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 			var lines = canvas.getLines(),
 				models = canvas.getModels();
 
-            $.each(models, function(i, model){
-                delete model.position;
-                console.log(model);
-            });
-
 			domainsChart.id 			= "";
 			domainsChart.version 		= "";
 			domainsChart.name			= chart.name;
 			domainsChart.project.id 	= project.id;
 			domainsChart.project.name	= project.name;
-			domainsChart.lineInfo		= JSON.stringify(lines);
+			//domainsChart.lineInfo		= JSON.stringify(lines);
+			domainsChart.domainShapeInfo = JSON.stringify(models);
+			domainsChart.lineInfo		= lines;
+			domainsChart.aaa = models;
 			
+			models = JSON.parse(domainsChart.domainShapeInfo);
 			$.each(models, function(i, model){
 				delete model.position;
-				delete model.domainCharsId;
 			});
-			domainsChart.domainShapeInfo = JSON.stringify(models);
+			
 			domainsChart.domainShapeDtos = models;
 
 			console.log(JSON.stringify(domainsChart));
@@ -232,7 +208,7 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 				data 	:  JSON.stringify(domainsChart),
 				type	: "post",
 				success : function(data){
-					window.location.assign(data + "/" + domainsChart.name + ".zip");
+					//window.location.assign(data + "/" + domainsChart.name + ".zip");
 				},
 				error : function(){
 				}
@@ -249,26 +225,20 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 });
 
 /**
- * 生成代码
+ * 保存代码
  */
 mainTab.panels.delegate(".save", "click", function(){
 	var toolBar = $(this).parents(".tools_bar:first"),
 		canvas = toolBar.data("canvas");
 		
-	var domainsChart = {
-			project:{}
-		};
+	var domainsChart = {};
 	
 	var lines = canvas.getLines(),
 		models = canvas.getModels();
 		
-	domainsChart.id 			= "";
-	domainsChart.version 		= "";
-	domainsChart.name			= toolBar.data("chart").name;
-	domainsChart.project.id 	= toolBar.data("project").id;
+	domainsChart.id 			= toolBar.data("chart").id;
 	domainsChart.lineInfo		= JSON.stringify(lines);
-	domainsChart.domainShapeDtos = models;
-	
+	domainsChart.domainShapeInfo = JSON.stringify(models);
 	$.ajax({
 		headers: { 
 	        'Accept': 'application/json',
@@ -285,4 +255,4 @@ mainTab.panels.delegate(".save", "click", function(){
 
 		}
 	});
-})
+});

@@ -140,7 +140,6 @@ function DomainShape(name, position, type, desc){
 	this.shapeType		= type;
 	this.name			= name;
 	this.description	= desc;
-	this.domainsChartId	= charid;
 }
 
 /****************************顶级数据结构****************************/
@@ -157,7 +156,10 @@ function DomainShape(name, position, type, desc){
 function EntityShape(name,position,type,desc,isAbstract,isMapped){
 	DomainShape.call(this, name, position, type, desc); 		//继承DomainShap
 	
+	this.parentId			= null;
 	this.parentName			= null;			//父类
+	
+	this.implementsIdSet	= [];			//实现列表
 	this.implementsNameSet 	= [];			//实现（连线时接连产生，有可能要自动实现方法）
 	
 	this.properties 		= []; 			//属性数组（属性对象数组）

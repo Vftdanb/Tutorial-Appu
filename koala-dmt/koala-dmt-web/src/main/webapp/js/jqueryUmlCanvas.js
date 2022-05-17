@@ -87,7 +87,7 @@ umlCanvas(thiz, renderData){
 			if(!drawing){
 				model1 = thiz.data("data");
 				if(toolName == "extends") {
-					((nodeType == "entity") && (model1.parentName == null)) ? //只能继承类，并且只能单继承
+					((nodeType == "entity") && (model1.parentId == null)) ? //只能继承类，并且只能单继承
 						thiz.addClass("legal") : thiz.addClass("illegal");
 				} else if(toolName == "implements"){
 					((nodeType == "entity")) ? //只能有类实现接口
@@ -108,7 +108,7 @@ umlCanvas(thiz, renderData){
 				if(toolName == "extends"){
 					(nodeType == "entity") ?  thiz.addClass("legal") : thiz.addClass("illegal");
 				} else if(toolName == "implements"){
-					((nodeType == "interface") && ($.inArray(model2.name, model1.implementsNameSet) < 0)) ? 
+					((nodeType == "interface") && ($.inArray(model2.id, model1.implementsIdSet) < 0)) ? 
 						thiz.addClass("legal") : thiz.addClass("illegal");
 				} else if(toolName == "aggregate" || toolName == "compose" || toolName == "associate"){
 					thiz.addClass("legal");
@@ -138,13 +138,17 @@ umlCanvas(thiz, renderData){
 			if((drawing && node2 == null)){
 				line.remove();
 			} else if(node2 != null && drawing){
+				var lineData = null;
+				var type = line.attr("relationType");
+				lineData = new Line(type, node1.attr("id"), node2.attr("id"), null);
+				
 				/*连线的相关逻辑.根据连线生成或更改某些属性*/
 				if(line.is(".extends")){
-					model1.parentName = model2.name;
+					model1.parentId = model2.id;
 				} else if(line.is(".implements")){
-					model1.implementsNameSet.push(model2.name);
+					model1.implementsIdSet.push(model2.id);
 				} else if(line.is(".aggregate,.compose,.associate")){
-					
+					lineData = new AssociatedLine(type, node1.attr("id"), node2.attr("id"), null);
 					/*自动获取不重复的命名*/
 					var name = getName("property", (function(){
 						var namespace = [];
@@ -153,7 +157,7 @@ umlCanvas(thiz, renderData){
 						});
 						return namespace;
 					})());
-					var property1 = new Property(name, model2.name, line.attr("id"));
+					var property1 = new Property(name, model2.name, lineData.id);
 					
 					/*自动获取不重复的命名*/
 					name = getName("property", (function(){
@@ -163,18 +167,9 @@ umlCanvas(thiz, renderData){
 						});
 						return namespace;
 					})());
-					var property2 = new Property(name, model1.name, line.attr("id"));
-					
+					var property2 = new Property(name, model1.name, lineData.id);
 					addProperty(model1, property1, true);
 					addProperty(model2, property2, true);
-				}
-				
-				var type = line.attr("relationType");
-				var lineData = null;
-				if(line.is(".aggregate,.compose,.associate")){
-					lineData = new AssociatedLine(type, node1.attr("id"), node2.attr("id"), null);
-				} else {
-					lineData = new Line(type, node1.attr("id"), node2.attr("id"), null);
 				}
 				
 				var lineId = lineData.id;
@@ -495,43 +490,47 @@ umlCanvas.prototype = {
 		if(!data) return;
 		
 		var lines = JSON.parse(data.lineInfo);
-		var models = JSON.parse(data.modelInfo);
+		var models = JSON.parse(data.domainShapeInfo);
 		var canvas = this;
 		
 		/*反向生成节点*/
-		$.each(models, function(i, model){
-			modelDom = addNode(canvas, model);
-		});
+		if(models){
+			$.each(models, function(i, model){
+				modelDom = addNode(canvas, model);
+			});
+		}
 		
 		/*方向生成线条*/
-		var lineDom, polyline;
-		$.each(lines, function(i, line){
-			lineDom = $("#line-template ." + line.relationType)
-					.clone()
-					.attr("id", line.id);
-			
-			lineDom.attr("class", lineDom.attr("class").replace("templine"), "");
-			
-			polyline = lineDom.children("polyline");
-			polyline.attr("points",line.points);
-			canvas.LINEDOMS[line.id] = lineDom;
-			canvas.LINES[line.id] = line;
-			
-			if(line.relationType == "aggregate" ||
-			line.relationType == "associate" ||
-			line.relationType == "compose"){
-				var start = lineDom.children("foreignobject").children(".start");
-				var end = lineDom.children("foreignobject").children(".end");
+		if(lines){
+			var lineDom, polyline;
+			$.each(lines, function(i, line){
+				lineDom = $("#line-template ." + line.relationType)
+				.clone()
+				.attr("id", line.id);
 				
-				start.css(line.multiplicity.start.position);
-				end.css(line.multiplicity.end.position);
+				lineDom.attr("class", lineDom.attr("class").replace("templine"), "");
 				
-				start.find(".multiplicity_type").html(line.multiplicity.start.mapping);
-				end.find(".multiplicity_type").html(line.multiplicity.end.mapping);
-			}
-			
-			canvas.SVGLINES.append(lineDom);
-		});
+				polyline = lineDom.children("polyline");
+				polyline.attr("points",line.points);
+				canvas.LINEDOMS[line.id] = lineDom;
+				canvas.LINES[line.id] = line;
+				
+				if(line.relationType == "aggregate" ||
+						line.relationType == "associate" ||
+						line.relationType == "compose"){
+					var start = lineDom.children("foreignobject").children(".start");
+					var end = lineDom.children("foreignobject").children(".end");
+					
+					start.css(line.multiplicity.start.position);
+					end.css(line.multiplicity.end.position);
+					
+					start.find(".multiplicity_type").html(line.multiplicity.start.mapping);
+					end.find(".multiplicity_type").html(line.multiplicity.end.mapping);
+				}
+				
+				canvas.SVGLINES.append(lineDom);
+			});
+		}
 	},
 	
 	/**
@@ -981,7 +980,7 @@ $("#add_members").delegate(".contextmenu_item","click",function(e){
 	} else if(thiz.is(".add_enumItem")){
 		var name = getName("ENUMITEM",(function(){
 				var namespace = [];
-				$.each(dmodel.enumItems,function(i,p){
+				$.each(target.data("data").enumItems,function(i,p){
 					namespace.push(p.name);
 				});
 				return namespace;

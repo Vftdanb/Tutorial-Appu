@@ -120,6 +120,13 @@ $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "cli
 	console.log(action);
 });
 
+/*
+ * 编辑属性
+ */
+$("#dialog_container").find(".enumitem_panel:first").delegate("", ".add_enumitems", function(){
+	
+});
+
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
 editDialog = {
 	initDialog : function(node, UMLCANVAS){
@@ -157,10 +164,28 @@ editDialog = {
 			this.initClassPanel(dialog, entityData);
 			this.initPropertyPanel(dialog, entityData.properties);
 			this.initActionPanel(dialog, entityData.actions);
+			
+			//切换到适当的tab上
+			var tabs = dialog.children(".tabs");
+			if(tabs.children(".interface_tab").is(".active")){
+				tabs.children(".interface_tab").removeClass("active");
+				tabs.next(".panels").children(".interface_panel").removeClass("active");
+				tabs.children(".entity_tab").addClass("active");
+				tabs.next(".panels").children(".entity_panel").addClass("active");
+			}
 		} else if(node.is(".interface")){
 			dialog.removeClass("edit_entity").addClass("edit_interface");
 			this.initInterfacePanel(dialog ,entityData ,node);
 			this.initActionPanel(dialog, entityData.actions);
+			
+			//切换到适当的tab上
+			var tabs = dialog.children(".tabs");
+			if(tabs.children(".entity_tab").is(".active") || tabs.children(".property_tab").is(".active")){
+				tabs.children(".active").removeClass("active");
+				tabs.next(".panels").children(".active").removeClass("active");
+				tabs.children(".interface_tab").addClass("active");
+				tabs.next(".panels").children(".interface_panel").addClass("active");
+			}
 		} else if(node.is(".enum")){
 			this.initEnumPanel(dialog, entityData, node);
 		}
@@ -231,6 +256,7 @@ editDialog = {
 	 * @param action
 	 */
 	addPropertyToEdit : function(property){
+		if(property.autoBy) return;
 		var copy = $("#"+property.id).clone().data("data",property).removeAttr("id");
 		var propertyItem = $("<div class='property_item'/>").append(copy).append('<a href="javascript:void(0)" class="delete_property">删除</a>');
 		$("#"+property.id).data("copy", copy);

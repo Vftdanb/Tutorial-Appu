@@ -9,7 +9,8 @@
 /*编辑对话框*/
 #dialog_container {
     margin:4px;
-    border:solid 3px @assistantColor1;    
+    border:solid 3px @assistantColor1;
+    
     .tabs{
          background:@assistantColor1;
     }
@@ -75,6 +76,8 @@
 	        		padding:2px;
 	        		cursor:pointer;
 	        		position:relative;
+	        		.odd;
+	        		
 	        		&.active{
 	        			background:@dottingColor;
 	        		}
@@ -105,6 +108,7 @@
 	        	.action_item{
 	        		position:relative;
 	        		padding:2px;
+	        		.odd;
 	        		.action{
 	        			font-size:0;
 	        			margin-right:80px;
@@ -176,6 +180,12 @@
 	            	}
 	            }
 	        }
+	    }
+	    
+	    .enumitem_panel{
+	    	.enumItem{
+	    		.odd;
+	    	}
 	    }
     }
 }

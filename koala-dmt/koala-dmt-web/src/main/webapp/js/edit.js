@@ -198,58 +198,9 @@ function addEnumItem(model, itemData, isAddToModel){
  */
 function updateModelName(model, input, canvas){
 	var node = $("#"+model.id);
-	
 	checkNodeName(node, input, canvas);
-	
-	/*该节点的所有连线*/
-	var inAout 	= commonTool.findRelatedLines(node.attr("id"),canvas.LINES),
-		newName = input.val(),
-		data	= node.data("data"),
-		ins 	= inAout.inLines;
-	
-	$.each(ins,function(i, line){
-		line = ins[i];
-		node = $("#"+line.fromShapeId);
-		
-		switch (line.relationType){
-			/**
-			 * 被继承者更名时，继承者的继承对象要更名 
-			 */
-			case "extends" : {
-				model.parentName = newName;
-				break;
-			};
-			
-			/**
-			 * 被实现者更名时，实现者的实现对象要更名
-			 */
-			case "implements" : {
-				var set = model.implementsNameSet;
-				for(var i=0 ;i<set.length ;i++){
-					if(set[i] == data.name){
-						set[i] = newName;
-						break;
-					}
-				}
-				break;
-			};
-			
-			/**
-			 * 被聚合（组合）者更名时，关联的属性（泛型）类型也要更名
-			 */
-			case "aggregate" :
-			case "associate" :
-			case "compose"   : {
-				var propertyNode 	= node.find("." + line.id);
-				var property = propertyNode.data("data");
-				propertyNode.find(".genericity").html(newName);
-				property.name = newName;
-				break;
-			};
-		}
-	});
-	
-	data.name 	= newName;
+	var newName = input.val();
+	model.name 	= newName;
 	node.find(".name").html(newName);
 }
 
@@ -497,24 +448,17 @@ function deleteLines(lines, canvas){
 		switch(line.relationType){
 			/*如果*/
 			case "extends" : {		//继承线的删除
-				var from = canvas.MODELS[line.fromShapeId];
-				if(from){
-					from.extends = null;
-				}
+				canvas.MODELS[line.fromShapeId].parentId = null;
 				break;
 			};
 			
 			/**
 			 * 如果被实现者被删除，要把被实现者从实现者的实现列表里删除
 			 * 如果实现者被删除，不需要做任何级联操作
-			 * TODO:还可能要级联删除实现的方法
 			 */
 			case "implements" : {
 				var from = canvas.MODELS[line.fromShapeId], to	= canvas.MODELS[line.toShapeId];
-				if(from){
-					var set = from.implementsNameSet;
-					set.remove($.inArray(set,to.name));
-				}
+				from.implementsIdSet.removeByEquals(to.id);
 				break;
 			};
 			
@@ -522,16 +466,27 @@ function deleteLines(lines, canvas){
 			 * 当线段是关联关系时，从关联处删除相应的属性
 			 */
 			case "aggregate":
-			case "compose" 	: {
+			case "compose" 	:
+			case "associate" : {
 				var from = canvas.MODELS[line.fromShapeId];
-				if(from){
-					var fromNode 	= canvas.NODEDOMS[from.id],
-						properties 	= from.properties,
-						propertyDom = fromNode.find("."+id);
-						
-					properties.removeByEquals(propertyDom.data("data"));
-					propertyDom.remove();
-				}
+				var to = canvas.MODELS[line.toShapeId];
+				
+				/*删除关联属性*/
+				$.each(from.properties, function(i, property){
+					if(property.autoBy == line.id){
+						from.properties.remove(i);
+						return false;
+					}
+				});
+				
+				/*删除关联属性*/
+				$.each(to.properties, function(i, property){
+					if(property.autoBy == line.id){
+						from.properties.remove(i);
+						return false;
+					}
+				});
+				
 				break;
 			};
 			case "" : {
@@ -549,12 +504,11 @@ function deleteLines(lines, canvas){
 
 
 /*↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑对模型的编辑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑*/
-
-
 /**
  * 自动命名。
  * 在某个命名空间内，采用递增的方式获取一个可用的命名
  */
+
 /**
  * @param nodeType
  * @param nameSpace
