@@ -321,11 +321,11 @@ umlCanvas(thiz, renderData){
 			
 			var model = null;
 			if(type == "ENTITY"){
-				model = new EntityShape(THIS.CHARTID, modelName, position, type, "", false, false);
+				model = new EntityShape(modelName, position, type, "", false, false);
 			} else if(type == "INTERFACE"){
-				model = new InterfaceShape(THIS.CHARTID, modelName, position, type, "");
+				model = new InterfaceShape(modelName, position, type, "");
 			} else if(type == "ENUM"){
-				model = new EnumShape(THIS.CHARTID, modelName, position, type, "");
+				model = new EnumShape(modelName, position, type, "");
 			}
 			
 			addNode(THIS, model);
@@ -939,9 +939,9 @@ $("#add_nodes").delegate(".contextmenu_item", "click", function(e){
 	if(type == "ENTITY"){
 		model 		= new EntityShape(canvas.CHARTID, modelName, position, type, "", false, false);
 	} else if(type == "INTERFACE"){
-		model 		= new InterfaceShape(canvas.CHARTID, modelName, position, type, "");
+		model 		= new InterfaceShape(modelName, position, type, "");
 	} else if(type == "ENUM"){
-		model 		= new EnumShape(canvas.CHARTID, modelName, position, type, "");
+		model 		= new EnumShape(modelName, position, type, "");
 	}
 	
 	addNode(canvas, model);

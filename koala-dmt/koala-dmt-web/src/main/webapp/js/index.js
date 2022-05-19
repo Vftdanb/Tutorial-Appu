@@ -35,7 +35,9 @@ var setting = {
 			} else {
 				$("#add_chart").hide();
 				if(treeData.type == "chart" && !mainTab.isExistTab(treeData.id)){
-					//TODO 先获取数据在生成uml图
+					console.log(treeData);
+					var charId = treeData.id;
+					
 					$.ajax({
 						url : "js/chart.js",
 						dataType:"json",
@@ -46,6 +48,15 @@ var setting = {
 								afterAdd : function(tab, panel){
 									tab.addClass("tab_"+treeData.id);
 									$.get('pages/template.html').done(function(data) {
+										$.ajax({
+											url : "domains-chart/",
+											dataType:"json",
+											type:"post",
+											success:function(){
+												
+											}
+										});
+										
 										panel.html(data);
 										panel.find('#canvas').umlCanvas();
 										
@@ -194,8 +205,6 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 
             $.each(models, function(i, model){
                 delete model.position;
-                delete model.domainsChartId;
-
                 console.log(model);
             });
 
@@ -205,6 +214,11 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 			domainsChart.project.id 	= project.id;
 			domainsChart.project.name	= project.name;
 			domainsChart.lineInfo		= JSON.stringify(lines);
+			
+			$.each(models, function(i, model){
+				delete model.position;
+				delete model.domainCharsId;
+			});
 			domainsChart.domainShapeInfo = JSON.stringify(models);
 			domainsChart.domainShapeDtos = models;
 
