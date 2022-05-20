@@ -38,10 +38,16 @@ public class CodeGeneratorTest {
 
 	private Set<DomainShape> buildDomainShapes() {
 		Set<DomainShape> results = new HashSet<DomainShape>();
-		results.add(buildInterfaceShape());
+        DomainShape interfaceShape = buildInterfaceShape();
+		results.add(interfaceShape);
+
 		DomainShape abstractEntity = buildAbstractEntityShape();
 		results.add(abstractEntity);
-		results.add(buildEntityShape(abstractEntity));
+
+        Set<InterfaceShape> interfaceShapes = new HashSet<InterfaceShape>();
+        interfaceShapes.add((InterfaceShape) interfaceShape);
+		results.add(buildEntityShape(abstractEntity, interfaceShapes));
+
 		results.add(buildValueObjectShape());
 		results.add(buildMscShape());
 		results.add(buildEnumerateShape());
@@ -71,12 +77,13 @@ public class CodeGeneratorTest {
 		return result;
 	}
 
-	private DomainShape buildEntityShape(DomainShape parent) {
+	private DomainShape buildEntityShape(DomainShape parent, Set<InterfaceShape> implementsInterfaces) {
 		EntityShape result = new EntityShape();
 		result.setEntityType(EntityType.ENTITY);
 		result.setName("Person");
 		result.setDescription("test-entity");
 		result.setParent(parent);
+        result.setImplementsInterfaceShapes(implementsInterfaces);
 		
 		Set<Property> properties = new HashSet<Property>();
 		Property ageProp = new Property();

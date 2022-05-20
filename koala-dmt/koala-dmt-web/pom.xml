@@ -116,7 +116,9 @@
 					<webApp>
 						<contextPath>/</contextPath>
 					</webApp>
-				</configuration>
+                    <stopKey/>
+                    <stopPort/>
+                </configuration>
 			</plugin>
 			<!-- 排除WAR的Deploy -->
 			<plugin>

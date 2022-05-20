@@ -26,6 +26,7 @@ import japa.parser.ast.type.ClassOrInterfaceType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openkoala.dmt.codegen.metadata.DomainClassInfo;
@@ -42,7 +43,12 @@ public class EntityGenerator extends DomainClassGenerator {
 	public ClassOrInterfaceDeclaration createTypeDeclare() {
 		ClassOrInterfaceDeclaration result = super.createTypeDeclare();
 		result.setExtends(Arrays.asList(new ClassOrInterfaceType(domainClassInfo.getBaseClass()))); // 扩展基类
-		
+
+        //实现接口
+        if (!domainClassInfo.getImplementsInterfaces().isEmpty()) {
+		    result.setImplements(createImlements(domainClassInfo.getImplementsInterfaces()));
+        }
+
 		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos());
 		methodGenerator.generateMethods(result);
 		ASTHelper.addMember(result, createGetMethod());
@@ -56,9 +62,16 @@ public class EntityGenerator extends DomainClassGenerator {
 		ASTHelper.addMember(result, createToStringMethod());
 		return result;
 	}
-	
-	
-	public List<AnnotationExpr> createClassAnnotations() {
+
+    private List<ClassOrInterfaceType> createImlements(Set<String> interfaceNames) {
+        List<ClassOrInterfaceType> results = new ArrayList<ClassOrInterfaceType>();
+        for (String interfaceName : interfaceNames) {
+            results.add(new ClassOrInterfaceType(interfaceName));
+        }
+        return  results;
+    }
+
+    public List<AnnotationExpr> createClassAnnotations() {
 		List<AnnotationExpr> results = new ArrayList<AnnotationExpr>();
 		results.add(createEntityAnnotation());
 		if (domainClassInfo.getBaseClass().equals("AbstractEntity")) {
