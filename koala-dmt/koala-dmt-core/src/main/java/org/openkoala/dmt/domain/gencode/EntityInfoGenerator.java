@@ -52,6 +52,11 @@ public class EntityInfoGenerator {
 		DomainClassInfo result = createBasicEntityInfo(domainShape);
 		result.setPropertyInfos(createPropertyInfos(domainShape));
 		result.setActionInfos(createActionInfos(domainShape.getActions()));
+
+        if (domainShape instanceof EntityShape) {
+            EntityShape entityShape = (EntityShape) domainShape;
+            result.setImplementsInterfaces(createInterfaceInfos(entityShape));
+        }
 		if (domainShape instanceof EnumShape) {
 			EnumShape enumShape = (EnumShape) domainShape;
 			result.setEnumItems(enumShape.getEnumItems());
@@ -59,7 +64,7 @@ public class EntityInfoGenerator {
 		return result;
 	}
 
-	private DomainClassInfo createBasicEntityInfo(DomainShape domainShape) {
+    private DomainClassInfo createBasicEntityInfo(DomainShape domainShape) {
 		DomainClassInfo result = new DomainClassInfo();
 		result.setClassName(domainShape.getName());
 		
@@ -75,6 +80,14 @@ public class EntityInfoGenerator {
 		result.setCategory(getClassCategory(domainShape));
 		return result;
 	}
+
+    private Set<String> createInterfaceInfos(EntityShape entityShape) {
+        Set<String> results = new HashSet<String>();
+        for (InterfaceShape interfaceShape : entityShape.getImplementsInterfaceShapes()) {
+            results.add(interfaceShape.getName());
+        }
+        return results;
+    }
 
 	private ClassCategory getClassCategory(DomainShape domainShape) {
 		if (domainShape instanceof InterfaceShape) {

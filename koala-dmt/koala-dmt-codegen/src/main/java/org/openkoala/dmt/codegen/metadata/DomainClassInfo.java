@@ -1,7 +1,9 @@
 package org.openkoala.dmt.codegen.metadata;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,7 +28,12 @@ public class DomainClassInfo {
 
 	/* 方法 */
 	private List<ActionInfo> actionInfos = new ArrayList<ActionInfo>();
-	
+
+    /*
+    实现的接口
+     */
+    private Set<String> implementsInterfaces = new HashSet<String>();
+
 	public String getPackageName() {
 		return packageName;
 	}
@@ -101,7 +108,15 @@ public class DomainClassInfo {
 		this.actionInfos = actionInfos;
 	}
 
-	public void addPropertyInfo(PropertyInfo propertyInfo) {
+    public Set<String> getImplementsInterfaces() {
+        return implementsInterfaces;
+    }
+
+    public void setImplementsInterfaces(Set<String> implementsInterfaces) {
+        this.implementsInterfaces = implementsInterfaces;
+    }
+
+    public void addPropertyInfo(PropertyInfo propertyInfo) {
 		propertyInfo.setEntityInfo(this);
 		propertyInfos.add(propertyInfo);
 	}
