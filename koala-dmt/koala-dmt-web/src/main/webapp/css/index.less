@@ -6,6 +6,19 @@ body, html{
     height:100%;
 }
 
+button{
+	cursor:default;
+	display:inline-block;
+	padding:5px 10px;
+	background:#CECECE;
+	border-radius:4px;
+	border:none;
+	
+	&:hover{
+		background:#A0C1FF;
+	}
+}
+
 #wrapper{
     min-width:960px;
     position:relative;
@@ -15,11 +28,9 @@ body, html{
     #header, #footer{
         clear:both;
         width:100%;
-        position:absolute;
-        text-align:center;
     }
     #header{
-        height:60px;
+        height:80px;
         background:@dottingColor;
     }
     #footer{
@@ -27,18 +38,18 @@ body, html{
         width:100%;
         height:40px;
         line-height:40px;
+        text-align:center;
         background:@assistantColor1;
     }
     #container{
         min-width:960px;
-        height:100%;
-        padding-top:60px;
-        padding-bottom:40px;
         box-sizing: border-box;
         
+        margin:10px 0;
+        
         .left, .right{
-           height:100%;
            overflow:hidden;
+           margin:0 4px;
         }
         
         .left{
@@ -47,7 +58,6 @@ body, html{
 
             .project_explorer{
                 min-height:300px;
-                margin:4px;
                 border:3px solid @assistantColor1;   //辅色调2
                 >div{
                     padding:4px;
@@ -58,9 +68,12 @@ body, html{
         
         .right{
             .main_panel{
-                height:100%;
+                padding-right:5px;
                 position:relative;
+                min-height:600px;
+                
                 .tabs{
+                	padding-top:0;
                     position:relative;
                     z-index:20;
                 }

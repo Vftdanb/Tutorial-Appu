@@ -227,7 +227,7 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 /**
  * 保存代码
  */
-mainTab.panels.delegate(".save", "click", function(){
+mainTab.panels.delegate(".saveUml", "click", function(){
 	var toolBar = $(this).parents(".tools_bar:first"),
 		canvas = toolBar.data("canvas");
 		

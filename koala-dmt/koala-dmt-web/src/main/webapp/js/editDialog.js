@@ -123,8 +123,8 @@ $("#dialog_container").find(".action_panel:first").delegate(".edit_action", "cli
 /*
  * 编辑属性
  */
-$("#dialog_container").find(".enumitem_panel:first").delegate("", ".add_enumitems", function(){
-	
+$("#dialog_container").find(".enumitem_panel:first").delegate(".add_enumitems", "click", function(){
+	console.log("asdfasdf");
 });
 
 /*为了实现编辑结果在展示和数据同步上尽量自动化*/
@@ -227,8 +227,8 @@ editDialog = {
 		panel.find("select[name='scope']").select(data.scope);
 		panel.find("input[name='description']").val(data.description);
 		
-		var enumitems = dialog.find(".enumitems").empty();
-		$.each(node.find(".enumItem"), function(i, n){
+		var enumitems = dialog.find("#dialogEnumitemsSet").empty();
+		$.each(node.data("data"), function(i, n){
 			enumitems.append($(n).clone().data("data",$(n)));
 		});
 	},

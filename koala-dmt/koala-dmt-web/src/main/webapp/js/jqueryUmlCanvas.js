@@ -25,7 +25,7 @@ umlCanvas(thiz, renderData){
 	this.EASEL		= thiz.find(".uml_easel");	//画布容器（画架）
 	this.SVGLINES 	= thiz.find(".uml_lines");  //线条容器
 	this.UMLCANVAS 	= thiz.find(".uml_canvas");	//所有图形元素的容器
-	this.TOOLBAR	= thiz.find(".tools");		//切换工具的工具栏
+	this.TOOLBAR	= thiz.find(".uml_tools");		//切换工具的工具栏
 	this.CURTOOL	= {type:"cursor",name:null};//当前的工具（currentTool）
 	
 	
@@ -472,16 +472,6 @@ umlCanvas(thiz, renderData){
 };
 
 umlCanvas.prototype = {
-	getModels : function(){
-		var models = [];
-		
-		for(temp in this.MODELS){
-			models.push(this.MODELS[temp]);
-		}
-		
-		return models;
-	},
-
 	/**
 	 * 从数据渲染出图片
 	 * @param data 源数据，包括箭头数据和节点数据
@@ -863,6 +853,42 @@ umlCanvas.prototype = {
 			end[0]		+ "," + end[1] 		+ " ");
 			
 		return line;
+	},
+	
+	getModels : function(){
+		var models = [];
+		var model;
+		for(temp in this.MODELS){
+			model = JSON.parse(JSON.stringify(this.MODELS[temp]));
+			delete model.position;
+			
+			console.log(JSON.stringify(this.MODELS[temp]));
+			
+			
+			if(model.parentId){
+				model.parentName = this.MODELS[model.parentId].name;
+				delete model.parentId;
+			} 
+			
+			if(model.implementsIdSet.length > 0){
+				var impl;
+				for(var i=0; i<model.implementsIdSet.length; i++){
+					impl = this.MODELS[model.implementsIdSet[i]];
+					
+					model.implementsNameSet.push(impl.name);
+					
+					if(impl.actions.length > 0){
+						for(var j=0; j<impl.actions.length; j++){
+							model.actions.push(impl.actions[j]);
+						}
+					}
+				}
+			}
+			
+			models.push(model);
+		}
+		
+		return models;
 	},
 	
 	/**

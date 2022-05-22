@@ -8,9 +8,8 @@
 
 /*编辑对话框*/
 #dialog_container {
-    margin:4px;
     border:solid 3px @assistantColor1;
-    
+    margin-top:4px;
     .tabs{
          background:@assistantColor1;
     }
@@ -183,8 +182,19 @@
 	    }
 	    
 	    .enumitem_panel{
-	    	.enumItem{
+	    	.enum_item{
 	    		.odd;
+	    		position:relative;
+	    		
+	    		.enum_name{
+	    			margin-right:40px;
+	    		}
+	    		
+	    		.delete_enum_item{
+	    			position:absolute;
+	    			right:0;
+	    			top:2px;
+	    		}
 	    	}
 	    }
     }
