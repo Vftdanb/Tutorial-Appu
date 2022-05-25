@@ -485,15 +485,16 @@ umlCanvas.prototype = {
 		
 		/*反向生成节点*/
 		if(models){
-			$.each(models, function(i, model){
-				modelDom = addNode(canvas, model);
-			});
+			for(var i in models){
+				modelDom = addNode(canvas, models[i]);
+			}
 		}
 		
-		/*方向生成线条*/
+		/*反向生成线条*/
 		if(lines){
-			var lineDom, polyline;
-			$.each(lines, function(i, line){
+			var lineDom, polyline, line;
+			for(var i in lines){
+				line = lines[i];
 				lineDom = $("#line-template ." + line.relationType)
 				.clone()
 				.attr("id", line.id);
@@ -519,7 +520,7 @@ umlCanvas.prototype = {
 				}
 				
 				canvas.SVGLINES.append(lineDom);
-			});
+			}
 		}
 	},
 	
@@ -855,36 +856,39 @@ umlCanvas.prototype = {
 		return line;
 	},
 	
+	/**
+	 * 获取加工过的models，已经去除了对后台生成没用的属性
+	 * @returns {Array}
+	 */
 	getModels : function(){
 		var models = [];
-		var model;
+		var model = null;
 		for(temp in this.MODELS){
 			model = JSON.parse(JSON.stringify(this.MODELS[temp]));
 			delete model.position;
-			
-			console.log(JSON.stringify(this.MODELS[temp]));
-			
+			delete model.id;
 			
 			if(model.parentId){
 				model.parentName = this.MODELS[model.parentId].name;
 				delete model.parentId;
 			} 
 			
-			if(model.implementsIdSet.length > 0){
-				var impl;
-				for(var i=0; i<model.implementsIdSet.length; i++){
-					impl = this.MODELS[model.implementsIdSet[i]];
-					
-					model.implementsNameSet.push(impl.name);
-					
-					if(impl.actions.length > 0){
-						for(var j=0; j<impl.actions.length; j++){
-							model.actions.push(impl.actions[j]);
+			if(model.implementsIdSet){
+				if(model.implementsIdSet.length > 0){
+					var impl;
+					for(var i=0; i<model.implementsIdSet.length; i++){
+						impl = this.MODELS[model.implementsIdSet[i]];
+						model.implementsNameSet.push(impl.name);
+						if(impl.actions.length > 0){
+							for(var j=0; j<impl.actions.length; j++){
+								model.actions.push(impl.actions[j]);
+							}
 						}
 					}
 				}
+				delete model.implementsIdSet;
+				
 			}
-			
 			models.push(model);
 		}
 		
@@ -892,16 +896,18 @@ umlCanvas.prototype = {
 	},
 	
 	/**
-	 * 获取当前uml图的所有线条（箭头）
+	 * 获取未被加工的models的json字符串，用于保存
+	 */
+	getModelString : function(){
+		return JSON.stringify(this.MODELS);
+	},
+	
+	/**
+	 * 获取当前uml图的所有线条（箭头），用于保存
 	 * @returns {Array}
 	 */
-	getLines : function(){
-		var lines = [];
-		for(var temp in this.LINES){
-			lines.push(this.LINES[temp]);
-		}
-		
-		return lines;
+	getLineString : function(){
+		return JSON.stringify(this.LINES);;
 	},
 	
 	/**

@@ -11,10 +11,9 @@ var setting = {
 		dataFilter : function(treeId, parentNode, responseData){
 			$.each(responseData, function(i, chart){
 				chart.projectId = parentNode.id;
-				chart.isParent = true;
+				chart.isParent = false;
 				chart.type = "chart";
 			});
-			
 			return responseData;
 		}
 	},
@@ -26,6 +25,7 @@ var setting = {
 				return false;
 			}
 		},
+		
 		onClick : function(event, treeId, treeData){
 			if(treeData.type == "project"){
 				$("#add_chart").show();
@@ -174,33 +174,17 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 				project = dialog.project,
 				chart	= dialog.chart;
 			
-			var domainsChart = {
-					project:{}
-				};
-				
-			var lines = canvas.getLines(),
-				models = canvas.getModels();
+			var domainsChart = {};
 
-			domainsChart.id 			= "";
-			domainsChart.version 		= "";
+			domainsChart.id 			= chart.id;
+			domainsChart.version 		= chart.version;
 			domainsChart.name			= chart.name;
-			domainsChart.project.id 	= project.id;
-			domainsChart.project.name	= project.name;
-			//domainsChart.lineInfo		= JSON.stringify(lines);
-			domainsChart.domainShapeInfo = JSON.stringify(models);
-			domainsChart.lineInfo		= lines;
-			domainsChart.aaa = models;
+			domainsChart.project 		= project;
+			domainsChart.domainShapeDtos = canvas.getModels();
 			
-			models = JSON.parse(domainsChart.domainShapeInfo);
-			$.each(models, function(i, model){
-				delete model.position;
-			});
-			
-			domainsChart.domainShapeDtos = models;
-
 			console.log(JSON.stringify(domainsChart));
 			
-			$.ajax({
+			/*$.ajax({
 				headers: { 
 			        'Content-Type': 'application/json' 
 			    },
@@ -212,16 +196,16 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 				},
 				error : function(){
 				}
-			});
+			});*/
 		}
 	});
-	
-	dialog.show().setTitle("生成代码").setBody(form);
 	
 	var toolBar = $(this).parents(".tools_bar:first");
 	dialog.canvas = toolBar.data("canvas");
 	dialog.project = toolBar.data("project");
 	dialog.chart = toolBar.data("chart");
+	
+	dialog.show().setTitle("生成代码").setBody(form);
 });
 
 /**
@@ -229,16 +213,19 @@ mainTab.panels.delegate(".generateCode", "click", function(){
  */
 mainTab.panels.delegate(".saveUml", "click", function(){
 	var toolBar = $(this).parents(".tools_bar:first"),
-		canvas = toolBar.data("canvas");
-		
-	var domainsChart = {};
+		canvas = toolBar.data("canvas"),
+		domainsChart = {},
+		chart = toolBar.data("chart");
+		project = toolBar.data("project");
 	
-	var lines = canvas.getLines(),
-		models = canvas.getModels();
-		
-	domainsChart.id 			= toolBar.data("chart").id;
-	domainsChart.lineInfo		= JSON.stringify(lines);
-	domainsChart.domainShapeInfo = JSON.stringify(models);
+	domainsChart.version		= chart.version;
+	domainsChart.id 			= chart.id;
+	
+	domainsChart.project 		= project;
+	
+	domainsChart.lineInfo		= canvas.getLineString(),
+	domainsChart.domainShapeInfo = canvas.getModelString();
+	
 	$.ajax({
 		headers: { 
 	        'Accept': 'application/json',
