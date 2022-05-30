@@ -71,6 +71,10 @@
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.svg</url-pattern>
 	</servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>*.less</url-pattern>
+    </servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.ttf</url-pattern>
@@ -87,12 +91,10 @@
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.zip</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.gif</url-pattern>
 	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>default</servlet-name>
 		<url-pattern>*.jpg</url-pattern>

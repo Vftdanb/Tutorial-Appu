@@ -12,7 +12,7 @@ import org.dayatang.domain.AbstractEntity;
 
 @Entity
 @Table(name = "KD_DOMAINS_CHARTS")
-public class DomainsChart extends AbstractEntity {
+public class DomainsChart extends DmtAbstractEntity {
 
 	private static final long serialVersionUID = 3043999013741427550L;
 
