@@ -55,6 +55,12 @@ function addNode(canvas, model){
 		});
 	}
 	
+	if(model.actions){
+		$.each(model.actions, function(i, action){
+			addAction(model, action, false);
+		});
+	}
+	
 	return node;
 }
 
@@ -95,16 +101,16 @@ function addProperty(entity, propertyData, isAddToModel) {
 		}
 	}
 }
-
-/*添加行为*/
 /**
- * @param targetNode
+ * 添加行为
+ * @param model
  * @param actionData
+ * @param isAddToModel
  */
 function addAction(model, actionData, isAddToModel){
 	var targetNode = $("#"+model.id);
 	var actDom = $("#node-template .action").clone();
-	model.actions.push(actionData);
+	
 	targetNode.find(".actions").append(actDom);
 	actDom.find(".actionName").html(actionData.name);
 	actDom.find(".returnType").html(actionData.returnType);
@@ -120,10 +126,13 @@ function addAction(model, actionData, isAddToModel){
 		editDialog.addActionToEdit(actionData);
 	}
 	
-	if(actionData.arguments){
-		$.each(actionData.arguments, function(i, argument){
-			addActionArguments(action, argument, false);
-		});
+	if(isAddToModel){
+		model.actions.push(actionData);
+		if(actionData.arguments){
+			$.each(actionData.arguments, function(i, argument){
+				addActionArguments(action, argument, false);
+			});
+		}
 	}
 }
 

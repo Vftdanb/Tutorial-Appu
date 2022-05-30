@@ -185,7 +185,7 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 			
 			console.log(JSON.stringify(domainsChart));
 			
-			/*$.ajax({
+			$.ajax({
 				headers: { 
 			        'Content-Type': 'application/json' 
 			    },
@@ -193,11 +193,11 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 				data 	:  JSON.stringify(domainsChart),
 				type	: "post",
 				success : function(data){
-					//window.location.assign(data + "/" + domainsChart.name + ".zip");
+					window.location.assign(data + "/" + domainsChart.name + ".zip");
 				},
 				error : function(){
 				}
-			});*/
+			});
 		}
 	});
 	
@@ -221,8 +221,11 @@ mainTab.panels.delegate(".saveUml", "click", function(){
 	
 	domainsChart.version		= chart.version;
 	domainsChart.id 			= chart.id;
+	domainsChart.name			= chart.name;
+	domainsChart.project		= {};
+	domainsChart.project.id		= project.id;
+	domainsChart.project.name	= project.name;
 	
-	domainsChart["project.id"] 		= project.id;
 	
 	domainsChart.lineInfo		= canvas.getLineString(),
 	domainsChart.domainShapeInfo = canvas.getModelString();
