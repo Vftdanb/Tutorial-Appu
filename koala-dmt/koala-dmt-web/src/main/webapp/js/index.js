@@ -13,6 +13,7 @@ var setting = {
 				chart.projectId = parentNode.id;
 				chart.isParent = false;
 				chart.type = "chart";
+				chart.icon = "images/uml/uml_chart.png";
 			});
 			return responseData;
 		}
@@ -133,7 +134,7 @@ $("#add_chart").click(function(){
 				success : function(data){
 					if(!isNaN(data)) {
 						if(project.isAjaxing != false){
-							projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), id: data, isParent:true, type:"chart", projectId:dialog.projectId}]);
+							projectTree.addNodes(projectTree.getSelectedNodes()[0], [{name:input.val(), id: data, isParent:false, type:"chart", projectId:dialog.projectId,icon:"images/uml/uml_chart.png"}]);
 						}
 						dialog.close();
 					} else {
@@ -221,7 +222,7 @@ mainTab.panels.delegate(".saveUml", "click", function(){
 	domainsChart.version		= chart.version;
 	domainsChart.id 			= chart.id;
 	
-	domainsChart.project 		= project;
+	domainsChart["project.id"] 		= project.id;
 	
 	domainsChart.lineInfo		= canvas.getLineString(),
 	domainsChart.domainShapeInfo = canvas.getModelString();
