@@ -43,9 +43,9 @@
 		<hibernate.show_sql>true</hibernate.show_sql>
 		<hibernate.dialect>org.hibernate.dialect.MySQL5Dialect</hibernate.dialect>
 		<db.jdbcDriver>com.mysql.jdbc.Driver</db.jdbcDriver>
-		<db.connectionURL>jdbc:mysql://localhost:3306/dmt?useUnicode=true&amp;characterEncoding=UTF-8</db.connectionURL>
+		<db.connectionURL>jdbc:mysql://localhost:3306/koala?useUnicode=true&amp;characterEncoding=UTF-8</db.connectionURL>
 		<db.username>root</db.username>
-		<db.password>root</db.password>
+		<db.password>xmfang</db.password>
 		<db.Type>MYSQL</db.Type>
 		<db.generate.ddl>true</db.generate.ddl>
 	</properties>

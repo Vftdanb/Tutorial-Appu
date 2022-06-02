@@ -89,7 +89,6 @@ public class DomainsChartDto implements Dto {
 	public DomainsChart transformToDomainsChart() {
 		DomainsChart result = new DomainsChart();
 		result.setId(id);
-		result.setVersion(version);
 		result.setName(name);
 		result.setProject(project);
 		result.setDomainShapeInfo(domainShapeInfo);
@@ -138,7 +137,6 @@ public class DomainsChartDto implements Dto {
 	public static DomainsChartDto getInstance(DomainsChart domainsChart) {
 		DomainsChartDto result = new DomainsChartDto();
 		result.setId(domainsChart.getId());
-		result.setVersion(domainsChart.getVersion());
 		result.setProject(domainsChart.getProject());
 		result.setName(domainsChart.getName());
 		result.setLineInfo(domainsChart.getLineInfo());
