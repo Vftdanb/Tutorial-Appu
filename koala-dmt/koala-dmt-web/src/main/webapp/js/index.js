@@ -178,10 +178,13 @@ mainTab.panels.delegate(".generateCode", "click", function(){
 			var domainsChart = {};
 
 			domainsChart.id 			= chart.id;
-			domainsChart.version 		= chart.version;
 			domainsChart.name			= chart.name;
-			domainsChart.project 		= project;
+			domainsChart.project		= {};
+			domainsChart.project.id		= project.id;
+			domainsChart.project.name	= project.name;
 			domainsChart.domainShapeDtos = canvas.getModels();
+			domainsChart.domainShapeInfo = "";
+			domainsChart.lineInfo		= "";
 			
 			console.log(JSON.stringify(domainsChart));
 			
