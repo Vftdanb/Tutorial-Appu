@@ -337,8 +337,8 @@ function updateActionModifier(action, val){
 	var copy = actionDom.data("copy");
 	action.modifier = val;
 	
-	copy ? copy.removeClass("public private protected").addClass(val):"";
-	actionDom.removeClass("public private protected").addClass(val);
+	copy ? copy.removeClass("public private protected").addClass(val.toLowerCase()):"";
+	actionDom.removeClass("public private protected").addClass(val.toLowerCase());
 }
 
 /**

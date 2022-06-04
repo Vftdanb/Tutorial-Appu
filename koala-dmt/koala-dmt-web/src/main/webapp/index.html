@@ -174,10 +174,19 @@
 										<div><label>返回值:</label><input name="action_returntype" type="text" oninput="updateActionReturnType($(this).parents('.edit_action_detail:first').data('data'),$(this).val())"/></div>
 										<div>
 											<label>作用域:</label><select name="action_modifier" onchange="updateActionModifier($(this).parents('.edit_action_detail:first').data('data'),$(this).val())">
-												<option value="public">public</option>
-												<option value="private">private</option>
-												<option vlaue="protected">protected</option>
+												<option value="PUBLIC">public</option>
+												<option value="PRIVATE">private</option>
+												<option value="PROTECTED">protected</option>
 											</select>
+										</div>
+										<div>
+											<table>
+												<tr>
+													<td><input type="checkbox" onclick="$(this).parents('.edit_action_detail:first').data('data').isFinal = $(this).is(':checked')"/>isFinal</td>
+													<td><input type="checkbox" onclick="$(this).parents('.edit_action_detail:first').data('data').isStatic = $(this).is(':checked')"/>isStatic</td>
+													<td><input type="checkbox" onclick="$(this).parents('.edit_action_detail:first').data('data').isAbstract = $(this).is(':checked')"/>isAbstract</td>
+												</tr>
+											</table>
 										</div>
 										<fieldset class="action_argument_set" style="margin-top:10px;">
 											<legend style="font-size:14px;">参数列表</legend>

@@ -199,8 +199,11 @@ function Action(name){
 	this.id			= commonTool.guid();
 	this.name 		= name;
 	this.returnType = "void";
-	this.modifier 	= "public";
+	this.modifier 	= "PUBLIC";
 	this.arguments 	= [];
+	this.isFinal	= false;
+	this.isStatic	= false;
+	this.isAbstract	= false;
 }
 
 /*枚举项类*/
