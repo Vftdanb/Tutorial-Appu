@@ -868,6 +868,18 @@ umlCanvas.prototype = {
 			delete model.position;
 			delete model.id;
 			
+			if(model.actions){
+				$.each(model.actions, function(i, action){
+					delete action.id;
+				});
+			}
+			
+			if(model.properties){
+				$.each(model.properties, function(i, property){
+					delete property.id;
+				});
+			}
+			
 			if(model.parentId){
 				model.parentName = this.MODELS[model.parentId].name;
 				delete model.parentId;
@@ -886,8 +898,8 @@ umlCanvas.prototype = {
 						}
 					}
 				}
-				delete model.implementsIdSet;
 				
+				delete model.implementsIdSet;
 			}
 			models.push(model);
 		}
