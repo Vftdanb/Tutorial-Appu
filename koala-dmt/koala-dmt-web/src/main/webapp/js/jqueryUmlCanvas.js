@@ -882,9 +882,9 @@ umlCanvas.prototype = {
 			
 			if(model.parentId){
 				model.parentName = this.MODELS[model.parentId].name;
-				delete model.parentId;
 			} 
 			
+			delete model.parentId;
 			if(model.implementsIdSet){
 				if(model.implementsIdSet.length > 0){
 					var impl;
