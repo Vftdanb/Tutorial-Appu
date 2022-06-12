@@ -871,6 +871,9 @@ umlCanvas.prototype = {
 			if(model.actions){
 				$.each(model.actions, function(i, action){
 					delete action.id;
+					$.each(action.arguments, function(j, argument){
+						delete argument.id;
+					});
 				});
 			}
 			
