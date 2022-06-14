@@ -201,9 +201,9 @@ function Action(name){
 	this.returnType = "void";
 	this.modifier 	= "PUBLIC";
 	this.arguments 	= [];
-	this.isFinal	= false;
-	this.isStatic	= false;
-	this.isAbstract	= false;
+	this.final	= false;
+	this.static	= false;
+	this.abstract = false;
 }
 
 /*枚举项类*/
