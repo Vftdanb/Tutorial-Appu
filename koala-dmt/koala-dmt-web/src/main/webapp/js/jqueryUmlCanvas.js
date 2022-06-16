@@ -9,15 +9,7 @@ function swichTool(name, canvas){
 	tool.addClass("current-tool");
 }
 
-function /**
- * @author LW
- *
- */
-/**
- * @author LW
- *
- */
-umlCanvas(thiz, renderData){
+function umlCanvas(thiz, renderData){
 	/*全局变量*/
 	var THIS		= this;
 	
@@ -896,6 +888,7 @@ umlCanvas.prototype = {
 						model.implementsNameSet.push(impl.name);
 						if(impl.actions.length > 0){
 							for(var j=0; j<impl.actions.length; j++){
+								delete impl.actions[j].id;
 								model.actions.push(impl.actions[j]);
 							}
 						}
