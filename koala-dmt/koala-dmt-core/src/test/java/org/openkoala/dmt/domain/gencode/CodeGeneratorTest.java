@@ -115,23 +115,18 @@ public class CodeGeneratorTest {
 		Action action = new Action();
 		action.setName("action");
 		action.setDescription("action-description");
-		
-		Property returnValue = new Property();
-		returnValue.setType("List");
-		returnValue.setGenericity("String");
-		returnValue.setName("returnvalue");
-		action.setReturnValue(returnValue);
+		action.setReturnType("List<String>");
 		
 		Property parameter1 = new Property();
 		parameter1.setType("Set");
 		parameter1.setGenericity("Long");
 		parameter1.setName("para1");
-		action.getParameters().add(parameter1);
+		action.getArguments().add(parameter1);
 		
 		Property parameter2 = new Property();
 		parameter2.setType("String");
 		parameter2.setName("para2");
-		action.getParameters().add(parameter2);
+		action.getArguments().add(parameter2);
 		
 		actions.add(action);
 		result.setActions(actions);

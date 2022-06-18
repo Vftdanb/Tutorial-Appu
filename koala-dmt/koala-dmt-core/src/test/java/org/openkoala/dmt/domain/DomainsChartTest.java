@@ -61,15 +61,12 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		parameter.setType("String");
 		parameters.add(parameter);
 		
-		Property returnValue = new Property();
-		returnValue.setType("ReturnType");
-		
 		List<Action> actions = new ArrayList<Action>();
 		Action action = new Action();
 		action.setName("action");
-		action.setParameters(parameters);
+		action.setArguments(parameters);
 		action.setDescription("action description");
-		action.setReturnValue(returnValue);
+		action.setReturnType("ReturnType");
 		actions.add(action);
 		
 		entityShape.setName("Entity");

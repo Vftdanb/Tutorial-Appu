@@ -2,6 +2,7 @@ package org.openkoala.dmt.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.openkoala.dmt.codegen.metadata.Modifier;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,15 +12,31 @@ public class Action implements Serializable {
 
 	private static final long serialVersionUID = -5683932639335290666L;
 
+    private Modifier modifier;
+
 	private String name;
 	
-	private List<Property> parameters = new ArrayList<Property>();
+	private List<Property> arguments = new ArrayList<Property>();
 	
-	private Property returnValue;
+	private String returnType;
 
 	private String description;
-	
-	public String getName() {
+
+    private boolean isFinal;
+
+    private boolean isStatic;
+
+    private boolean isAbstract;
+
+    public Modifier getModifier() {
+        return modifier;
+    }
+
+    public void setModifier(Modifier modifier) {
+        this.modifier = modifier;
+    }
+
+    public String getName() {
 		return name;
 	}
 
@@ -27,20 +44,20 @@ public class Action implements Serializable {
 		this.name = name;
 	}
 
-	public List<Property> getParameters() {
-		return parameters;
+	public List<Property> getArguments() {
+		return arguments;
 	}
 
-	public void setParameters(List<Property> parameters) {
-		this.parameters = parameters;
+	public void setArguments(List<Property> arguments) {
+		this.arguments = arguments;
 	}
 
-	public Property getReturnValue() {
-		return returnValue;
+	public String getReturnType() {
+		return returnType;
 	}
 
-	public void setReturnValue(Property returnValue) {
-		this.returnValue = returnValue;
+	public void setReturnType(String returnType) {
+		this.returnType = returnType;
 	}
 
 	public String getDescription() {
@@ -51,7 +68,31 @@ public class Action implements Serializable {
 		this.description = description;
 	}
 
-	@Override
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public void setFinal(boolean isFinal) {
+        this.isFinal = isFinal;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
+    public void setStatic(boolean isStatic) {
+        this.isStatic = isStatic;
+    }
+
+    public boolean isAbstract() {
+        return isAbstract;
+    }
+
+    public void setAbstract(boolean isAbstract) {
+        this.isAbstract = isAbstract;
+    }
+
+    @Override
 	public boolean equals(final Object other) {
 		if (this == other)
 			return true;
@@ -59,8 +100,8 @@ public class Action implements Serializable {
 			return false;
 		Action castOther = (Action) other;
 		return new EqualsBuilder().append(name, castOther.name)
-				.append(parameters, castOther.parameters)
-				.append(returnValue, castOther.returnValue)
+				.append(arguments, castOther.arguments)
+				.append(returnType, castOther.returnType)
 				.isEquals();
 	}
 
@@ -68,8 +109,8 @@ public class Action implements Serializable {
 	public int hashCode() {
 		return new HashCodeBuilder(17, 37)
 			.append(name)
-			.append(parameters)
-			.append(returnValue)
+			.append(arguments)
+			.append(returnType)
 			.toHashCode();
 	}
 

@@ -103,7 +103,7 @@ public class DomainsChartController extends BaseController {
 	@RequestMapping(value = "/gencode", method = RequestMethod.POST, consumes = "application/json")
 	public String gencode(@RequestBody DomainsChartDto domainsChartDTO, String packageName, HttpServletRequest request) {
 		String destinationPath = GENERATE_CODE_DIR + "/"
-				+ generateDirName(domainsChartDTO.getProject().getName());
+				+ generateDirName();
 		String destinationRealPath = request.getSession().getServletContext().getRealPath("/") + "/"
 				+ destinationPath;
 		
@@ -122,8 +122,8 @@ public class DomainsChartController extends BaseController {
 		return destinationPath;
 	}
 	
-	private String generateDirName(String projectName) {
+	private String generateDirName() {
 		Random random = new Random();
-		return projectName + new Date().getTime() + random.nextInt(10000);
+		return "" + new Date().getTime() + random.nextInt(10000);
 	}
 }
