@@ -52,7 +52,7 @@ public class InterfaceGenerator implements ClassGenerator {
 		ClassOrInterfaceDeclaration result = new ClassOrInterfaceDeclaration(ModifierSet.PUBLIC, true, domainClassInfo.getClassName());
 		result.setJavaDoc(new JavadocComment(domainClassInfo.getEntityComment())); // 设置类文档注释
 		
-		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos());
+		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos(), false);
 		methodGenerator.generateMethods(result);
 		return result;
 	}

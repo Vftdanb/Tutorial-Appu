@@ -19,9 +19,12 @@ import org.openkoala.dmt.codegen.metadata.PropertyInfo;
 public class MethodGenerator {
 
 	private List<ActionInfo> actionInfos = new ArrayList<ActionInfo>();
-	
-	public MethodGenerator(List<ActionInfo> actionInfos) {
+
+    private boolean needEmptyMethodBody;
+
+	public MethodGenerator(List<ActionInfo> actionInfos, boolean needEmptyMethodBody) {
 		this.actionInfos = actionInfos;
+        this.needEmptyMethodBody = needEmptyMethodBody;
 	}
 	
 	public void generateMethods(ClassOrInterfaceDeclaration classOrInterfaceDeclaration) {
@@ -49,8 +52,11 @@ public class MethodGenerator {
 		for(PropertyInfo propertyInfo : actionInfo.getParameters()) {
 			parameters.add(ASTHelper.createParameter(new ClassOrInterfaceType(propertyInfo.getType().getDeclareType()), propertyInfo.getName()));
 		}
-		methodDeclaration.setParameters(parameters);
-        methodDeclaration.setBody(new BlockStmt());
+
+        if (needEmptyMethodBody) {
+            methodDeclaration.setParameters(parameters);
+            methodDeclaration.setBody(new BlockStmt());
+        }
 		ASTHelper.addMember(classOrInterfaceDeclaration, methodDeclaration);
 	}
 
