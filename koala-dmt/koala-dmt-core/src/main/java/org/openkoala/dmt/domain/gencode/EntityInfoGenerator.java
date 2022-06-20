@@ -136,7 +136,7 @@ public class EntityInfoGenerator {
 		return results;
 	}
 	
-	private List<ActionInfo> createActionInfos(List<Action> actions) {
+	private List<ActionInfo> createActionInfos(Set<Action> actions) {
 		List<ActionInfo> results = new ArrayList<ActionInfo>();
 		for (Action action : actions) {
 			results.add(createActionInfo(action));

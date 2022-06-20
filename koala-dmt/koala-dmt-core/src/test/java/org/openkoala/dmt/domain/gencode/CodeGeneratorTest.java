@@ -110,8 +110,8 @@ public class CodeGeneratorTest {
 		listProp.setRelation(DomainPropertyRelation.ElementCollection);
 		properties.add(listProp);
 		result.setProperties(properties);
-		
-		List<Action> actions = new ArrayList<Action>();
+
+        Set<Action> actions = new HashSet<Action>();
 		Action action = new Action();
 		action.setName("action");
 		action.setDescription("action-description");

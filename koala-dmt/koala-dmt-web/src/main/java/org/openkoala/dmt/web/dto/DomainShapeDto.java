@@ -107,8 +107,7 @@ public class DomainShapeDto implements Dto {
 		return implementsNameSet;
 	}
 
-	public void setImplementsNameSet(
-			Set<String> implementsNameSet) {
+	public void setImplementsNameSet(Set<String> implementsNameSet) {
 		this.implementsNameSet = implementsNameSet;
 	}
 
@@ -148,6 +147,7 @@ public class DomainShapeDto implements Dto {
 		domainShape.setId(id);
 		domainShape.setName(name);
 		domainShape.setDescription(description);
+        domainShape.setActions(actions);
 	}
 	
 	private InterfaceShape generateInterfaceShape() {

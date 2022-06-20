@@ -60,8 +60,8 @@ public class DomainsChartTest extends BaseIntegrationTest {
 		parameter.setName("parameter");
 		parameter.setType("String");
 		parameters.add(parameter);
-		
-		List<Action> actions = new ArrayList<Action>();
+
+        Set<Action> actions = new HashSet<Action>();
 		Action action = new Action();
 		action.setName("action");
 		action.setArguments(parameters);

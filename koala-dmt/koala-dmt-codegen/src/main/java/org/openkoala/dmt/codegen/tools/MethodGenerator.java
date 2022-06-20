@@ -6,6 +6,7 @@ import japa.parser.ast.body.JavadocComment;
 import japa.parser.ast.body.MethodDeclaration;
 import japa.parser.ast.body.ModifierSet;
 import japa.parser.ast.body.Parameter;
+import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.type.ClassOrInterfaceType;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class MethodGenerator {
 			parameters.add(ASTHelper.createParameter(new ClassOrInterfaceType(propertyInfo.getType().getDeclareType()), propertyInfo.getName()));
 		}
 		methodDeclaration.setParameters(parameters);
+        methodDeclaration.setBody(new BlockStmt());
 		ASTHelper.addMember(classOrInterfaceDeclaration, methodDeclaration);
 	}
 
