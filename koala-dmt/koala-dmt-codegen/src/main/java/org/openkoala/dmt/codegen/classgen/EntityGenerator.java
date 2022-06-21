@@ -49,7 +49,7 @@ public class EntityGenerator extends DomainClassGenerator {
 		    result.setImplements(createImlements(domainClassInfo.getImplementsInterfaces()));
         }
 
-		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos());
+		MethodGenerator methodGenerator = new MethodGenerator(domainClassInfo.getActionInfos(), true);
 		methodGenerator.generateMethods(result);
 		ASTHelper.addMember(result, createGetMethod());
 		ASTHelper.addMember(result, createGetMethod());

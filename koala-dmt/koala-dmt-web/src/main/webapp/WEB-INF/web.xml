@@ -14,6 +14,10 @@
 			<param-value>UTF-8</param-value>
 		</init-param>
 	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
 	<!-- Spring Listener -->
 	<context-param>
@@ -112,6 +116,6 @@
 		<url-pattern>*.html</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 </web-app>

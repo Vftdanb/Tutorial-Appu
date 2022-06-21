@@ -136,7 +136,7 @@ public class EntityInfoGenerator {
 		return results;
 	}
 	
-	private List<ActionInfo> createActionInfos(List<Action> actions) {
+	private List<ActionInfo> createActionInfos(Set<Action> actions) {
 		List<ActionInfo> results = new ArrayList<ActionInfo>();
 		for (Action action : actions) {
 			results.add(createActionInfo(action));
@@ -146,10 +146,14 @@ public class EntityInfoGenerator {
 	
 	private ActionInfo createActionInfo(Action action) {
 		ActionInfo result = new ActionInfo();
+        result.setModifier(action.getModifier());
 		result.setName(action.getName());
 		result.setDescription(action.getDescription());
-		result.setReturnValue(createPropertyInfoByProperty(action.getReturnValue()));
-		for (Property parameter : action.getParameters()) {
+		result.setReturnType(action.getReturnType());
+        result.setAbstract(action.isAbstract());
+        result.setFinal(action.isFinal());
+        result.setStatic(action.isStatic());
+		for (Property parameter : action.getArguments()) {
 			result.getParameters().add(createPropertyInfoByProperty(parameter));
 		}
 		

@@ -5,7 +5,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 领域图形
@@ -22,7 +24,7 @@ public abstract class DomainShape implements Serializable {
 
 	private String description;
 	
-	private List<Action> actions = new ArrayList<Action>();
+	private Set<Action> actions = new HashSet<Action>();
 	
 	private DomainShape parent;
 	
@@ -50,11 +52,11 @@ public abstract class DomainShape implements Serializable {
 		this.description = description;
 	}
 	
-	public List<Action> getActions() {
+	public Set<Action> getActions() {
 		return actions;
 	}
 
-	public void setActions(List<Action> actions) {
+	public void setActions(Set<Action> actions) {
 		this.actions = actions;
 	}
 

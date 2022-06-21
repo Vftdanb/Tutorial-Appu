@@ -18,8 +18,6 @@ public class DomainsChartDto implements Dto {
 
 	private Long id;
 	
-	private int version;
-	
 	private Project project;
 	
 	private String name;
@@ -36,14 +34,6 @@ public class DomainsChartDto implements Dto {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
 	}
 
 	public Project getProject() {
