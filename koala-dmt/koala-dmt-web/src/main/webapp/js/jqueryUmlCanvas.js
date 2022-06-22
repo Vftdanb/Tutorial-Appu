@@ -872,6 +872,7 @@ umlCanvas.prototype = {
 			if(model.properties){
 				$.each(model.properties, function(i, property){
 					delete property.id;
+                    delete property.autoBy;
 				});
 			}
 			

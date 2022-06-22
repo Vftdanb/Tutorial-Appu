@@ -131,7 +131,7 @@ public class EntityInfoGenerator {
 		
 		EntityShape entityShape = (EntityShape) domainShape;
 		for (Property property : entityShape.getProperties()) {
-			results.add(createPropertyInfoByProperty(property));
+			results.add(createPropertyInfo(property));
 		}
 		return results;
 	}
@@ -154,29 +154,28 @@ public class EntityInfoGenerator {
         result.setFinal(action.isFinal());
         result.setStatic(action.isStatic());
 		for (Property parameter : action.getArguments()) {
-			result.getParameters().add(createPropertyInfoByProperty(parameter));
+			result.getParameters().add(createPropertyInfo(parameter));
 		}
 		
 		return result;
 	}
 
-	private PropertyInfo createPropertyInfoByProperty(Property property) {
-		PropertyInfo result = new PropertyInfo();
-		result.setName(property.getName());
-		
+    private PropertyInfo createPropertyInfo(Property property) {
+        PropertyInfo result = new PropertyInfo();
+        result.setName(property.getName());
+        result.setType(getPropertyType(property.getType(), property.getGenericity()));
+
 		UpperUnderscoreConvertor upperUnderscoreConvertor = new UpperUnderscoreConvertor(property.getName());
 		result.setColumnName(upperUnderscoreConvertor.convert());
 		result.setComment(property.getDescription());
-		result.setType(getPropertyType(property.getType(), property.getGenericity()));
 		result.setTypeExt(getTypeExt(property));
 		result.setBusinessPK(property.getBusinessPK());
-		
+        result.setNullable(property.getNullable());
+
 		//如果是OneToMany的关联关系，默认mappedby使用类名，首字母小写。
 		if (property.getRelation() == DomainPropertyRelation.OneToMany) {
 			result.setMappedBy(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, property.getName()));
 		}
-		
-		result.setNullable(property.getNullable());
 		return result;
 	}
 
@@ -206,7 +205,21 @@ public class EntityInfoGenerator {
 			if (property.getRelation().equals(DomainPropertyRelation.Enumerated)) {
 				return PropertyExt.ENUM;
 			}
-		}
+		} else {
+            for (DomainShape each : domainShapes) {
+                if (each.getName().equals(property.getType())) {
+                    return PropertyExt.MANY_TO_ONE;
+                }
+                if (property.getGenericity() != null
+                        && each.getName().equals(property.getGenericity())
+                        && (property.getType().equals("Collection")
+                            || property.getType().equals("List")
+                            || property.getType().equals("Set")
+                            || property.getType().equals("SortedSet"))) {
+                    return PropertyExt.ONE_TO_MANY;
+                }
+            }
+        }
 		return null;
 	}
 
